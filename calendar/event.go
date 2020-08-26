@@ -18,7 +18,6 @@ import (
 	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
-	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -35,6 +34,8 @@ const (
 const (
 	// EventModelActiveColumn is the column json value active
 	EventModelActiveColumn = "active"
+	// EventModelAttendeeRefIDColumn is the column json value attendee_ref_id
+	EventModelAttendeeRefIDColumn = "attendee_ref_id"
 	// EventModelBusyColumn is the column json value busy
 	EventModelBusyColumn = "busy"
 	// EventModelCalendarIDColumn is the column json value calendar_id
@@ -67,12 +68,6 @@ const (
 	EventModelNameColumn = "name"
 	// EventModelOwnerRefIDColumn is the column json value owner_ref_id
 	EventModelOwnerRefIDColumn = "owner_ref_id"
-	// EventModelParticipantsColumn is the column json value participants
-	EventModelParticipantsColumn = "participants"
-	// EventModelParticipantsStatusColumn is the column json value status
-	EventModelParticipantsStatusColumn = "status"
-	// EventModelParticipantsUserRefIDColumn is the column json value user_ref_id
-	EventModelParticipantsUserRefIDColumn = "user_ref_id"
 	// EventModelRefIDColumn is the column json value ref_id
 	EventModelRefIDColumn = "ref_id"
 	// EventModelRefTypeColumn is the column json value ref_type
@@ -295,226 +290,6 @@ func (o *EventLocation) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
-// EventParticipantsStatus is the enumeration type for status
-type EventParticipantsStatus int32
-
-// toEventParticipantsStatusPointer is the enumeration pointer type for status
-func toEventParticipantsStatusPointer(v int32) *EventParticipantsStatus {
-	nv := EventParticipantsStatus(v)
-	return &nv
-}
-
-// toEventParticipantsStatusEnum is the enumeration pointer wrapper for status
-func toEventParticipantsStatusEnum(v *EventParticipantsStatus) string {
-	if v == nil {
-		return toEventParticipantsStatusPointer(0).String()
-	}
-	return v.String()
-}
-
-// UnmarshalBSONValue for unmarshaling value
-func (v *EventParticipantsStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
-	val := bson.RawValue{Type: t, Value: data}
-	switch t {
-	case bsontype.Int32:
-		*v = EventParticipantsStatus(val.Int32())
-	case bsontype.String:
-		switch val.StringValue() {
-		case "UNKNOWN":
-			*v = EventParticipantsStatus(0)
-		case "MAYBE":
-			*v = EventParticipantsStatus(1)
-		case "GOING":
-			*v = EventParticipantsStatus(2)
-		case "NOT_GOING":
-			*v = EventParticipantsStatus(3)
-		}
-	}
-	return nil
-}
-
-// UnmarshalJSON unmarshals the enum value
-func (v *EventParticipantsStatus) UnmarshalJSON(buf []byte) error {
-	var val string
-	if err := json.Unmarshal(buf, &val); err != nil {
-		return err
-	}
-	switch val {
-	case "UNKNOWN":
-		*v = 0
-	case "MAYBE":
-		*v = 1
-	case "GOING":
-		*v = 2
-	case "NOT_GOING":
-		*v = 3
-	}
-	return nil
-}
-
-// MarshalJSON marshals the enum value
-func (v EventParticipantsStatus) MarshalJSON() ([]byte, error) {
-	switch v {
-	case 0:
-		return json.Marshal("UNKNOWN")
-	case 1:
-		return json.Marshal("MAYBE")
-	case 2:
-		return json.Marshal("GOING")
-	case 3:
-		return json.Marshal("NOT_GOING")
-	}
-	return nil, fmt.Errorf("unexpected enum value")
-}
-
-// String returns the string value for ParticipantsStatus
-func (v EventParticipantsStatus) String() string {
-	switch int32(v) {
-	case 0:
-		return "UNKNOWN"
-	case 1:
-		return "MAYBE"
-	case 2:
-		return "GOING"
-	case 3:
-		return "NOT_GOING"
-	}
-	return "unset"
-}
-
-// FromInterface for decoding from an interface
-func (v *EventParticipantsStatus) FromInterface(o interface{}) error {
-	switch val := o.(type) {
-	case EventParticipantsStatus:
-		*v = val
-	case int32:
-		*v = EventParticipantsStatus(int32(val))
-	case int:
-		*v = EventParticipantsStatus(int32(val))
-	case string:
-		switch val {
-		case "UNKNOWN":
-			*v = EventParticipantsStatus(0)
-		case "MAYBE":
-			*v = EventParticipantsStatus(1)
-		case "GOING":
-			*v = EventParticipantsStatus(2)
-		case "NOT_GOING":
-			*v = EventParticipantsStatus(3)
-		}
-	}
-	return nil
-}
-
-const (
-	// EventParticipantsStatusUnknown is the enumeration value for unknown
-	EventParticipantsStatusUnknown EventParticipantsStatus = 0
-	// EventParticipantsStatusMaybe is the enumeration value for maybe
-	EventParticipantsStatusMaybe EventParticipantsStatus = 1
-	// EventParticipantsStatusGoing is the enumeration value for going
-	EventParticipantsStatusGoing EventParticipantsStatus = 2
-	// EventParticipantsStatusNotGoing is the enumeration value for not_going
-	EventParticipantsStatusNotGoing EventParticipantsStatus = 3
-)
-
-// EventParticipants represents the object structure for participants
-type EventParticipants struct {
-	// Status the status of the participant
-	Status EventParticipantsStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
-	// UserRefID the user ref_id of the participant
-	UserRefID string `json:"user_ref_id" codec:"user_ref_id" bson:"user_ref_id" yaml:"user_ref_id" faker:"-"`
-}
-
-func toEventParticipantsObject(o interface{}, isoptional bool) interface{} {
-	switch v := o.(type) {
-	case *EventParticipants:
-		return v.ToMap()
-
-	case EventParticipantsStatus:
-		return v.String()
-
-	default:
-		return o
-	}
-}
-
-// ToMap returns the object as a map
-func (o *EventParticipants) ToMap() map[string]interface{} {
-	o.setDefaults(true)
-	return map[string]interface{}{
-		// Status the status of the participant
-		"status": toEventParticipantsObject(o.Status, false),
-		// UserRefID the user ref_id of the participant
-		"user_ref_id": toEventParticipantsObject(o.UserRefID, false),
-	}
-}
-
-func (o *EventParticipants) setDefaults(frommap bool) {
-
-	if frommap {
-		o.FromMap(map[string]interface{}{})
-	}
-}
-
-// FromMap attempts to load data into object from a map
-func (o *EventParticipants) FromMap(kv map[string]interface{}) {
-
-	// if coming from db
-	if id, ok := kv["_id"]; ok && id != "" {
-		kv["id"] = id
-	}
-	if val, ok := kv["status"].(EventParticipantsStatus); ok {
-		o.Status = val
-	} else {
-		if em, ok := kv["status"].(map[string]interface{}); ok {
-
-			ev := em["calendar.status"].(string)
-			switch ev {
-			case "unknown", "UNKNOWN":
-				o.Status = 0
-			case "maybe", "MAYBE":
-				o.Status = 1
-			case "going", "GOING":
-				o.Status = 2
-			case "not_going", "NOT_GOING":
-				o.Status = 3
-			}
-		}
-		if em, ok := kv["status"].(string); ok {
-			switch em {
-			case "unknown", "UNKNOWN":
-				o.Status = 0
-			case "maybe", "MAYBE":
-				o.Status = 1
-			case "going", "GOING":
-				o.Status = 2
-			case "not_going", "NOT_GOING":
-				o.Status = 3
-			}
-		}
-	}
-	if val, ok := kv["user_ref_id"].(string); ok {
-		o.UserRefID = val
-	} else {
-		if val, ok := kv["user_ref_id"]; ok {
-			if val == nil {
-				o.UserRefID = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.UserRefID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	o.setDefaults(false)
-}
-
 // EventStartDate represents the object structure for start_date
 type EventStartDate struct {
 	// Epoch the date in epoch format
@@ -726,6 +501,8 @@ const (
 type Event struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
+	// AttendeeRefID ref_id of the user from whom's calendar this event was exported
+	AttendeeRefID string `json:"attendee_ref_id" codec:"attendee_ref_id" bson:"attendee_ref_id" yaml:"attendee_ref_id" faker:"-"`
 	// Busy true if the user is marked as busy in this event
 	Busy bool `json:"busy" codec:"busy" bson:"busy" yaml:"busy" faker:"-"`
 	// CalendarID unique project id this event belongs to
@@ -746,8 +523,6 @@ type Event struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// OwnerRefID owner ref_id of the event
 	OwnerRefID string `json:"owner_ref_id" codec:"owner_ref_id" bson:"owner_ref_id" yaml:"owner_ref_id" faker:"-"`
-	// Participants participants of the event
-	Participants []EventParticipants `json:"participants" codec:"participants" bson:"participants" yaml:"participants" faker:"-"`
 	// RefID the calendar ID
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
@@ -778,13 +553,6 @@ func toEventObject(o interface{}, isoptional bool) interface{} {
 
 	case EventLocation:
 		return v.ToMap()
-
-	case []EventParticipants:
-		arr := make([]interface{}, 0)
-		for _, i := range v {
-			arr = append(arr, i.ToMap())
-		}
-		return arr
 
 	case EventStartDate:
 		return v.ToMap()
@@ -824,17 +592,13 @@ func (o *Event) GetModelName() datamodel.ModelNameType {
 
 // NewEventID provides a template for generating an ID field for Event
 func NewEventID(customerID string, refType string, refID string) string {
-	return hash.Values("Event", customerID, refType, refID)
+	return hash.Values(customerID, refType, refID, "user_ref_id")
 }
 
 func (o *Event) setDefaults(frommap bool) {
-	if o.Participants == nil {
-		o.Participants = make([]EventParticipants, 0)
-	}
 
 	if o.ID == "" {
-		// we will attempt to generate a consistent, unique ID from a hash
-		o.ID = hash.Values("Event", o.CustomerID, o.RefType, o.GetRefID())
+		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID, "user_ref_id")
 	}
 
 	if frommap {
@@ -1003,6 +767,7 @@ func (o *Event) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"active":                  toEventObject(o.Active, false),
+		"attendee_ref_id":         toEventObject(o.AttendeeRefID, false),
 		"busy":                    toEventObject(o.Busy, false),
 		"calendar_id":             toEventObject(o.CalendarID, false),
 		"customer_id":             toEventObject(o.CustomerID, false),
@@ -1013,7 +778,6 @@ func (o *Event) ToMap() map[string]interface{} {
 		"location":                toEventObject(o.Location, false),
 		"name":                    toEventObject(o.Name, false),
 		"owner_ref_id":            toEventObject(o.OwnerRefID, false),
-		"participants":            toEventObject(o.Participants, false),
 		"ref_id":                  toEventObject(o.RefID, false),
 		"ref_type":                toEventObject(o.RefType, false),
 		"start_date":              toEventObject(o.StartDate, false),
@@ -1041,6 +805,25 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 				o.Active = false
 			} else {
 				o.Active = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["attendee_ref_id"].(string); ok {
+		o.AttendeeRefID = val
+	} else {
+		if val, ok := kv["attendee_ref_id"]; ok {
+			if val == nil {
+				o.AttendeeRefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.AttendeeRefID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1232,70 +1015,6 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if o == nil {
-
-		o.Participants = make([]EventParticipants, 0)
-
-	}
-	if val, ok := kv["participants"]; ok {
-		if sv, ok := val.([]EventParticipants); ok {
-			o.Participants = sv
-		} else if sp, ok := val.([]*EventParticipants); ok {
-			o.Participants = o.Participants[:0]
-			for _, e := range sp {
-				o.Participants = append(o.Participants, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(EventParticipants); ok {
-					o.Participants = append(o.Participants, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm EventParticipants
-					fm.FromMap(av)
-					o.Participants = append(o.Participants, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av EventParticipants
-					av.FromMap(bkv)
-					o.Participants = append(o.Participants, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(EventParticipants); ok {
-					o.Participants = append(o.Participants, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm EventParticipants
-					fm.FromMap(r)
-					o.Participants = append(o.Participants, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := EventParticipants{}
-					fm.FromMap(r)
-					o.Participants = append(o.Participants, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm EventParticipants
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.Participants = append(o.Participants, fm)
-						}
-					}
-				}
-			}
-		}
-	}
-
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1412,6 +1131,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 func (o *Event) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
+	args = append(args, o.AttendeeRefID)
 	args = append(args, o.Busy)
 	args = append(args, o.CalendarID)
 	args = append(args, o.CustomerID)
@@ -1422,7 +1142,6 @@ func (o *Event) Hash() string {
 	args = append(args, o.Location)
 	args = append(args, o.Name)
 	args = append(args, o.OwnerRefID)
-	args = append(args, o.Participants)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.StartDate)
@@ -1436,6 +1155,8 @@ func (o *Event) Hash() string {
 type EventPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active *bool `json:"active,omitempty"`
+	// AttendeeRefID ref_id of the user from whom's calendar this event was exported
+	AttendeeRefID *string `json:"attendee_ref_id,omitempty"`
 	// Busy true if the user is marked as busy in this event
 	Busy *bool `json:"busy,omitempty"`
 	// CalendarID unique project id this event belongs to
@@ -1450,8 +1171,6 @@ type EventPartial struct {
 	Name *string `json:"name,omitempty"`
 	// OwnerRefID owner ref_id of the event
 	OwnerRefID *string `json:"owner_ref_id,omitempty"`
-	// Participants participants of the event
-	Participants []EventParticipants `json:"participants,omitempty"`
 	// RefID the calendar ID
 	RefID *string `json:"ref_id,omitempty"`
 	// RefType the record type
@@ -1472,18 +1191,18 @@ func (o *EventPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *EventPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":       toEventObject(o.Active, true),
-		"busy":         toEventObject(o.Busy, true),
-		"calendar_id":  toEventObject(o.CalendarID, true),
-		"description":  toEventObject(o.Description, true),
-		"end_date":     toEventObject(o.EndDate, true),
-		"location":     toEventObject(o.Location, true),
-		"name":         toEventObject(o.Name, true),
-		"owner_ref_id": toEventObject(o.OwnerRefID, true),
-		"participants": toEventObject(o.Participants, true),
-		"ref_id":       toEventObject(o.RefID, true),
-		"ref_type":     toEventObject(o.RefType, true),
-		"start_date":   toEventObject(o.StartDate, true),
+		"active":          toEventObject(o.Active, true),
+		"attendee_ref_id": toEventObject(o.AttendeeRefID, true),
+		"busy":            toEventObject(o.Busy, true),
+		"calendar_id":     toEventObject(o.CalendarID, true),
+		"description":     toEventObject(o.Description, true),
+		"end_date":        toEventObject(o.EndDate, true),
+		"location":        toEventObject(o.Location, true),
+		"name":            toEventObject(o.Name, true),
+		"owner_ref_id":    toEventObject(o.OwnerRefID, true),
+		"ref_id":          toEventObject(o.RefID, true),
+		"ref_type":        toEventObject(o.RefType, true),
+		"start_date":      toEventObject(o.StartDate, true),
 
 		"status": toEventStatusEnum(o.Status),
 	}
@@ -1494,14 +1213,6 @@ func (o *EventPartial) ToMap() map[string]interface{} {
 			if k == "end_date" {
 				if dt, ok := v.(*EventEndDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
-						delete(kv, k)
-					}
-				}
-			}
-
-			if k == "participants" {
-				if arr, ok := v.([]EventParticipants); ok {
-					if len(arr) == 0 {
 						delete(kv, k)
 					}
 				}
@@ -1557,6 +1268,23 @@ func (o *EventPartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.Active = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["attendee_ref_id"].(*string); ok {
+		o.AttendeeRefID = val
+	} else if val, ok := kv["attendee_ref_id"].(string); ok {
+		o.AttendeeRefID = &val
+	} else {
+		if val, ok := kv["attendee_ref_id"]; ok {
+			if val == nil {
+				o.AttendeeRefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.AttendeeRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1698,70 +1426,6 @@ func (o *EventPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-
-	if o == nil {
-
-		o.Participants = make([]EventParticipants, 0)
-
-	}
-	if val, ok := kv["participants"]; ok {
-		if sv, ok := val.([]EventParticipants); ok {
-			o.Participants = sv
-		} else if sp, ok := val.([]*EventParticipants); ok {
-			o.Participants = o.Participants[:0]
-			for _, e := range sp {
-				o.Participants = append(o.Participants, *e)
-			}
-		} else if a, ok := val.(primitive.A); ok {
-			for _, ae := range a {
-				if av, ok := ae.(EventParticipants); ok {
-					o.Participants = append(o.Participants, av)
-				} else if av, ok := ae.(primitive.M); ok {
-					var fm EventParticipants
-					fm.FromMap(av)
-					o.Participants = append(o.Participants, fm)
-				} else {
-					b, _ := json.Marshal(ae)
-					bkv := make(map[string]interface{})
-					json.Unmarshal(b, &bkv)
-					var av EventParticipants
-					av.FromMap(bkv)
-					o.Participants = append(o.Participants, av)
-				}
-			}
-		} else if arr, ok := val.([]interface{}); ok {
-			for _, item := range arr {
-				if r, ok := item.(EventParticipants); ok {
-					o.Participants = append(o.Participants, r)
-				} else if r, ok := item.(map[string]interface{}); ok {
-					var fm EventParticipants
-					fm.FromMap(r)
-					o.Participants = append(o.Participants, fm)
-				} else if r, ok := item.(primitive.M); ok {
-					fm := EventParticipants{}
-					fm.FromMap(r)
-					o.Participants = append(o.Participants, fm)
-				}
-			}
-		} else {
-			arr := reflect.ValueOf(val)
-			if arr.Kind() == reflect.Slice {
-				for i := 0; i < arr.Len(); i++ {
-					item := arr.Index(i)
-					if item.CanAddr() {
-						v := item.Addr().MethodByName("ToMap")
-						if !v.IsNil() {
-							m := v.Call([]reflect.Value{})
-							var fm EventParticipants
-							fm.FromMap(m[0].Interface().(map[string]interface{}))
-							o.Participants = append(o.Participants, fm)
-						}
-					}
-				}
-			}
-		}
-	}
-
 	if val, ok := kv["ref_id"].(*string); ok {
 		o.RefID = val
 	} else if val, ok := kv["ref_id"].(string); ok {
