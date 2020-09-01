@@ -54,7 +54,7 @@ const (
 	CalendarModelUserRefIDColumn = "user_ref_id"
 )
 
-// Calendar details for the given integration calendar
+// Calendar details for the given integration calendar (deprecated)
 type Calendar struct {
 	// Active the status of the calendar
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`

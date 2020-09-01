@@ -505,7 +505,7 @@ type Event struct {
 	AttendeeRefID string `json:"attendee_ref_id" codec:"attendee_ref_id" bson:"attendee_ref_id" yaml:"attendee_ref_id" faker:"-"`
 	// Busy true if the user is marked as busy in this event
 	Busy bool `json:"busy" codec:"busy" bson:"busy" yaml:"busy" faker:"-"`
-	// CalendarID unique project id this event belongs to
+	// CalendarID unique project id this event belongs to (deprecated)
 	CalendarID string `json:"calendar_id" codec:"calendar_id" bson:"calendar_id" yaml:"calendar_id" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -523,7 +523,7 @@ type Event struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// OwnerRefID owner ref_id of the event
 	OwnerRefID string `json:"owner_ref_id" codec:"owner_ref_id" bson:"owner_ref_id" yaml:"owner_ref_id" faker:"-"`
-	// RefID the calendar ID
+	// RefID the event ref ID
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the record type
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
@@ -1159,7 +1159,7 @@ type EventPartial struct {
 	AttendeeRefID *string `json:"attendee_ref_id,omitempty"`
 	// Busy true if the user is marked as busy in this event
 	Busy *bool `json:"busy,omitempty"`
-	// CalendarID unique project id this event belongs to
+	// CalendarID unique project id this event belongs to (deprecated)
 	CalendarID *string `json:"calendar_id,omitempty"`
 	// Description the description of the event
 	Description *string `json:"description,omitempty"`
@@ -1171,7 +1171,7 @@ type EventPartial struct {
 	Name *string `json:"name,omitempty"`
 	// OwnerRefID owner ref_id of the event
 	OwnerRefID *string `json:"owner_ref_id,omitempty"`
-	// RefID the calendar ID
+	// RefID the event ref ID
 	RefID *string `json:"ref_id,omitempty"`
 	// RefType the record type
 	RefType *string `json:"ref_type,omitempty"`
