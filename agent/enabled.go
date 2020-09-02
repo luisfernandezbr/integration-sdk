@@ -1397,6 +1397,20 @@ func (o *Enabled) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Enabled) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Enabled) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // EnabledPartial is a partial struct for upsert mutations for Enabled
 type EnabledPartial struct {
 	// Architecture the architecture of the agent machine

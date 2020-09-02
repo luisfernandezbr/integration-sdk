@@ -886,6 +886,20 @@ func (o *Team) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Team) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Team) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {

@@ -1397,6 +1397,20 @@ func (o *UninstallRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *UninstallRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *UninstallRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UninstallRequestPartial is a partial struct for upsert mutations for UninstallRequest
 type UninstallRequestPartial struct {
 	// Architecture the architecture of the agent machine

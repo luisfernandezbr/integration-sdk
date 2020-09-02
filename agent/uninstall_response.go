@@ -1397,6 +1397,20 @@ func (o *UninstallResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *UninstallResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *UninstallResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UninstallResponsePartial is a partial struct for upsert mutations for UninstallResponse
 type UninstallResponsePartial struct {
 	// Architecture the architecture of the agent machine

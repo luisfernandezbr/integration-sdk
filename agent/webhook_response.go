@@ -2017,6 +2017,20 @@ func (o *WebhookResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WebhookResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WebhookResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WebhookResponsePartial is a partial struct for upsert mutations for WebhookResponse
 type WebhookResponsePartial struct {
 	// AgentReceivedDate set by agent when event is received

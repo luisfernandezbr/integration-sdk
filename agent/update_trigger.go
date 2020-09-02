@@ -406,6 +406,20 @@ func (o *UpdateTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *UpdateTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *UpdateTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UpdateTriggerPartial is a partial struct for upsert mutations for UpdateTrigger
 type UpdateTriggerPartial struct {
 	// UUID UUID of the agent to update

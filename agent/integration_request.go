@@ -3376,6 +3376,20 @@ func (o *IntegrationRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *IntegrationRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *IntegrationRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // IntegrationRequestPartial is a partial struct for upsert mutations for IntegrationRequest
 type IntegrationRequestPartial struct {
 	// Integration the integration details to add

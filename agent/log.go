@@ -1397,6 +1397,20 @@ func (o *Log) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Log) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Log) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // LogPartial is a partial struct for upsert mutations for Log
 type LogPartial struct {
 	// Architecture the architecture of the agent machine

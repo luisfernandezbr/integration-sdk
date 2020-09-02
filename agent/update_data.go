@@ -608,6 +608,20 @@ func (o *UpdateData) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *UpdateData) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *UpdateData) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UpdateDataPartial is a partial struct for upsert mutations for UpdateData
 type UpdateDataPartial struct {
 	// ID the ID of the object to mutate. this object must exist or will not succeed

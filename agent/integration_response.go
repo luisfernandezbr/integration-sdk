@@ -1445,6 +1445,20 @@ func (o *IntegrationResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *IntegrationResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *IntegrationResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // IntegrationResponsePartial is a partial struct for upsert mutations for IntegrationResponse
 type IntegrationResponsePartial struct {
 	// Architecture the architecture of the agent machine

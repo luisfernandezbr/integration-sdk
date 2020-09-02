@@ -1714,6 +1714,20 @@ func (o *CodequalityResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CodequalityResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CodequalityResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CodequalityResponsePartial is a partial struct for upsert mutations for CodequalityResponse
 type CodequalityResponsePartial struct {
 	// Architecture the architecture of the agent machine

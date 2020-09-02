@@ -869,6 +869,20 @@ func (o *PullRequestReview) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *PullRequestReview) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *PullRequestReview) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // PullRequestReviewPartial is a partial struct for upsert mutations for PullRequestReview
 type PullRequestReviewPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

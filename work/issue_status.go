@@ -432,6 +432,20 @@ func (o *IssueStatus) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *IssueStatus) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *IssueStatus) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // IssueStatusPartial is a partial struct for upsert mutations for IssueStatus
 type IssueStatusPartial struct {
 	// Description the description of the status

@@ -583,6 +583,20 @@ func (o *User) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *User) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *User) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UserPartial is a partial struct for upsert mutations for User
 type UserPartial struct {
 	// AssociatedRefID the ref id associated for this user in another system

@@ -1422,6 +1422,20 @@ func (o *EnrollResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *EnrollResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *EnrollResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // EnrollResponsePartial is a partial struct for upsert mutations for EnrollResponse
 type EnrollResponsePartial struct {
 	// Apikey The API key that the agent should use when communicating with the cloud

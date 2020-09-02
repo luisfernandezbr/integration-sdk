@@ -1113,6 +1113,20 @@ func (o *WebhookRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WebhookRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WebhookRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WebhookRequestPartial is a partial struct for upsert mutations for WebhookRequest
 type WebhookRequestPartial struct {
 	// Data Webhook data

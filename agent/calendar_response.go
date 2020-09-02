@@ -1700,6 +1700,20 @@ func (o *CalendarResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CalendarResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CalendarResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CalendarResponsePartial is a partial struct for upsert mutations for CalendarResponse
 type CalendarResponsePartial struct {
 	// Architecture the architecture of the agent machine

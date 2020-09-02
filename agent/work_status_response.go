@@ -2160,6 +2160,20 @@ func (o *WorkStatusResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WorkStatusResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WorkStatusResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WorkStatusResponsePartial is a partial struct for upsert mutations for WorkStatusResponse
 type WorkStatusResponsePartial struct {
 	// Architecture the architecture of the agent machine

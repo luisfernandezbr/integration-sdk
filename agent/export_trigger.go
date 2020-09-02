@@ -401,6 +401,20 @@ func (o *ExportTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ExportTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ExportTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ExportTriggerPartial is a partial struct for upsert mutations for ExportTrigger
 type ExportTriggerPartial struct {
 	// ReprocessHistorical This field is to differentiate between historical and incrementals

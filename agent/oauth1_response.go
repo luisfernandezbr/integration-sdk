@@ -472,6 +472,20 @@ func (o *Oauth1Response) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Oauth1Response) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Oauth1Response) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // Oauth1ResponsePartial is a partial struct for upsert mutations for Oauth1Response
 type Oauth1ResponsePartial struct {
 	// Error if the request was not successful, the description of the error

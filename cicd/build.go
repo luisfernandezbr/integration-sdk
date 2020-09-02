@@ -1080,6 +1080,20 @@ func (o *Build) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Build) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Build) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // BuildPartial is a partial struct for upsert mutations for Build
 type BuildPartial struct {
 	// Automated if the build was automated or manual

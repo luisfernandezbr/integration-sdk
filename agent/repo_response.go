@@ -1972,6 +1972,20 @@ func (o *RepoResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *RepoResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *RepoResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // RepoResponsePartial is a partial struct for upsert mutations for RepoResponse
 type RepoResponsePartial struct {
 	// Architecture the architecture of the agent machine

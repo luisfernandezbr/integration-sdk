@@ -385,6 +385,20 @@ func (o *CalendarTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CalendarTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CalendarTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CalendarTriggerPartial is a partial struct for upsert mutations for CalendarTrigger
 type CalendarTriggerPartial struct {
 	// IntegrationID the integration id

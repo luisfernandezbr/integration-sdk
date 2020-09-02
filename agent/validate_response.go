@@ -449,6 +449,20 @@ func (o *ValidateResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ValidateResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ValidateResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ValidateResponsePartial is a partial struct for upsert mutations for ValidateResponse
 type ValidateResponsePartial struct {
 	// Error if the validation was not successful, the description of the error

@@ -385,6 +385,20 @@ func (o *ProjectTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ProjectTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ProjectTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ProjectTriggerPartial is a partial struct for upsert mutations for ProjectTrigger
 type ProjectTriggerPartial struct {
 	// IntegrationID the integration id

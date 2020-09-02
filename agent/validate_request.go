@@ -433,6 +433,20 @@ func (o *ValidateRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ValidateRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ValidateRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ValidateRequestPartial is a partial struct for upsert mutations for ValidateRequest
 type ValidateRequestPartial struct {
 	// Config The configuration from the UI to be validated in JSON format as a string

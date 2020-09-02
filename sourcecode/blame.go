@@ -1206,6 +1206,20 @@ func (o *Blame) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Blame) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Blame) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // BlamePartial is a partial struct for upsert mutations for Blame
 type BlamePartial struct {
 	// Blanks the count of blank lines in the file

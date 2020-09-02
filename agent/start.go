@@ -1397,6 +1397,20 @@ func (o *Start) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Start) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Start) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // StartPartial is a partial struct for upsert mutations for Start
 type StartPartial struct {
 	// Architecture the architecture of the agent machine

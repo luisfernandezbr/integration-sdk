@@ -1627,6 +1627,20 @@ func (o *PullRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *PullRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *PullRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // PullRequestPartial is a partial struct for upsert mutations for PullRequest
 type PullRequestPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

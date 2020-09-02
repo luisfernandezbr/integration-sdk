@@ -667,6 +667,20 @@ func (o *ProjectCapability) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ProjectCapability) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ProjectCapability) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ProjectCapabilityPartial is a partial struct for upsert mutations for ProjectCapability
 type ProjectCapabilityPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

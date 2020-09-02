@@ -789,6 +789,20 @@ func (o *PullRequestComment) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *PullRequestComment) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *PullRequestComment) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // PullRequestCommentPartial is a partial struct for upsert mutations for PullRequestComment
 type PullRequestCommentPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

@@ -531,6 +531,20 @@ func (o *Calendar) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Calendar) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Calendar) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CalendarPartial is a partial struct for upsert mutations for Calendar
 type CalendarPartial struct {
 	// Active the status of the calendar

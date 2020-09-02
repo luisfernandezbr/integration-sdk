@@ -848,6 +848,20 @@ func (o *Repo) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Repo) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Repo) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // RepoPartial is a partial struct for upsert mutations for Repo
 type RepoPartial struct {
 	// Active the status of the repo

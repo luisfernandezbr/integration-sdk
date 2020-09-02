@@ -385,6 +385,20 @@ func (o *RestartTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *RestartTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *RestartTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // RestartTriggerPartial is a partial struct for upsert mutations for RestartTrigger
 type RestartTriggerPartial struct {
 	// UUID This UUID of the agent to trigger

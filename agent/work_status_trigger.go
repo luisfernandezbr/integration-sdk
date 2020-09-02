@@ -385,6 +385,20 @@ func (o *WorkStatusTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WorkStatusTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WorkStatusTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WorkStatusTriggerPartial is a partial struct for upsert mutations for WorkStatusTrigger
 type WorkStatusTriggerPartial struct {
 	// IntegrationID the integration id

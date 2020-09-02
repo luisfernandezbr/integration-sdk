@@ -3376,6 +3376,20 @@ func (o *CalendarRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CalendarRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CalendarRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CalendarRequestPartial is a partial struct for upsert mutations for CalendarRequest
 type CalendarRequestPartial struct {
 	// Integration the integration details to use

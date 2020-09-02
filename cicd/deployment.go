@@ -1105,6 +1105,20 @@ func (o *Deployment) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Deployment) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Deployment) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // DeploymentPartial is a partial struct for upsert mutations for Deployment
 type DeploymentPartial struct {
 	// Automated if the deployment was automated or manual

@@ -969,6 +969,20 @@ func (o *WebappIntegrationMutationRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WebappIntegrationMutationRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WebappIntegrationMutationRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WebappIntegrationMutationRequestPartial is a partial struct for upsert mutations for WebappIntegrationMutationRequest
 type WebappIntegrationMutationRequestPartial struct {
 	// Action Action to perform

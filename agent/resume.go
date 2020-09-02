@@ -1447,6 +1447,20 @@ func (o *Resume) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Resume) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Resume) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ResumePartial is a partial struct for upsert mutations for Resume
 type ResumePartial struct {
 	// Architecture the architecture of the agent machine

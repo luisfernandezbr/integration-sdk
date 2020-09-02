@@ -555,6 +555,20 @@ func (o *UpdateRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *UpdateRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *UpdateRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // UpdateRequestPartial is a partial struct for upsert mutations for UpdateRequest
 type UpdateRequestPartial struct {
 	// RequestDate the date when the request was made

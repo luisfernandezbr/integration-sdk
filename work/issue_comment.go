@@ -789,6 +789,20 @@ func (o *IssueComment) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *IssueComment) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *IssueComment) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // IssueCommentPartial is a partial struct for upsert mutations for IssueComment
 type IssueCommentPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

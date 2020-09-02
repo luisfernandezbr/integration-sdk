@@ -976,6 +976,20 @@ func (o *Board) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Board) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Board) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // BoardPartial is a partial struct for upsert mutations for Board
 type BoardPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

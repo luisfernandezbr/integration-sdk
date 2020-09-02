@@ -734,6 +734,20 @@ func (o *Oauth1Request) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Oauth1Request) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Oauth1Request) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // Oauth1RequestPartial is a partial struct for upsert mutations for Oauth1Request
 type Oauth1RequestPartial struct {
 	// CallbackURL The callback url to use.

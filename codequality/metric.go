@@ -866,6 +866,20 @@ func (o *Metric) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Metric) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Metric) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // MetricPartial is a partial struct for upsert mutations for Metric
 type MetricPartial struct {
 	// Branch branch name

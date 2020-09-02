@@ -3376,6 +3376,20 @@ func (o *WorkStatusRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *WorkStatusRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *WorkStatusRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // WorkStatusRequestPartial is a partial struct for upsert mutations for WorkStatusRequest
 type WorkStatusRequestPartial struct {
 	// Integration the integration details to use

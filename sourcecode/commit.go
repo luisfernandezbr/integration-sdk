@@ -713,6 +713,20 @@ func (o *Commit) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Commit) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Commit) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CommitPartial is a partial struct for upsert mutations for Commit
 type CommitPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

@@ -479,6 +479,20 @@ func (o *IssuePriority) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *IssuePriority) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *IssuePriority) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // IssuePriorityPartial is a partial struct for upsert mutations for IssuePriority
 type IssuePriorityPartial struct {
 	// Color an optional color in hex for display

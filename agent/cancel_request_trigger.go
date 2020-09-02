@@ -533,6 +533,20 @@ func (o *CancelRequestTrigger) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CancelRequestTrigger) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CancelRequestTrigger) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CancelRequestTriggerPartial is a partial struct for upsert mutations for CancelRequestTrigger
 type CancelRequestTriggerPartial struct {
 	// Command The command to cancel

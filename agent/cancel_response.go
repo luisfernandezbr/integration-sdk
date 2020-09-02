@@ -1540,6 +1540,20 @@ func (o *CancelResponse) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *CancelResponse) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *CancelResponse) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CancelResponsePartial is a partial struct for upsert mutations for CancelResponse
 type CancelResponsePartial struct {
 	// Architecture the architecture of the agent machine

@@ -1151,6 +1151,20 @@ func (o *Event) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Event) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Event) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // EventPartial is a partial struct for upsert mutations for Event
 type EventPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted

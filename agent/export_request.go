@@ -3485,6 +3485,20 @@ func (o *ExportRequest) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *ExportRequest) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *ExportRequest) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // ExportRequestPartial is a partial struct for upsert mutations for ExportRequest
 type ExportRequestPartial struct {
 	// Integrations The integrations that should be exported and their current configuration

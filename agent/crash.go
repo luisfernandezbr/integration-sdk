@@ -1565,6 +1565,20 @@ func (o *Crash) Hash() string {
 	return o.Hashcode
 }
 
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Crash) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Crash) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
+}
+
 // CrashPartial is a partial struct for upsert mutations for Crash
 type CrashPartial struct {
 	// Architecture the architecture of the agent machine
