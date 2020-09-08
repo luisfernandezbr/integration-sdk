@@ -591,14 +591,14 @@ func (o *Event) GetModelName() datamodel.ModelNameType {
 }
 
 // NewEventID provides a template for generating an ID field for Event
-func NewEventID(customerID string, refType string, refID string) string {
-	return hash.Values(customerID, refType, refID, "user_ref_id")
+func NewEventID(customerID string, refType string, refID string, OwnerRefID string) string {
+	return hash.Values(customerID, refType, refID, OwnerRefID)
 }
 
 func (o *Event) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID, "user_ref_id")
+		o.ID = hash.Values(o.CustomerID, o.RefType, o.RefID, o.OwnerRefID)
 	}
 
 	if frommap {
