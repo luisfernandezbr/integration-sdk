@@ -71,12 +71,22 @@ const (
 	IntegrationInstanceModelDeletedDateRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelEnrollmentIDColumn is the column json value enrollment_id
 	IntegrationInstanceModelEnrollmentIDColumn = "enrollment_id"
+	// IntegrationInstanceModelErrorDateColumn is the column json value error_date
+	IntegrationInstanceModelErrorDateColumn = "error_date"
+	// IntegrationInstanceModelErrorDateEpochColumn is the column json value epoch
+	IntegrationInstanceModelErrorDateEpochColumn = "epoch"
+	// IntegrationInstanceModelErrorDateOffsetColumn is the column json value offset
+	IntegrationInstanceModelErrorDateOffsetColumn = "offset"
+	// IntegrationInstanceModelErrorDateRfc3339Column is the column json value rfc3339
+	IntegrationInstanceModelErrorDateRfc3339Column = "rfc3339"
 	// IntegrationInstanceModelErrorMessageColumn is the column json value error_message
 	IntegrationInstanceModelErrorMessageColumn = "error_message"
 	// IntegrationInstanceModelErroredColumn is the column json value errored
 	IntegrationInstanceModelErroredColumn = "errored"
 	// IntegrationInstanceModelExportAcknowledgedColumn is the column json value export_acknowledged
 	IntegrationInstanceModelExportAcknowledgedColumn = "export_acknowledged"
+	// IntegrationInstanceModelExportLivenessColumn is the column json value export_liveness
+	IntegrationInstanceModelExportLivenessColumn = "export_liveness"
 	// IntegrationInstanceModelIDColumn is the column json value id
 	IntegrationInstanceModelIDColumn = "id"
 	// IntegrationInstanceModelIntegrationIDColumn is the column json value integration_id
@@ -280,6 +290,103 @@ func (o *IntegrationInstanceDeletedDate) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *IntegrationInstanceDeletedDate) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["epoch"].(int64); ok {
+		o.Epoch = val
+	} else {
+		if val, ok := kv["epoch"]; ok {
+			if val == nil {
+				o.Epoch = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Epoch = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["offset"].(int64); ok {
+		o.Offset = val
+	} else {
+		if val, ok := kv["offset"]; ok {
+			if val == nil {
+				o.Offset = 0
+			} else {
+				if tv, ok := val.(time.Time); ok {
+					val = datetime.TimeToEpoch(tv)
+				}
+				o.Offset = number.ToInt64Any(val)
+			}
+		}
+	}
+	if val, ok := kv["rfc3339"].(string); ok {
+		o.Rfc3339 = val
+	} else {
+		if val, ok := kv["rfc3339"]; ok {
+			if val == nil {
+				o.Rfc3339 = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Rfc3339 = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// IntegrationInstanceErrorDate represents the object structure for error_date
+type IntegrationInstanceErrorDate struct {
+	// Epoch the date in epoch format
+	Epoch int64 `json:"epoch" codec:"epoch" bson:"epoch" yaml:"epoch" faker:"-"`
+	// Offset the timezone offset from GMT
+	Offset int64 `json:"offset" codec:"offset" bson:"offset" yaml:"offset" faker:"-"`
+	// Rfc3339 the date in RFC3339 format
+	Rfc3339 string `json:"rfc3339" codec:"rfc3339" bson:"rfc3339" yaml:"rfc3339" faker:"-"`
+}
+
+func toIntegrationInstanceErrorDateObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IntegrationInstanceErrorDate:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *IntegrationInstanceErrorDate) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Epoch the date in epoch format
+		"epoch": toIntegrationInstanceErrorDateObject(o.Epoch, false),
+		// Offset the timezone offset from GMT
+		"offset": toIntegrationInstanceErrorDateObject(o.Offset, false),
+		// Rfc3339 the date in RFC3339 format
+		"rfc3339": toIntegrationInstanceErrorDateObject(o.Rfc3339, false),
+	}
+}
+
+func (o *IntegrationInstanceErrorDate) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IntegrationInstanceErrorDate) FromMap(kv map[string]interface{}) {
 
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
@@ -897,12 +1004,18 @@ type IntegrationInstance struct {
 	DeletedDate IntegrationInstanceDeletedDate `json:"deleted_date" codec:"deleted_date" bson:"deleted_date" yaml:"deleted_date" faker:"-"`
 	// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
 	EnrollmentID *string `json:"enrollment_id,omitempty" codec:"enrollment_id,omitempty" bson:"enrollment_id" yaml:"enrollment_id,omitempty" faker:"-"`
+	// ErrorDate The date of the error from an export run
+	ErrorDate *IntegrationInstanceErrorDate `json:"error_date,omitempty" codec:"error_date,omitempty" bson:"error_date" yaml:"error_date,omitempty" faker:"-"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty" codec:"error_message,omitempty" bson:"error_message" yaml:"error_message,omitempty" faker:"-"`
 	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty" codec:"errored,omitempty" bson:"errored" yaml:"errored,omitempty" faker:"-"`
 	// ExportAcknowledged Set to true an export has been received by the agent.
+	//
+	// Deprecated: no longer used, see export_liveness
 	ExportAcknowledged *bool `json:"export_acknowledged,omitempty" codec:"export_acknowledged,omitempty" bson:"export_acknowledged" yaml:"export_acknowledged,omitempty" faker:"-"`
+	// ExportLiveness Is true when agent is still exporting.
+	ExportLiveness *bool `json:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationID The unique id for the integration
@@ -972,6 +1085,9 @@ func toIntegrationInstanceObject(o interface{}, isoptional bool) interface{} {
 	case IntegrationInstanceDeletedDate:
 		return v.ToMap()
 
+	case *IntegrationInstanceErrorDate:
+		return v.ToMap()
+
 	case IntegrationInstanceLocation:
 		return v.String()
 
@@ -1027,6 +1143,9 @@ func NewIntegrationInstanceID(customerID string) string {
 }
 
 func (o *IntegrationInstance) setDefaults(frommap bool) {
+	if o.ErrorDate == nil {
+		o.ErrorDate = &IntegrationInstanceErrorDate{}
+	}
 	if o.ThrottledUntil == nil {
 		o.ThrottledUntil = &IntegrationInstanceThrottledUntil{}
 	}
@@ -1047,6 +1166,11 @@ func (o *IntegrationInstance) setDefaults(frommap bool) {
 	if o.ExportAcknowledged == nil {
 		var v bool
 		o.ExportAcknowledged = &v
+	}
+
+	if o.ExportLiveness == nil {
+		var v bool
+		o.ExportLiveness = &v
 	}
 
 	{
@@ -1203,9 +1327,11 @@ func (o *IntegrationInstance) ToMap() map[string]interface{} {
 		"deleted_by_user_id":      toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":            toIntegrationInstanceObject(o.DeletedDate, false),
 		"enrollment_id":           toIntegrationInstanceObject(o.EnrollmentID, true),
+		"error_date":              toIntegrationInstanceObject(o.ErrorDate, true),
 		"error_message":           toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":                 toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":     toIntegrationInstanceObject(o.ExportAcknowledged, true),
+		"export_liveness":         toIntegrationInstanceObject(o.ExportLiveness, true),
 		"id":                      toIntegrationInstanceObject(o.ID, false),
 		"integration_id":          toIntegrationInstanceObject(o.IntegrationID, false),
 		"integration_instance_id": toIntegrationInstanceObject(o.IntegrationInstanceID, true),
@@ -1475,6 +1601,41 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.ErrorDate == nil {
+		o.ErrorDate = &IntegrationInstanceErrorDate{}
+	}
+
+	if val, ok := kv["error_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ErrorDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceErrorDate); ok {
+			// struct
+			o.ErrorDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceErrorDate); ok {
+			// struct pointer
+			o.ErrorDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ErrorDate.Epoch = dt.Epoch
+			o.ErrorDate.Rfc3339 = dt.Rfc3339
+			o.ErrorDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt := datetime.NewDateWithTime(tv)
+			o.ErrorDate.Epoch = dt.Epoch
+			o.ErrorDate.Rfc3339 = dt.Rfc3339
+			o.ErrorDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ErrorDate.Epoch = dt.Epoch
+				o.ErrorDate.Rfc3339 = dt.Rfc3339
+				o.ErrorDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ErrorDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
 	} else if val, ok := kv["error_message"].(string); ok {
@@ -1509,6 +1670,7 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["export_acknowledged"].(*bool); ok {
 		o.ExportAcknowledged = val
 	} else if val, ok := kv["export_acknowledged"].(bool); ok {
@@ -1523,6 +1685,23 @@ func (o *IntegrationInstance) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.ExportAcknowledged = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["export_liveness"].(*bool); ok {
+		o.ExportLiveness = val
+	} else if val, ok := kv["export_liveness"].(bool); ok {
+		o.ExportLiveness = &val
+	} else {
+		if val, ok := kv["export_liveness"]; ok {
+			if val == nil {
+				o.ExportLiveness = nil
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["bool"]
+				}
+				o.ExportLiveness = number.BoolPointer(number.ToBoolAny(val))
 			}
 		}
 	}
@@ -2007,9 +2186,11 @@ func (o *IntegrationInstance) Hash() string {
 	args = append(args, o.DeletedByUserID)
 	args = append(args, o.DeletedDate)
 	args = append(args, o.EnrollmentID)
+	args = append(args, o.ErrorDate)
 	args = append(args, o.ErrorMessage)
 	args = append(args, o.Errored)
 	args = append(args, o.ExportAcknowledged)
+	args = append(args, o.ExportLiveness)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationID)
 	args = append(args, o.IntegrationInstanceID)
@@ -2078,9 +2259,15 @@ func (o *IntegrationInstance) GetHydrationQuery() string {
 			rfc3339
 			}
 			enrollment_id
+			error_date {
+			epoch
+			offset
+			rfc3339
+			}
 			error_message
 			errored
 			export_acknowledged
+			export_liveness
 			_id
 			integration_id
 			integration_instance_id
@@ -2165,12 +2352,24 @@ func getIntegrationInstanceQueryFields() string {
 	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\tenrollment_id\n")
+	// object with fields
+	sb.WriteString("\t\t\terror_date {\n")
+
+	// scalar
+	sb.WriteString("\t\t\tepoch\n")
+	// scalar
+	sb.WriteString("\t\t\toffset\n")
+	// scalar
+	sb.WriteString("\t\t\trfc3339\n")
+	sb.WriteString("\t\t\t}\n")
 	// scalar
 	sb.WriteString("\t\t\terror_message\n")
 	// scalar
 	sb.WriteString("\t\t\terrored\n")
 	// scalar
 	sb.WriteString("\t\t\texport_acknowledged\n")
+	// scalar
+	sb.WriteString("\t\t\texport_liveness\n")
 	// id
 	sb.WriteString("\t\t\t_id\n")
 	// scalar
@@ -2541,11 +2740,15 @@ type IntegrationInstancePartial struct {
 	DeletedDate *IntegrationInstanceDeletedDate `json:"deleted_date,omitempty"`
 	// EnrollmentID if the integration is linked to a self-managed agent, it will have the enrollment_id set otherwise will be null
 	EnrollmentID *string `json:"enrollment_id,omitempty"`
+	// ErrorDate The date of the error from an export run
+	ErrorDate *IntegrationInstanceErrorDate `json:"error_date,omitempty"`
 	// ErrorMessage The error message from an export run
 	ErrorMessage *string `json:"error_message,omitempty"`
 	// Errored If authorization failed by the agent or any other error
 	Errored *bool `json:"errored,omitempty"`
 	// ExportAcknowledged Set to true an export has been received by the agent.
+	//
+	// Deprecated: no longer used, see export_liveness
 	ExportAcknowledged *bool `json:"export_acknowledged,omitempty"`
 	// IntegrationID The unique id for the integration
 	IntegrationID *string `json:"integration_id,omitempty"`
@@ -2608,6 +2811,7 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 		"deleted_by_user_id":    toIntegrationInstanceObject(o.DeletedByUserID, true),
 		"deleted_date":          toIntegrationInstanceObject(o.DeletedDate, true),
 		"enrollment_id":         toIntegrationInstanceObject(o.EnrollmentID, true),
+		"error_date":            toIntegrationInstanceObject(o.ErrorDate, true),
 		"error_message":         toIntegrationInstanceObject(o.ErrorMessage, true),
 		"errored":               toIntegrationInstanceObject(o.Errored, true),
 		"export_acknowledged":   toIntegrationInstanceObject(o.ExportAcknowledged, true),
@@ -2646,6 +2850,13 @@ func (o *IntegrationInstancePartial) ToMap() map[string]interface{} {
 			}
 			if k == "deleted_date" {
 				if dt, ok := v.(*IntegrationInstanceDeletedDate); ok {
+					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+			if k == "error_date" {
+				if dt, ok := v.(*IntegrationInstanceErrorDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
 						delete(kv, k)
 					}
@@ -2919,6 +3130,41 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o.ErrorDate == nil {
+		o.ErrorDate = &IntegrationInstanceErrorDate{}
+	}
+
+	if val, ok := kv["error_date"]; ok {
+		if kv, ok := val.(map[string]interface{}); ok {
+			o.ErrorDate.FromMap(kv)
+		} else if sv, ok := val.(IntegrationInstanceErrorDate); ok {
+			// struct
+			o.ErrorDate = &sv
+		} else if sp, ok := val.(*IntegrationInstanceErrorDate); ok {
+			// struct pointer
+			o.ErrorDate = sp
+		} else if dt, ok := val.(*datetime.Date); ok && dt != nil {
+			o.ErrorDate.Epoch = dt.Epoch
+			o.ErrorDate.Rfc3339 = dt.Rfc3339
+			o.ErrorDate.Offset = dt.Offset
+		} else if tv, ok := val.(time.Time); ok && !tv.IsZero() {
+			dt := datetime.NewDateWithTime(tv)
+			o.ErrorDate.Epoch = dt.Epoch
+			o.ErrorDate.Rfc3339 = dt.Rfc3339
+			o.ErrorDate.Offset = dt.Offset
+		} else if s, ok := val.(string); ok && s != "" {
+			dt, err := datetime.NewDate(s)
+			if err == nil {
+				o.ErrorDate.Epoch = dt.Epoch
+				o.ErrorDate.Rfc3339 = dt.Rfc3339
+				o.ErrorDate.Offset = dt.Offset
+			}
+		}
+	} else {
+		o.ErrorDate.FromMap(map[string]interface{}{})
+	}
+
 	if val, ok := kv["error_message"].(*string); ok {
 		o.ErrorMessage = val
 	} else if val, ok := kv["error_message"].(string); ok {
@@ -2953,6 +3199,7 @@ func (o *IntegrationInstancePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["export_acknowledged"].(*bool); ok {
 		o.ExportAcknowledged = val
 	} else if val, ok := kv["export_acknowledged"].(bool); ok {

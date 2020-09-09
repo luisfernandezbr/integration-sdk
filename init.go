@@ -98,6 +98,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.ExportResponse)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.ExportStat":
+		o := new(dm_agent.ExportStat)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.ExportTrigger":
 		o := new(dm_agent.ExportTrigger)
 		o.FromMap(map[string]interface{}{})
@@ -441,6 +445,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.ExportRequestPartial)
 	case "agent.ExportResponse":
 		return new(dm_agent.ExportResponsePartial)
+	case "agent.ExportStat":
+		return new(dm_agent.ExportStatPartial)
 	case "agent.ExportTrigger":
 		return new(dm_agent.ExportTriggerPartial)
 	case "agent.IntegrationInstance":
@@ -719,6 +725,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.ExportData"),
 		datamodel.ModelNameType("agent.ExportRequest"),
 		datamodel.ModelNameType("agent.ExportResponse"),
+		datamodel.ModelNameType("agent.ExportStat"),
 		datamodel.ModelNameType("agent.ExportTrigger"),
 		datamodel.ModelNameType("agent.IntegrationInstance"),
 		datamodel.ModelNameType("agent.IntegrationInstanceStat"),
