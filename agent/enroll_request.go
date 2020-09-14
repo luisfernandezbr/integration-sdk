@@ -260,6 +260,16 @@ func (o *EnrollRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil
 }
 
+// GetRefType will return the ref_type
+func (o *EnrollRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *EnrollRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of EnrollRequest
 func (o *EnrollRequest) Clone() datamodel.Model {
 	c := new(EnrollRequest)

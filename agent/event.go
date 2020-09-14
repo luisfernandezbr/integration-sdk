@@ -729,6 +729,23 @@ func (o *Event) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Event) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Event) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Event) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Event
 func (o *Event) Clone() datamodel.Model {
 	c := new(Event)

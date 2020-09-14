@@ -952,6 +952,23 @@ func (o *Sprint) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Sprint) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Sprint) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Sprint) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Sprint
 func (o *Sprint) Clone() datamodel.Model {
 	c := new(Sprint)

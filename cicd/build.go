@@ -682,6 +682,23 @@ func (o *Build) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Build) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Build) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Build) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Build
 func (o *Build) Clone() datamodel.Model {
 	c := new(Build)

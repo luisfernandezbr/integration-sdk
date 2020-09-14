@@ -1225,6 +1225,23 @@ func (o *RepoResponse) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *RepoResponse) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *RepoResponse) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *RepoResponse) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of RepoResponse
 func (o *RepoResponse) Clone() datamodel.Model {
 	c := new(RepoResponse)

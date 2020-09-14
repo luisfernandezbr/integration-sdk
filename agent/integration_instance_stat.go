@@ -734,6 +734,23 @@ func (o *IntegrationInstanceStat) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IntegrationInstanceStat) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IntegrationInstanceStat) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IntegrationInstanceStat) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IntegrationInstanceStat
 func (o *IntegrationInstanceStat) Clone() datamodel.Model {
 	c := new(IntegrationInstanceStat)

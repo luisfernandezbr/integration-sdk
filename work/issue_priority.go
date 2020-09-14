@@ -197,6 +197,23 @@ func (o *IssuePriority) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IssuePriority) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IssuePriority) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IssuePriority) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IssuePriority
 func (o *IssuePriority) Clone() datamodel.Model {
 	c := new(IssuePriority)

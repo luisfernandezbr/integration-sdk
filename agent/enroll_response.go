@@ -741,6 +741,23 @@ func (o *EnrollResponse) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *EnrollResponse) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *EnrollResponse) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *EnrollResponse) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of EnrollResponse
 func (o *EnrollResponse) Clone() datamodel.Model {
 	c := new(EnrollResponse)

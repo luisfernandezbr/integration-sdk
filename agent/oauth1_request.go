@@ -319,6 +319,23 @@ func (o *Oauth1Request) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Oauth1Request) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Oauth1Request) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Oauth1Request) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Oauth1Request
 func (o *Oauth1Request) Clone() datamodel.Model {
 	c := new(Oauth1Request)

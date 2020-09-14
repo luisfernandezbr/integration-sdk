@@ -248,6 +248,23 @@ func (o *PullRequestBranch) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *PullRequestBranch) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *PullRequestBranch) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *PullRequestBranch) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of PullRequestBranch
 func (o *PullRequestBranch) Clone() datamodel.Model {
 	c := new(PullRequestBranch)

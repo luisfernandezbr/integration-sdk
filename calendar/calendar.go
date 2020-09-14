@@ -238,6 +238,23 @@ func (o *Calendar) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Calendar) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Calendar) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Calendar) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Calendar
 func (o *Calendar) Clone() datamodel.Model {
 	c := new(Calendar)

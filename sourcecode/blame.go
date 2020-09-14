@@ -636,6 +636,23 @@ func (o *Blame) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Blame) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Blame) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Blame) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Blame
 func (o *Blame) Clone() datamodel.Model {
 	c := new(Blame)

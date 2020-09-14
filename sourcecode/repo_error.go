@@ -236,6 +236,23 @@ func (o *RepoError) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *RepoError) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *RepoError) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *RepoError) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of RepoError
 func (o *RepoError) Clone() datamodel.Model {
 	c := new(RepoError)

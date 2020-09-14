@@ -945,6 +945,23 @@ func (o *IntegrationMutationRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IntegrationMutationRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IntegrationMutationRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IntegrationMutationRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IntegrationMutationRequest
 func (o *IntegrationMutationRequest) Clone() datamodel.Model {
 	c := new(IntegrationMutationRequest)

@@ -244,6 +244,23 @@ func (o *RepoWebhook) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *RepoWebhook) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *RepoWebhook) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *RepoWebhook) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of RepoWebhook
 func (o *RepoWebhook) Clone() datamodel.Model {
 	c := new(RepoWebhook)

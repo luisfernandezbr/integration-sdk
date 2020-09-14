@@ -268,6 +268,16 @@ func (o *Hook) GetTopicConfig() *datamodel.ModelTopicConfig {
 	return nil
 }
 
+// GetRefType will return the ref_type
+func (o *Hook) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Hook) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Hook
 func (o *Hook) Clone() datamodel.Model {
 	c := new(Hook)

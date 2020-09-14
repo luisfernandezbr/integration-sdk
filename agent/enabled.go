@@ -737,6 +737,23 @@ func (o *Enabled) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Enabled) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Enabled) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Enabled) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Enabled
 func (o *Enabled) Clone() datamodel.Model {
 	c := new(Enabled)

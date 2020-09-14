@@ -176,6 +176,23 @@ func (o *RepoTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *RepoTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *RepoTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *RepoTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of RepoTrigger
 func (o *RepoTrigger) Clone() datamodel.Model {
 	c := new(RepoTrigger)

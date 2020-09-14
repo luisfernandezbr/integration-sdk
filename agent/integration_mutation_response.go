@@ -1306,6 +1306,23 @@ func (o *IntegrationMutationResponse) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IntegrationMutationResponse) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IntegrationMutationResponse) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IntegrationMutationResponse) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IntegrationMutationResponse
 func (o *IntegrationMutationResponse) Clone() datamodel.Model {
 	c := new(IntegrationMutationResponse)

@@ -176,6 +176,23 @@ func (o *WorkStatusTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *WorkStatusTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *WorkStatusTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *WorkStatusTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of WorkStatusTrigger
 func (o *WorkStatusTrigger) Clone() datamodel.Model {
 	c := new(WorkStatusTrigger)

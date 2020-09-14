@@ -737,6 +737,23 @@ func (o *UninstallRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *UninstallRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *UninstallRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *UninstallRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of UninstallRequest
 func (o *UninstallRequest) Clone() datamodel.Model {
 	c := new(UninstallRequest)

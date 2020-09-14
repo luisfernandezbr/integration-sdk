@@ -745,6 +745,23 @@ func (o *Resume) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Resume) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Resume) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Resume) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Resume
 func (o *Resume) Clone() datamodel.Model {
 	c := new(Resume)

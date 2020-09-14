@@ -545,6 +545,23 @@ func (o *Board) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Board) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Board) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Board) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Board
 func (o *Board) Clone() datamodel.Model {
 	c := new(Board)

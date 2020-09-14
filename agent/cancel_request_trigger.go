@@ -295,6 +295,23 @@ func (o *CancelRequestTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *CancelRequestTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *CancelRequestTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *CancelRequestTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of CancelRequestTrigger
 func (o *CancelRequestTrigger) Clone() datamodel.Model {
 	c := new(CancelRequestTrigger)

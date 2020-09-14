@@ -1128,6 +1128,23 @@ func (o *ProjectResponse) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *ProjectResponse) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *ProjectResponse) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *ProjectResponse) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of ProjectResponse
 func (o *ProjectResponse) Clone() datamodel.Model {
 	c := new(ProjectResponse)

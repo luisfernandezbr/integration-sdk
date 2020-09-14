@@ -181,6 +181,23 @@ func (o *ExportTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *ExportTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *ExportTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *ExportTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of ExportTrigger
 func (o *ExportTrigger) Clone() datamodel.Model {
 	c := new(ExportTrigger)

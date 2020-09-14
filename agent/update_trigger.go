@@ -180,6 +180,23 @@ func (o *UpdateTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *UpdateTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *UpdateTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *UpdateTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of UpdateTrigger
 func (o *UpdateTrigger) Clone() datamodel.Model {
 	c := new(UpdateTrigger)

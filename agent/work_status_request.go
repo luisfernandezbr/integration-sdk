@@ -3117,6 +3117,23 @@ func (o *WorkStatusRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *WorkStatusRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *WorkStatusRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *WorkStatusRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of WorkStatusRequest
 func (o *WorkStatusRequest) Clone() datamodel.Model {
 	c := new(WorkStatusRequest)

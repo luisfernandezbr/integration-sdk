@@ -660,6 +660,23 @@ func (o *Enrollment) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Enrollment) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Enrollment) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Enrollment) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Enrollment
 func (o *Enrollment) Clone() datamodel.Model {
 	c := new(Enrollment)

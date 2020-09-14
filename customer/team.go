@@ -344,6 +344,23 @@ func (o *Team) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Team) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Team) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Team) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Team
 func (o *Team) Clone() datamodel.Model {
 	c := new(Team)

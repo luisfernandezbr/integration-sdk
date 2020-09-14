@@ -855,6 +855,23 @@ func (o *Pause) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Pause) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Pause) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Pause) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Pause
 func (o *Pause) Clone() datamodel.Model {
 	c := new(Pause)

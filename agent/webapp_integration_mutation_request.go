@@ -603,6 +603,23 @@ func (o *WebappIntegrationMutationRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *WebappIntegrationMutationRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *WebappIntegrationMutationRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *WebappIntegrationMutationRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of WebappIntegrationMutationRequest
 func (o *WebappIntegrationMutationRequest) Clone() datamodel.Model {
 	c := new(WebappIntegrationMutationRequest)

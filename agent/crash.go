@@ -851,6 +851,23 @@ func (o *Crash) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *Crash) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *Crash) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Crash) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of Crash
 func (o *Crash) Clone() datamodel.Model {
 	c := new(Crash)

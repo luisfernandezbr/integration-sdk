@@ -189,6 +189,23 @@ func (o *ValidateResponse) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *ValidateResponse) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *ValidateResponse) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *ValidateResponse) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of ValidateResponse
 func (o *ValidateResponse) Clone() datamodel.Model {
 	c := new(ValidateResponse)

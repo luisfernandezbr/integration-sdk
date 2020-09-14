@@ -176,6 +176,23 @@ func (o *ProjectTrigger) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *ProjectTrigger) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *ProjectTrigger) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *ProjectTrigger) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of ProjectTrigger
 func (o *ProjectTrigger) Clone() datamodel.Model {
 	c := new(ProjectTrigger)

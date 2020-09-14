@@ -362,6 +362,23 @@ func (o *IssueType) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IssueType) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IssueType) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IssueType) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IssueType
 func (o *IssueType) Clone() datamodel.Model {
 	c := new(IssueType)

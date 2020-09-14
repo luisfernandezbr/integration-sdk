@@ -1252,6 +1252,23 @@ func (o *IntegrationInstance) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *IntegrationInstance) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *IntegrationInstance) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *IntegrationInstance) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of IntegrationInstance
 func (o *IntegrationInstance) Clone() datamodel.Model {
 	c := new(IntegrationInstance)

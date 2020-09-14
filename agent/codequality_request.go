@@ -3117,6 +3117,23 @@ func (o *CodequalityRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *CodequalityRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *CodequalityRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *CodequalityRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of CodequalityRequest
 func (o *CodequalityRequest) Clone() datamodel.Model {
 	c := new(CodequalityRequest)

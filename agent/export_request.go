@@ -3124,6 +3124,23 @@ func (o *ExportRequest) GetCustomerID() string {
 
 }
 
+// SetCustomerID will return the customer_id
+func (o *ExportRequest) SetCustomerID(id string) {
+
+	o.CustomerID = id
+
+}
+
+// GetRefType will return the ref_type
+func (o *ExportRequest) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *ExportRequest) SetRefType(t string) {
+	o.RefType = t
+}
+
 // Clone returns an exact copy of ExportRequest
 func (o *ExportRequest) Clone() datamodel.Model {
 	c := new(ExportRequest)
