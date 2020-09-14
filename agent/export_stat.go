@@ -311,12 +311,16 @@ func (o *ExportStat) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *ExportStat) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *ExportStat) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of ExportStat

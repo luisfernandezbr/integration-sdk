@@ -247,12 +247,16 @@ func (o *Calendar) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *Calendar) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *Calendar) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of Calendar

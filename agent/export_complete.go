@@ -225,12 +225,16 @@ func (o *ExportComplete) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *ExportComplete) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *ExportComplete) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of ExportComplete

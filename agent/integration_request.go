@@ -3126,12 +3126,16 @@ func (o *IntegrationRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *IntegrationRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *IntegrationRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of IntegrationRequest

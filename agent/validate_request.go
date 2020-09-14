@@ -193,12 +193,16 @@ func (o *ValidateRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *ValidateRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *ValidateRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of ValidateRequest

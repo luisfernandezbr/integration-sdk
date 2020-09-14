@@ -506,12 +506,16 @@ func (o *Kanban) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *Kanban) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *Kanban) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of Kanban

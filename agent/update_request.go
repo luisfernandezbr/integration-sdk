@@ -301,12 +301,16 @@ func (o *UpdateRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *UpdateRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *UpdateRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of UpdateRequest

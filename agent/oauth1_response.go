@@ -202,12 +202,16 @@ func (o *Oauth1Response) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *Oauth1Response) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *Oauth1Response) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of Oauth1Response

@@ -185,12 +185,16 @@ func (o *RestartTrigger) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *RestartTrigger) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *RestartTrigger) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of RestartTrigger

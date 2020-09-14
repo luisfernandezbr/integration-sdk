@@ -1234,12 +1234,16 @@ func (o *RepoResponse) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *RepoResponse) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *RepoResponse) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of RepoResponse

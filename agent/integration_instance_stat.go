@@ -743,12 +743,16 @@ func (o *IntegrationInstanceStat) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *IntegrationInstanceStat) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *IntegrationInstanceStat) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of IntegrationInstanceStat

@@ -253,12 +253,16 @@ func (o *RepoWebhook) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *RepoWebhook) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *RepoWebhook) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of RepoWebhook

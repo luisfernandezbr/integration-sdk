@@ -316,12 +316,16 @@ func (o *PullRequestReviewRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *PullRequestReviewRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *PullRequestReviewRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of PullRequestReviewRequest

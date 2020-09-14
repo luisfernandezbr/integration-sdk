@@ -416,12 +416,16 @@ func (o *CancelRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *CancelRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *CancelRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of CancelRequest

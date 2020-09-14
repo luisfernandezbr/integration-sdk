@@ -612,12 +612,16 @@ func (o *WebappIntegrationMutationRequest) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *WebappIntegrationMutationRequest) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *WebappIntegrationMutationRequest) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of WebappIntegrationMutationRequest

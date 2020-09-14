@@ -282,12 +282,16 @@ func (o *ProjectCapability) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *ProjectCapability) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *ProjectCapability) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of ProjectCapability

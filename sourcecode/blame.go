@@ -645,12 +645,16 @@ func (o *Blame) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *Blame) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *Blame) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of Blame

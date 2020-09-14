@@ -695,12 +695,16 @@ func (o *Deployment) SetCustomerID(id string) {
 
 // GetRefType will return the ref_type
 func (o *Deployment) GetRefType() string {
+
 	return o.RefType
+
 }
 
 // SetRefType will return the ref_type
 func (o *Deployment) SetRefType(t string) {
-	o.RefType = t
+
+	o.RefType = id
+
 }
 
 // Clone returns an exact copy of Deployment
