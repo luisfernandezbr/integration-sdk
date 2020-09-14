@@ -242,30 +242,22 @@ func (o *User) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *User) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *User) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *User) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *User) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of User

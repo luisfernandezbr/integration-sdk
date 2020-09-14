@@ -443,30 +443,22 @@ func (o *Config) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *Config) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *Config) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *Config) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *Config) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of Config

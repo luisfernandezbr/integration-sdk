@@ -195,30 +195,22 @@ func (o *CostCenter) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *CostCenter) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *CostCenter) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *CostCenter) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *CostCenter) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of CostCenter

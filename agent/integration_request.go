@@ -3112,30 +3112,22 @@ func (o *IntegrationRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *IntegrationRequest) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *IntegrationRequest) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *IntegrationRequest) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *IntegrationRequest) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of IntegrationRequest

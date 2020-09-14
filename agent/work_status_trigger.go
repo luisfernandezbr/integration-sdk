@@ -171,30 +171,22 @@ func (o *WorkStatusTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *WorkStatusTrigger) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *WorkStatusTrigger) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *WorkStatusTrigger) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *WorkStatusTrigger) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of WorkStatusTrigger

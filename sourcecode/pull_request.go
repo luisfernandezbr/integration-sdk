@@ -831,30 +831,22 @@ func (o *PullRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *PullRequest) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *PullRequest) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *PullRequest) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *PullRequest) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of PullRequest

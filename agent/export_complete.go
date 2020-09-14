@@ -211,30 +211,22 @@ func (o *ExportComplete) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *ExportComplete) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *ExportComplete) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *ExportComplete) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *ExportComplete) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of ExportComplete

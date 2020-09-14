@@ -947,30 +947,22 @@ func (o *Sprint) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *Sprint) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *Sprint) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *Sprint) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *Sprint) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of Sprint

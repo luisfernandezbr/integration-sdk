@@ -654,30 +654,22 @@ func (o *WebhookRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *WebhookRequest) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *WebhookRequest) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *WebhookRequest) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *WebhookRequest) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of WebhookRequest

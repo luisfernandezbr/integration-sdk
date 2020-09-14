@@ -3112,30 +3112,22 @@ func (o *RepoRequest) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *RepoRequest) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *RepoRequest) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *RepoRequest) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *RepoRequest) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of RepoRequest

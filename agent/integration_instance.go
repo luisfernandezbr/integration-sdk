@@ -1247,30 +1247,22 @@ func (o *IntegrationInstance) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *IntegrationInstance) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *IntegrationInstance) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *IntegrationInstance) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *IntegrationInstance) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of IntegrationInstance

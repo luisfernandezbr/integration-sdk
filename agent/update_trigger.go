@@ -175,30 +175,22 @@ func (o *UpdateTrigger) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *UpdateTrigger) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *UpdateTrigger) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *UpdateTrigger) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *UpdateTrigger) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of UpdateTrigger

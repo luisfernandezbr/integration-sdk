@@ -178,30 +178,22 @@ func (o *IssueStatus) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *IssueStatus) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *IssueStatus) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *IssueStatus) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *IssueStatus) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of IssueStatus

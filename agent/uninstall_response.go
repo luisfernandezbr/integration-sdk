@@ -732,30 +732,22 @@ func (o *UninstallResponse) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *UninstallResponse) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *UninstallResponse) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *UninstallResponse) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *UninstallResponse) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of UninstallResponse

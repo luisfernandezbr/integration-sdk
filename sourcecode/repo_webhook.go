@@ -239,30 +239,22 @@ func (o *RepoWebhook) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *RepoWebhook) GetCustomerID() string {
-
 	return o.CustomerID
-
 }
 
 // SetCustomerID will return the customer_id
 func (o *RepoWebhook) SetCustomerID(id string) {
-
 	o.CustomerID = id
-
 }
 
 // GetRefType will return the ref_type
 func (o *RepoWebhook) GetRefType() string {
-
 	return o.RefType
-
 }
 
 // SetRefType will return the ref_type
 func (o *RepoWebhook) SetRefType(t string) {
-
 	o.RefType = t
-
 }
 
 // Clone returns an exact copy of RepoWebhook
