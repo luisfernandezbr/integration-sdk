@@ -197,7 +197,7 @@ func (o *UpdateTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *UpdateTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

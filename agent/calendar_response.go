@@ -970,7 +970,7 @@ func (o *CalendarResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *CalendarResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

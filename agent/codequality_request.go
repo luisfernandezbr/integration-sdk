@@ -3134,7 +3134,7 @@ func (o *CodequalityRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *CodequalityRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

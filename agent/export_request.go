@@ -3141,7 +3141,7 @@ func (o *ExportRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ExportRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

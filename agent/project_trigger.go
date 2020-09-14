@@ -193,7 +193,7 @@ func (o *ProjectTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ProjectTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

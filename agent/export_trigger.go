@@ -198,7 +198,7 @@ func (o *ExportTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ExportTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

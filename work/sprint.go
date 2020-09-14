@@ -969,7 +969,7 @@ func (o *Sprint) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Sprint) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

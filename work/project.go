@@ -796,7 +796,7 @@ func (o *Project) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Project) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

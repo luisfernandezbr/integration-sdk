@@ -1479,7 +1479,7 @@ func (o *WorkStatusResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *WorkStatusResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

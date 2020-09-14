@@ -751,7 +751,7 @@ func (o *IntegrationInstanceStat) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *IntegrationInstanceStat) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

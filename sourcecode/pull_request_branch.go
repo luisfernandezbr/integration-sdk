@@ -265,7 +265,7 @@ func (o *PullRequestBranch) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *PullRequestBranch) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

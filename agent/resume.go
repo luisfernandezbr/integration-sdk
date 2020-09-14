@@ -762,7 +762,7 @@ func (o *Resume) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Resume) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

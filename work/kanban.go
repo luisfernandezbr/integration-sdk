@@ -514,7 +514,7 @@ func (o *Kanban) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Kanban) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

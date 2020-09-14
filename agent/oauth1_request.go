@@ -336,7 +336,7 @@ func (o *Oauth1Request) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Oauth1Request) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

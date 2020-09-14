@@ -269,7 +269,7 @@ func (o *Branch) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Branch) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

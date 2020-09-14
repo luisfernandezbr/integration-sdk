@@ -762,7 +762,7 @@ func (o *IntegrationResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *IntegrationResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

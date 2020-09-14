@@ -962,7 +962,7 @@ func (o *IntegrationMutationRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *IntegrationMutationRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

@@ -261,7 +261,7 @@ func (o *ProjectWebhook) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ProjectWebhook) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

@@ -489,7 +489,7 @@ func (o *Repo) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Repo) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

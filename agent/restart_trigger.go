@@ -193,7 +193,7 @@ func (o *RestartTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *RestartTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

@@ -3134,7 +3134,7 @@ func (o *IntegrationRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *IntegrationRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

@@ -312,7 +312,7 @@ func (o *CancelRequestTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *CancelRequestTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

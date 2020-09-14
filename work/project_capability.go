@@ -290,7 +290,7 @@ func (o *ProjectCapability) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ProjectCapability) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

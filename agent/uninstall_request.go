@@ -754,7 +754,7 @@ func (o *UninstallRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *UninstallRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

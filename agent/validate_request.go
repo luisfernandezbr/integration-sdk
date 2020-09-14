@@ -201,7 +201,7 @@ func (o *ValidateRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ValidateRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

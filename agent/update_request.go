@@ -309,7 +309,7 @@ func (o *UpdateRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *UpdateRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

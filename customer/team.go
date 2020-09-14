@@ -361,7 +361,7 @@ func (o *Team) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Team) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

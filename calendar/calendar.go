@@ -255,7 +255,7 @@ func (o *Calendar) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Calendar) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

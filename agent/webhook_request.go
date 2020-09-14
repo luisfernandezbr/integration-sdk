@@ -676,7 +676,7 @@ func (o *WebhookRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *WebhookRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

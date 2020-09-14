@@ -620,7 +620,7 @@ func (o *WebappIntegrationMutationRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *WebappIntegrationMutationRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

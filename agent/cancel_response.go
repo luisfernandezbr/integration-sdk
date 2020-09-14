@@ -864,7 +864,7 @@ func (o *CancelResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *CancelResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

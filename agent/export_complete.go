@@ -233,7 +233,7 @@ func (o *ExportComplete) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ExportComplete) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

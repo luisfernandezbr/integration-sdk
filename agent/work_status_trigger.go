@@ -193,7 +193,7 @@ func (o *WorkStatusTrigger) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *WorkStatusTrigger) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

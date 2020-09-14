@@ -261,7 +261,7 @@ func (o *RepoWebhook) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *RepoWebhook) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

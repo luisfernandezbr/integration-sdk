@@ -214,7 +214,7 @@ func (o *IssuePriority) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *IssuePriority) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

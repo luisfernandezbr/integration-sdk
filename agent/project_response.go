@@ -1145,7 +1145,7 @@ func (o *ProjectResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *ProjectResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

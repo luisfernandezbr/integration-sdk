@@ -217,7 +217,7 @@ func (o *CostCenter) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *CostCenter) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

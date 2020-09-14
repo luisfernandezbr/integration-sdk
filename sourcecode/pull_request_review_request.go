@@ -324,7 +324,7 @@ func (o *PullRequestReviewRequest) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *PullRequestReviewRequest) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

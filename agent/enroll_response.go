@@ -758,7 +758,7 @@ func (o *EnrollResponse) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *EnrollResponse) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

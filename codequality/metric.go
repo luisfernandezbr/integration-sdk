@@ -456,7 +456,7 @@ func (o *Metric) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Metric) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

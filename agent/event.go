@@ -746,7 +746,7 @@ func (o *Event) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Event) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 

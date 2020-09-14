@@ -2336,7 +2336,7 @@ func (o *Issue) GetRefType() string {
 // SetRefType will return the ref_type
 func (o *Issue) SetRefType(t string) {
 
-	o.RefType = id
+	o.RefType = t
 
 }
 
