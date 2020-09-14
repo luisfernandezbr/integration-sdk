@@ -342,14 +342,14 @@ func (o *IssueComment) GetModelName() datamodel.ModelNameType {
 }
 
 // NewIssueCommentID provides a template for generating an ID field for IssueComment
-func NewIssueCommentID(customerID string, refID string, refType string, ProjectID string) string {
-	return hash.Values(customerID, refID, refType, ProjectID)
+func NewIssueCommentID(customerID string, refID string, refType string) string {
+	return hash.Values(customerID, refID, refType)
 }
 
 func (o *IssueComment) setDefaults(frommap bool) {
 
 	if o.ID == "" {
-		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType, o.ProjectID)
+		o.ID = hash.Values(o.CustomerID, o.RefID, o.RefType)
 	}
 
 	if frommap {
