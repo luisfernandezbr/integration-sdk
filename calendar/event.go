@@ -84,6 +84,8 @@ const (
 	EventModelStatusColumn = "status"
 	// EventModelUpdatedAtColumn is the column json value updated_ts
 	EventModelUpdatedAtColumn = "updated_ts"
+	// EventModelURLColumn is the column json value url
+	EventModelURLColumn = "url"
 )
 
 // EventEndDate represents the object structure for end_date
@@ -506,6 +508,8 @@ type Event struct {
 	// Busy true if the user is marked as busy in this event
 	Busy bool `json:"busy" codec:"busy" bson:"busy" yaml:"busy" faker:"-"`
 	// CalendarID unique project id this event belongs to (deprecated)
+	//
+	// Deprecated: removed in agent 4.0
 	CalendarID string `json:"calendar_id" codec:"calendar_id" bson:"calendar_id" yaml:"calendar_id" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
@@ -533,6 +537,8 @@ type Event struct {
 	Status EventStatus `json:"status" codec:"status" bson:"status" yaml:"status" faker:"-"`
 	// UpdatedAt the timestamp that the model was last updated fo real
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
+	// URL the url to the event ui
+	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -797,6 +803,7 @@ func (o *Event) ToMap() map[string]interface{} {
 
 		"status":     o.Status.String(),
 		"updated_ts": toEventObject(o.UpdatedAt, false),
+		"url":        toEventObject(o.URL, false),
 		"hashcode":   toEventObject(o.Hashcode, false),
 	}
 }
@@ -851,6 +858,7 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["calendar_id"].(string); ok {
 		o.CalendarID = val
 	} else {
@@ -1137,6 +1145,25 @@ func (o *Event) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["url"].(string); ok {
+		o.URL = val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.URL = fmt.Sprintf("%v", val)
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -1160,6 +1187,7 @@ func (o *Event) Hash() string {
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
 	args = append(args, o.UpdatedAt)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -1187,6 +1215,8 @@ type EventPartial struct {
 	// Busy true if the user is marked as busy in this event
 	Busy *bool `json:"busy,omitempty"`
 	// CalendarID unique project id this event belongs to (deprecated)
+	//
+	// Deprecated: removed in agent 4.0
 	CalendarID *string `json:"calendar_id,omitempty"`
 	// Description the description of the event
 	Description *string `json:"description,omitempty"`
@@ -1206,6 +1236,8 @@ type EventPartial struct {
 	StartDate *EventStartDate `json:"start_date,omitempty"`
 	// Status the status of the user in this event
 	Status *EventStatus `json:"status,omitempty"`
+	// URL the url to the event ui
+	URL *string `json:"url,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*EventPartial)(nil)
@@ -1232,6 +1264,7 @@ func (o *EventPartial) ToMap() map[string]interface{} {
 		"start_date":      toEventObject(o.StartDate, true),
 
 		"status": toEventStatusEnum(o.Status),
+		"url":    toEventObject(o.URL, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -1332,6 +1365,7 @@ func (o *EventPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["calendar_id"].(*string); ok {
 		o.CalendarID = val
 	} else if val, ok := kv["calendar_id"].(string); ok {
@@ -1546,6 +1580,23 @@ func (o *EventPartial) FromMap(kv map[string]interface{}) {
 						o.Status = toEventStatusPointer(2)
 					}
 				}
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
