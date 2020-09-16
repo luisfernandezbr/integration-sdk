@@ -171,9 +171,22 @@ func (o *Mutation) GetTopicConfig() *datamodel.ModelTopicConfig {
 
 // GetCustomerID will return the customer_id
 func (o *Mutation) GetCustomerID() string {
-
 	return o.CustomerID
+}
 
+// SetCustomerID will return the customer_id
+func (o *Mutation) SetCustomerID(id string) {
+	o.CustomerID = id
+}
+
+// GetRefType will return the ref_type
+func (o *Mutation) GetRefType() string {
+	return o.RefType
+}
+
+// SetRefType will return the ref_type
+func (o *Mutation) SetRefType(t string) {
+	o.RefType = t
 }
 
 // Clone returns an exact copy of Mutation
@@ -383,6 +396,20 @@ func (o *Mutation) Hash() string {
 	args = append(args, o.RefType)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
+}
+
+// SetIntegrationInstanceID will set the integration instance ID
+func (o *Mutation) SetIntegrationInstanceID(id string) {
+	if id == "" {
+		o.IntegrationInstanceID = nil
+	} else {
+		o.IntegrationInstanceID = &id
+	}
+}
+
+// GetIntegrationInstanceID will return the integration instance ID
+func (o *Mutation) GetIntegrationInstanceID() *string {
+	return o.IntegrationInstanceID
 }
 
 // MutationPartial is a partial struct for upsert mutations for Mutation
