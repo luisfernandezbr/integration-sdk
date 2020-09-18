@@ -39,6 +39,8 @@ const (
 	SprintModelActiveColumn = "active"
 	// SprintModelBoardIDColumn is the column json value board_id
 	SprintModelBoardIDColumn = "board_id"
+	// SprintModelBoardIdsColumn is the column json value board_ids
+	SprintModelBoardIdsColumn = "board_ids"
 	// SprintModelColumnsColumn is the column json value columns
 	SprintModelColumnsColumn = "columns"
 	// SprintModelColumnsIssueIdsColumn is the column json value issue_ids
@@ -723,7 +725,11 @@ type Sprint struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active bool `json:"active" codec:"active" bson:"active" yaml:"active" faker:"-"`
 	// BoardID the board that this kanban board is related to
+	//
+	// Deprecated: this field needs to be an array, added board_ids instead
 	BoardID *string `json:"board_id,omitempty" codec:"board_id,omitempty" bson:"board_id" yaml:"board_id,omitempty" faker:"-"`
+	// BoardIds the boards that this kanban board is related to
+	BoardIds []string `json:"board_ids" codec:"board_ids" bson:"board_ids" yaml:"board_ids" faker:"-"`
 	// Columns the columns for the board in the order that they are displayed and the issue ids for each
 	Columns []SprintColumns `json:"columns" codec:"columns" bson:"columns" yaml:"columns" faker:"-"`
 	// CompletedDate the date that the sprint was completed
@@ -833,6 +839,9 @@ func NewSprintID(customerID string, refID string, refType string) string {
 }
 
 func (o *Sprint) setDefaults(frommap bool) {
+	if o.BoardIds == nil {
+		o.BoardIds = make([]string, 0)
+	}
 	if o.Columns == nil {
 		o.Columns = make([]SprintColumns, 0)
 	}
@@ -1029,6 +1038,7 @@ func (o *Sprint) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"active":                  toSprintObject(o.Active, false),
 		"board_id":                toSprintObject(o.BoardID, true),
+		"board_ids":               toSprintObject(o.BoardIds, false),
 		"columns":                 toSprintObject(o.Columns, false),
 		"completed_date":          toSprintObject(o.CompletedDate, false),
 		"customer_id":             toSprintObject(o.CustomerID, false),
@@ -1072,6 +1082,7 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["board_id"].(*string); ok {
 		o.BoardID = val
 	} else if val, ok := kv["board_id"].(string); ok {
@@ -1088,6 +1099,56 @@ func (o *Sprint) FromMap(kv map[string]interface{}) {
 				o.BoardID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["board_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for board_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for board_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for board_ids field")
+				}
+			}
+			o.BoardIds = na
+		}
+	}
+	if o.BoardIds == nil {
+		o.BoardIds = make([]string, 0)
 	}
 
 	if o == nil {
@@ -1583,6 +1644,7 @@ func (o *Sprint) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Active)
 	args = append(args, o.BoardID)
+	args = append(args, o.BoardIds)
 	args = append(args, o.Columns)
 	args = append(args, o.CompletedDate)
 	args = append(args, o.CustomerID)
@@ -1624,7 +1686,11 @@ type SprintPartial struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
 	Active *bool `json:"active,omitempty"`
 	// BoardID the board that this kanban board is related to
+	//
+	// Deprecated: this field needs to be an array, added board_ids instead
 	BoardID *string `json:"board_id,omitempty"`
+	// BoardIds the boards that this kanban board is related to
+	BoardIds []string `json:"board_ids,omitempty"`
 	// Columns the columns for the board in the order that they are displayed and the issue ids for each
 	Columns []SprintColumns `json:"columns,omitempty"`
 	// CompletedDate the date that the sprint was completed
@@ -1663,6 +1729,7 @@ func (o *SprintPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
 		"active":         toSprintObject(o.Active, true),
 		"board_id":       toSprintObject(o.BoardID, true),
+		"board_ids":      toSprintObject(o.BoardIds, true),
 		"columns":        toSprintObject(o.Columns, true),
 		"completed_date": toSprintObject(o.CompletedDate, true),
 		"deleted":        toSprintObject(o.Deleted, true),
@@ -1681,6 +1748,14 @@ func (o *SprintPartial) ToMap() map[string]interface{} {
 		if v == nil || reflect.ValueOf(v).IsZero() {
 			delete(kv, k)
 		} else {
+
+			if k == "board_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
 
 			if k == "columns" {
 				if arr, ok := v.([]SprintColumns); ok {
@@ -1780,6 +1855,7 @@ func (o *SprintPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["board_id"].(*string); ok {
 		o.BoardID = val
 	} else if val, ok := kv["board_id"].(string); ok {
@@ -1796,6 +1872,56 @@ func (o *SprintPartial) FromMap(kv map[string]interface{}) {
 				o.BoardID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["board_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for board_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for board_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for board_ids field")
+				}
+			}
+			o.BoardIds = na
+		}
+	}
+	if o.BoardIds == nil {
+		o.BoardIds = make([]string, 0)
 	}
 
 	if o == nil {
