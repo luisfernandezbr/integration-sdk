@@ -181,6 +181,22 @@ const (
 	IssueModelTransitionsNameColumn = "name"
 	// IssueModelTransitionsRefIDColumn is the column json value ref_id
 	IssueModelTransitionsRefIDColumn = "ref_id"
+	// IssueModelTransitionsRequiresColumn is the column json value requires
+	IssueModelTransitionsRequiresColumn = "requires"
+	// IssueModelTransitionsRequiresNameColumn is the column json value name
+	IssueModelTransitionsRequiresNameColumn = "name"
+	// IssueModelTransitionsRequiresRefIDColumn is the column json value ref_id
+	IssueModelTransitionsRequiresRefIDColumn = "ref_id"
+	// IssueModelTransitionsRequiresTypeColumn is the column json value type
+	IssueModelTransitionsRequiresTypeColumn = "type"
+	// IssueModelTransitionsRequiresValuesColumn is the column json value values
+	IssueModelTransitionsRequiresValuesColumn = "values"
+	// IssueModelTransitionsRequiresValuesNameColumn is the column json value name
+	IssueModelTransitionsRequiresValuesNameColumn = "name"
+	// IssueModelTransitionsRequiresValuesRefIDColumn is the column json value ref_id
+	IssueModelTransitionsRequiresValuesRefIDColumn = "ref_id"
+	// IssueModelTransitionsTerminalColumn is the column json value terminal
+	IssueModelTransitionsTerminalColumn = "terminal"
 	// IssueModelTypeColumn is the column json value type
 	IssueModelTypeColumn = "type"
 	// IssueModelTypeIDColumn is the column json value type_id
@@ -1884,18 +1900,399 @@ func (o *IssuePlannedStartDate) FromMap(kv map[string]interface{}) {
 	o.setDefaults(false)
 }
 
+// IssueTransitionsRequiresType is the enumeration type for type
+type IssueTransitionsRequiresType int32
+
+// toIssueTransitionsRequiresTypePointer is the enumeration pointer type for type
+func toIssueTransitionsRequiresTypePointer(v int32) *IssueTransitionsRequiresType {
+	nv := IssueTransitionsRequiresType(v)
+	return &nv
+}
+
+// toIssueTransitionsRequiresTypeEnum is the enumeration pointer wrapper for type
+func toIssueTransitionsRequiresTypeEnum(v *IssueTransitionsRequiresType) string {
+	if v == nil {
+		return toIssueTransitionsRequiresTypePointer(0).String()
+	}
+	return v.String()
+}
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *IssueTransitionsRequiresType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = IssueTransitionsRequiresType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "TEXT":
+			*v = IssueTransitionsRequiresType(0)
+		case "SELECT":
+			*v = IssueTransitionsRequiresType(1)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v *IssueTransitionsRequiresType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
+	case "TEXT":
+		*v = 0
+	case "SELECT":
+		*v = 1
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v IssueTransitionsRequiresType) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("TEXT")
+	case 1:
+		return json.Marshal("SELECT")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for TransitionsRequiresType
+func (v IssueTransitionsRequiresType) String() string {
+	switch int32(v) {
+	case 0:
+		return "TEXT"
+	case 1:
+		return "SELECT"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *IssueTransitionsRequiresType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case IssueTransitionsRequiresType:
+		*v = val
+	case int32:
+		*v = IssueTransitionsRequiresType(int32(val))
+	case int:
+		*v = IssueTransitionsRequiresType(int32(val))
+	case string:
+		switch val {
+		case "TEXT":
+			*v = IssueTransitionsRequiresType(0)
+		case "SELECT":
+			*v = IssueTransitionsRequiresType(1)
+		}
+	}
+	return nil
+}
+
+const (
+	// IssueTransitionsRequiresTypeText is the enumeration value for text
+	IssueTransitionsRequiresTypeText IssueTransitionsRequiresType = 0
+	// IssueTransitionsRequiresTypeSelect is the enumeration value for select
+	IssueTransitionsRequiresTypeSelect IssueTransitionsRequiresType = 1
+)
+
+// IssueTransitionsRequiresValues represents the object structure for values
+type IssueTransitionsRequiresValues struct {
+	// Name the name of the value, to be displayed
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the id of the field, if any
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+}
+
+func toIssueTransitionsRequiresValuesObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueTransitionsRequiresValues:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *IssueTransitionsRequiresValues) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the name of the value, to be displayed
+		"name": toIssueTransitionsRequiresValuesObject(o.Name, false),
+		// RefID the id of the field, if any
+		"ref_id": toIssueTransitionsRequiresValuesObject(o.RefID, false),
+	}
+}
+
+func (o *IssueTransitionsRequiresValues) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueTransitionsRequiresValues) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// IssueTransitionsRequires represents the object structure for requires
+type IssueTransitionsRequires struct {
+	// Name the name of the field to change
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the id of the field, if any
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Type the type of the field
+	Type IssueTransitionsRequiresType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	// Values if type is select, these are the values to select from
+	Values []IssueTransitionsRequiresValues `json:"values" codec:"values" bson:"values" yaml:"values" faker:"-"`
+}
+
+func toIssueTransitionsRequiresObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *IssueTransitionsRequires:
+		return v.ToMap()
+
+	case IssueTransitionsRequiresType:
+		return v.String()
+
+	case []IssueTransitionsRequiresValues:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *IssueTransitionsRequires) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the name of the field to change
+		"name": toIssueTransitionsRequiresObject(o.Name, false),
+		// RefID the id of the field, if any
+		"ref_id": toIssueTransitionsRequiresObject(o.RefID, false),
+		// Type the type of the field
+		"type": toIssueTransitionsRequiresObject(o.Type, false),
+		// Values if type is select, these are the values to select from
+		"values": toIssueTransitionsRequiresObject(o.Values, false),
+	}
+}
+
+func (o *IssueTransitionsRequires) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *IssueTransitionsRequires) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["type"].(IssueTransitionsRequiresType); ok {
+		o.Type = val
+	} else {
+		if em, ok := kv["type"].(map[string]interface{}); ok {
+
+			ev := em["work.type"].(string)
+			switch ev {
+			case "text", "TEXT":
+				o.Type = 0
+			case "select", "SELECT":
+				o.Type = 1
+			}
+		}
+		if em, ok := kv["type"].(string); ok {
+			switch em {
+			case "text", "TEXT":
+				o.Type = 0
+			case "select", "SELECT":
+				o.Type = 1
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Values = make([]IssueTransitionsRequiresValues, 0)
+
+	}
+	if val, ok := kv["values"]; ok {
+		if sv, ok := val.([]IssueTransitionsRequiresValues); ok {
+			o.Values = sv
+		} else if sp, ok := val.([]*IssueTransitionsRequiresValues); ok {
+			o.Values = o.Values[:0]
+			for _, e := range sp {
+				o.Values = append(o.Values, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueTransitionsRequiresValues); ok {
+					o.Values = append(o.Values, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueTransitionsRequiresValues
+					fm.FromMap(av)
+					o.Values = append(o.Values, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IssueTransitionsRequiresValues
+					av.FromMap(bkv)
+					o.Values = append(o.Values, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueTransitionsRequiresValues); ok {
+					o.Values = append(o.Values, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueTransitionsRequiresValues
+					fm.FromMap(r)
+					o.Values = append(o.Values, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueTransitionsRequiresValues{}
+					fm.FromMap(r)
+					o.Values = append(o.Values, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueTransitionsRequiresValues
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Values = append(o.Values, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	o.setDefaults(false)
+}
+
 // IssueTransitions represents the object structure for transitions
 type IssueTransitions struct {
 	// Name the name of the status
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID id of the status
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// Requires any fields that must be updated if this status is changed
+	Requires []IssueTransitionsRequires `json:"requires" codec:"requires" bson:"requires" yaml:"requires" faker:"-"`
+	// Terminal if this transitions to a terminal statuses
+	Terminal bool `json:"terminal" codec:"terminal" bson:"terminal" yaml:"terminal" faker:"-"`
 }
 
 func toIssueTransitionsObject(o interface{}, isoptional bool) interface{} {
 	switch v := o.(type) {
 	case *IssueTransitions:
 		return v.ToMap()
+
+	case []IssueTransitionsRequires:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
 
 	default:
 		return o
@@ -1910,6 +2307,10 @@ func (o *IssueTransitions) ToMap() map[string]interface{} {
 		"name": toIssueTransitionsObject(o.Name, false),
 		// RefID id of the status
 		"ref_id": toIssueTransitionsObject(o.RefID, false),
+		// Requires any fields that must be updated if this status is changed
+		"requires": toIssueTransitionsObject(o.Requires, false),
+		// Terminal if this transitions to a terminal statuses
+		"terminal": toIssueTransitionsObject(o.Terminal, false),
 	}
 }
 
@@ -1962,6 +2363,81 @@ func (o *IssueTransitions) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Requires = make([]IssueTransitionsRequires, 0)
+
+	}
+	if val, ok := kv["requires"]; ok {
+		if sv, ok := val.([]IssueTransitionsRequires); ok {
+			o.Requires = sv
+		} else if sp, ok := val.([]*IssueTransitionsRequires); ok {
+			o.Requires = o.Requires[:0]
+			for _, e := range sp {
+				o.Requires = append(o.Requires, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(IssueTransitionsRequires); ok {
+					o.Requires = append(o.Requires, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm IssueTransitionsRequires
+					fm.FromMap(av)
+					o.Requires = append(o.Requires, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av IssueTransitionsRequires
+					av.FromMap(bkv)
+					o.Requires = append(o.Requires, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(IssueTransitionsRequires); ok {
+					o.Requires = append(o.Requires, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm IssueTransitionsRequires
+					fm.FromMap(r)
+					o.Requires = append(o.Requires, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := IssueTransitionsRequires{}
+					fm.FromMap(r)
+					o.Requires = append(o.Requires, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm IssueTransitionsRequires
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Requires = append(o.Requires, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	if val, ok := kv["terminal"].(bool); ok {
+		o.Terminal = val
+	} else {
+		if val, ok := kv["terminal"]; ok {
+			if val == nil {
+				o.Terminal = false
+			} else {
+				o.Terminal = number.ToBoolAny(val)
 			}
 		}
 	}
