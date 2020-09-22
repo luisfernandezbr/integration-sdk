@@ -150,6 +150,14 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_agent.Oauth1Response)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "agent.Oauth1UserIdentityRequest":
+		o := new(dm_agent.Oauth1UserIdentityRequest)
+		o.FromMap(map[string]interface{}{})
+		return o
+	case "agent.Oauth1UserIdentityResponse":
+		o := new(dm_agent.Oauth1UserIdentityResponse)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "agent.Pause":
 		o := new(dm_agent.Pause)
 		o.FromMap(map[string]interface{}{})
@@ -479,6 +487,10 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_agent.Oauth1RequestPartial)
 	case "agent.Oauth1Response":
 		return new(dm_agent.Oauth1ResponsePartial)
+	case "agent.Oauth1UserIdentityRequest":
+		return new(dm_agent.Oauth1UserIdentityRequestPartial)
+	case "agent.Oauth1UserIdentityResponse":
+		return new(dm_agent.Oauth1UserIdentityResponsePartial)
 	case "agent.Pause":
 		return new(dm_agent.PausePartial)
 	case "agent.Ping":
@@ -750,6 +762,8 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("agent.MutationResponse"),
 		datamodel.ModelNameType("agent.Oauth1Request"),
 		datamodel.ModelNameType("agent.Oauth1Response"),
+		datamodel.ModelNameType("agent.Oauth1UserIdentityRequest"),
+		datamodel.ModelNameType("agent.Oauth1UserIdentityResponse"),
 		datamodel.ModelNameType("agent.Pause"),
 		datamodel.ModelNameType("agent.Ping"),
 		datamodel.ModelNameType("agent.ProjectRequest"),
