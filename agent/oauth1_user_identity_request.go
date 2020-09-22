@@ -68,7 +68,7 @@ type Oauth1UserIdentityRequest struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// URL The URL to the endpoint for fetching the temporary token
+	// URL The URL to the endpoint for fetching the data
 	URL string `json:"url" codec:"url" bson:"url" yaml:"url" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
@@ -520,7 +520,7 @@ type Oauth1UserIdentityRequestPartial struct {
 	EnrollmentID *string `json:"enrollment_id,omitempty"`
 	// PrivateKey A private key for signing the oauth request.
 	PrivateKey *string `json:"private_key,omitempty"`
-	// URL The URL to the endpoint for fetching the temporary token
+	// URL The URL to the endpoint for fetching the data
 	URL *string `json:"url,omitempty"`
 }
 
