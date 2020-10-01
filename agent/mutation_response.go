@@ -30,36 +30,48 @@ const (
 const (
 	// MutationResponseModelCustomerIDColumn is the column json value customer_id
 	MutationResponseModelCustomerIDColumn = "customer_id"
+	// MutationResponseModelEntityIDColumn is the column json value entity_id
+	MutationResponseModelEntityIDColumn = "entity_id"
 	// MutationResponseModelErrorColumn is the column json value error
 	MutationResponseModelErrorColumn = "error"
 	// MutationResponseModelIDColumn is the column json value id
 	MutationResponseModelIDColumn = "id"
 	// MutationResponseModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	MutationResponseModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// MutationResponseModelPropertiesColumn is the column json value properties
+	MutationResponseModelPropertiesColumn = "properties"
 	// MutationResponseModelRefIDColumn is the column json value ref_id
 	MutationResponseModelRefIDColumn = "ref_id"
 	// MutationResponseModelRefTypeColumn is the column json value ref_type
 	MutationResponseModelRefTypeColumn = "ref_type"
 	// MutationResponseModelSuccessColumn is the column json value success
 	MutationResponseModelSuccessColumn = "success"
+	// MutationResponseModelURLColumn is the column json value url
+	MutationResponseModelURLColumn = "url"
 )
 
 // MutationResponse response from the agent after a mutation was requested
 type MutationResponse struct {
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
+	// EntityID a ID to the entity in Pinpoint that was mutated
+	EntityID *string `json:"entity_id,omitempty" codec:"entity_id,omitempty" bson:"entity_id" yaml:"entity_id,omitempty" faker:"-"`
 	// Error the error message if success is false
 	Error *string `json:"error,omitempty" codec:"error,omitempty" bson:"error" yaml:"error,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// Properties optional properties as a JSON that are specific to the mutation type
+	Properties *string `json:"properties,omitempty" codec:"properties,omitempty" bson:"properties" yaml:"properties,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// Success if the mutation was successful.
 	Success bool `json:"success" codec:"success" bson:"success" yaml:"success" faker:"-"`
+	// URL a url to the entity in the source system
+	URL *string `json:"url,omitempty" codec:"url,omitempty" bson:"url" yaml:"url,omitempty" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
 	Hashcode string `json:"hashcode" codec:"hashcode" bson:"hashcode" yaml:"hashcode" faker:"-"`
 }
@@ -257,12 +269,15 @@ func (o *MutationResponse) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"customer_id":             toMutationResponseObject(o.CustomerID, false),
+		"entity_id":               toMutationResponseObject(o.EntityID, true),
 		"error":                   toMutationResponseObject(o.Error, true),
 		"id":                      toMutationResponseObject(o.ID, false),
 		"integration_instance_id": toMutationResponseObject(o.IntegrationInstanceID, true),
+		"properties":              toMutationResponseObject(o.Properties, true),
 		"ref_id":                  toMutationResponseObject(o.RefID, false),
 		"ref_type":                toMutationResponseObject(o.RefType, false),
 		"success":                 toMutationResponseObject(o.Success, false),
+		"url":                     toMutationResponseObject(o.URL, true),
 		"hashcode":                toMutationResponseObject(o.Hashcode, false),
 	}
 }
@@ -292,6 +307,23 @@ func (o *MutationResponse) FromMap(kv map[string]interface{}) {
 					val = v
 				}
 				o.CustomerID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["entity_id"].(*string); ok {
+		o.EntityID = val
+	} else if val, ok := kv["entity_id"].(string); ok {
+		o.EntityID = &val
+	} else {
+		if val, ok := kv["entity_id"]; ok {
+			if val == nil {
+				o.EntityID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EntityID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -348,6 +380,23 @@ func (o *MutationResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["properties"].(*string); ok {
+		o.Properties = val
+	} else if val, ok := kv["properties"].(string); ok {
+		o.Properties = &val
+	} else {
+		if val, ok := kv["properties"]; ok {
+			if val == nil {
+				o.Properties = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Properties = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -397,6 +446,23 @@ func (o *MutationResponse) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	o.setDefaults(false)
 }
 
@@ -404,12 +470,15 @@ func (o *MutationResponse) FromMap(kv map[string]interface{}) {
 func (o *MutationResponse) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
+	args = append(args, o.EntityID)
 	args = append(args, o.Error)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.Properties)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Success)
+	args = append(args, o.URL)
 	o.Hashcode = hash.Values(args...)
 	return o.Hashcode
 }
@@ -430,10 +499,16 @@ func (o *MutationResponse) GetIntegrationInstanceID() *string {
 
 // MutationResponsePartial is a partial struct for upsert mutations for MutationResponse
 type MutationResponsePartial struct {
+	// EntityID a ID to the entity in Pinpoint that was mutated
+	EntityID *string `json:"entity_id,omitempty"`
 	// Error the error message if success is false
 	Error *string `json:"error,omitempty"`
+	// Properties optional properties as a JSON that are specific to the mutation type
+	Properties *string `json:"properties,omitempty"`
 	// Success if the mutation was successful.
 	Success *bool `json:"success,omitempty"`
+	// URL a url to the entity in the source system
+	URL *string `json:"url,omitempty"`
 }
 
 var _ datamodel.PartialModel = (*MutationResponsePartial)(nil)
@@ -446,8 +521,11 @@ func (o *MutationResponsePartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *MutationResponsePartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"error":   toMutationResponseObject(o.Error, true),
-		"success": toMutationResponseObject(o.Success, true),
+		"entity_id":  toMutationResponseObject(o.EntityID, true),
+		"error":      toMutationResponseObject(o.Error, true),
+		"properties": toMutationResponseObject(o.Properties, true),
+		"success":    toMutationResponseObject(o.Success, true),
+		"url":        toMutationResponseObject(o.URL, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -483,6 +561,23 @@ func (o *MutationResponsePartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *MutationResponsePartial) FromMap(kv map[string]interface{}) {
+	if val, ok := kv["entity_id"].(*string); ok {
+		o.EntityID = val
+	} else if val, ok := kv["entity_id"].(string); ok {
+		o.EntityID = &val
+	} else {
+		if val, ok := kv["entity_id"]; ok {
+			if val == nil {
+				o.EntityID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EntityID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["error"].(*string); ok {
 		o.Error = val
 	} else if val, ok := kv["error"].(string); ok {
@@ -500,6 +595,23 @@ func (o *MutationResponsePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["properties"].(*string); ok {
+		o.Properties = val
+	} else if val, ok := kv["properties"].(string); ok {
+		o.Properties = &val
+	} else {
+		if val, ok := kv["properties"]; ok {
+			if val == nil {
+				o.Properties = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Properties = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["success"].(*bool); ok {
 		o.Success = val
 	} else if val, ok := kv["success"].(bool); ok {
@@ -514,6 +626,23 @@ func (o *MutationResponsePartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.Success = number.BoolPointer(number.ToBoolAny(val))
+			}
+		}
+	}
+	if val, ok := kv["url"].(*string); ok {
+		o.URL = val
+	} else if val, ok := kv["url"].(string); ok {
+		o.URL = &val
+	} else {
+		if val, ok := kv["url"]; ok {
+			if val == nil {
+				o.URL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.URL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
