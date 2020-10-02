@@ -2179,7 +2179,7 @@ type Issue struct {
 	// PriorityID priority id for the issue
 	PriorityID string `json:"priority_id" codec:"priority_id" bson:"priority_id" yaml:"priority_id" faker:"-"`
 	// ProjectID unique project id
-	ProjectID string `json:"project_id" codec:"project_id" bson:"project_id" yaml:"project_id" faker:"-"`
+	ProjectID *string `json:"project_id,omitempty" codec:"project_id,omitempty" bson:"project_id" yaml:"project_id,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -2486,7 +2486,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"planned_start_date":      toIssueObject(o.PlannedStartDate, false),
 		"priority":                toIssueObject(o.Priority, false),
 		"priority_id":             toIssueObject(o.PriorityID, false),
-		"project_id":              toIssueObject(o.ProjectID, false),
+		"project_id":              toIssueObject(o.ProjectID, true),
 		"ref_id":                  toIssueObject(o.RefID, false),
 		"ref_type":                toIssueObject(o.RefType, false),
 		"reporter_ref_id":         toIssueObject(o.ReporterRefID, false),
@@ -3044,22 +3044,20 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["project_id"].(string); ok {
+	if val, ok := kv["project_id"].(*string); ok {
 		o.ProjectID = val
+	} else if val, ok := kv["project_id"].(string); ok {
+		o.ProjectID = &val
 	} else {
 		if val, ok := kv["project_id"]; ok {
 			if val == nil {
-				o.ProjectID = ""
+				o.ProjectID = pstrings.Pointer("")
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.ProjectID = fmt.Sprintf("%v", val)
+				o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
