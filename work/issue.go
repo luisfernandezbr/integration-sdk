@@ -155,6 +155,8 @@ const (
 	IssueModelPriorityIDColumn = "priority_id"
 	// IssueModelProjectIDColumn is the column json value project_id
 	IssueModelProjectIDColumn = "project_id"
+	// IssueModelProjectIdsColumn is the column json value project_ids
+	IssueModelProjectIdsColumn = "project_ids"
 	// IssueModelRefIDColumn is the column json value ref_id
 	IssueModelRefIDColumn = "ref_id"
 	// IssueModelRefTypeColumn is the column json value ref_type
@@ -2179,7 +2181,11 @@ type Issue struct {
 	// PriorityID priority id for the issue
 	PriorityID string `json:"priority_id" codec:"priority_id" bson:"priority_id" yaml:"priority_id" faker:"-"`
 	// ProjectID unique project id
+	//
+	// Deprecated: some type of issues can be part of many projects, use project_ids instead
 	ProjectID *string `json:"project_id,omitempty" codec:"project_id,omitempty" bson:"project_id" yaml:"project_id,omitempty" faker:"-"`
+	// ProjectIds project_ids this issue belongs to
+	ProjectIds []string `json:"project_ids" codec:"project_ids" bson:"project_ids" yaml:"project_ids" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -2312,6 +2318,9 @@ func (o *Issue) setDefaults(frommap bool) {
 	}
 	if o.LinkedIssues == nil {
 		o.LinkedIssues = make([]IssueLinkedIssues, 0)
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 	if o.SprintIds == nil {
 		o.SprintIds = make([]string, 0)
@@ -2487,6 +2496,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"priority":                toIssueObject(o.Priority, false),
 		"priority_id":             toIssueObject(o.PriorityID, false),
 		"project_id":              toIssueObject(o.ProjectID, true),
+		"project_ids":             toIssueObject(o.ProjectIds, false),
 		"ref_id":                  toIssueObject(o.RefID, false),
 		"ref_type":                toIssueObject(o.RefType, false),
 		"reporter_ref_id":         toIssueObject(o.ReporterRefID, false),
@@ -3044,6 +3054,7 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["project_id"].(*string); ok {
 		o.ProjectID = val
 	} else if val, ok := kv["project_id"].(string); ok {
@@ -3060,6 +3071,56 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 				o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
@@ -3489,6 +3550,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Priority)
 	args = append(args, o.PriorityID)
 	args = append(args, o.ProjectID)
+	args = append(args, o.ProjectIds)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.ReporterRefID)
@@ -3555,7 +3617,11 @@ type IssuePartial struct {
 	// PriorityID priority id for the issue
 	PriorityID *string `json:"priority_id,omitempty"`
 	// ProjectID unique project id
+	//
+	// Deprecated: some type of issues can be part of many projects, use project_ids instead
 	ProjectID *string `json:"project_id,omitempty"`
+	// ProjectIds project_ids this issue belongs to
+	ProjectIds []string `json:"project_ids,omitempty"`
 	// ReporterRefID user id of the reporter
 	ReporterRefID *string `json:"reporter_ref_id,omitempty"`
 	// Resolution resolution of the issue
@@ -3610,6 +3676,7 @@ func (o *IssuePartial) ToMap() map[string]interface{} {
 		"priority":           toIssueObject(o.Priority, true),
 		"priority_id":        toIssueObject(o.PriorityID, true),
 		"project_id":         toIssueObject(o.ProjectID, true),
+		"project_ids":        toIssueObject(o.ProjectIds, true),
 		"reporter_ref_id":    toIssueObject(o.ReporterRefID, true),
 		"resolution":         toIssueObject(o.Resolution, true),
 		"sprint_ids":         toIssueObject(o.SprintIds, true),
@@ -3669,6 +3736,14 @@ func (o *IssuePartial) ToMap() map[string]interface{} {
 			if k == "planned_start_date" {
 				if dt, ok := v.(*IssuePlannedStartDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "project_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
 						delete(kv, k)
 					}
 				}
@@ -4181,6 +4256,7 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	// Deprecated
 	if val, ok := kv["project_id"].(*string); ok {
 		o.ProjectID = val
 	} else if val, ok := kv["project_id"].(string); ok {
@@ -4197,6 +4273,56 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 				o.ProjectID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
+	}
+	if val, ok := kv["project_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for project_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for project_ids field")
+				}
+			}
+			o.ProjectIds = na
+		}
+	}
+	if o.ProjectIds == nil {
+		o.ProjectIds = make([]string, 0)
 	}
 	if val, ok := kv["reporter_ref_id"].(*string); ok {
 		o.ReporterRefID = val
