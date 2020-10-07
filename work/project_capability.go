@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -15,7 +16,11 @@ import (
 	"github.com/pinpt/go-common/v10/hash"
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
+	"github.com/pinpt/go-common/v10/slice"
 	pstrings "github.com/pinpt/go-common/v10/strings"
+	"go.mongodb.org/mongo-driver/bson"
+	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -48,6 +53,28 @@ const (
 	ProjectCapabilityModelInProgressStatesColumn = "in_progress_states"
 	// ProjectCapabilityModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	ProjectCapabilityModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// ProjectCapabilityModelIssueMutationFieldsColumn is the column json value issue_mutation_fields
+	ProjectCapabilityModelIssueMutationFieldsColumn = "issue_mutation_fields"
+	// ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn is the column json value always_required
+	ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn = "always_required"
+	// ProjectCapabilityModelIssueMutationFieldsDescriptionColumn is the column json value description
+	ProjectCapabilityModelIssueMutationFieldsDescriptionColumn = "description"
+	// ProjectCapabilityModelIssueMutationFieldsImmutableColumn is the column json value immutable
+	ProjectCapabilityModelIssueMutationFieldsImmutableColumn = "immutable"
+	// ProjectCapabilityModelIssueMutationFieldsNameColumn is the column json value name
+	ProjectCapabilityModelIssueMutationFieldsNameColumn = "name"
+	// ProjectCapabilityModelIssueMutationFieldsRefIDColumn is the column json value ref_id
+	ProjectCapabilityModelIssueMutationFieldsRefIDColumn = "ref_id"
+	// ProjectCapabilityModelIssueMutationFieldsRequiredByTypesColumn is the column json value required_by_types
+	ProjectCapabilityModelIssueMutationFieldsRequiredByTypesColumn = "required_by_types"
+	// ProjectCapabilityModelIssueMutationFieldsTypeColumn is the column json value type
+	ProjectCapabilityModelIssueMutationFieldsTypeColumn = "type"
+	// ProjectCapabilityModelIssueMutationFieldsValuesColumn is the column json value values
+	ProjectCapabilityModelIssueMutationFieldsValuesColumn = "values"
+	// ProjectCapabilityModelIssueMutationFieldsValuesNameColumn is the column json value name
+	ProjectCapabilityModelIssueMutationFieldsValuesNameColumn = "name"
+	// ProjectCapabilityModelIssueMutationFieldsValuesRefIDColumn is the column json value ref_id
+	ProjectCapabilityModelIssueMutationFieldsValuesRefIDColumn = "ref_id"
 	// ProjectCapabilityModelKanbanBoardsColumn is the column json value kanban_boards
 	ProjectCapabilityModelKanbanBoardsColumn = "kanban_boards"
 	// ProjectCapabilityModelLinkedIssuesColumn is the column json value linked_issues
@@ -72,6 +99,557 @@ const (
 	ProjectCapabilityModelUpdatedAtColumn = "updated_ts"
 )
 
+// ProjectCapabilityIssueMutationFieldsType is the enumeration type for type
+type ProjectCapabilityIssueMutationFieldsType int32
+
+// toProjectCapabilityIssueMutationFieldsTypePointer is the enumeration pointer type for type
+func toProjectCapabilityIssueMutationFieldsTypePointer(v int32) *ProjectCapabilityIssueMutationFieldsType {
+	nv := ProjectCapabilityIssueMutationFieldsType(v)
+	return &nv
+}
+
+// toProjectCapabilityIssueMutationFieldsTypeEnum is the enumeration pointer wrapper for type
+func toProjectCapabilityIssueMutationFieldsTypeEnum(v *ProjectCapabilityIssueMutationFieldsType) string {
+	if v == nil {
+		return toProjectCapabilityIssueMutationFieldsTypePointer(0).String()
+	}
+	return v.String()
+}
+
+// UnmarshalBSONValue for unmarshaling value
+func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
+	val := bson.RawValue{Type: t, Value: data}
+	switch t {
+	case bsontype.Int32:
+		*v = ProjectCapabilityIssueMutationFieldsType(val.Int32())
+	case bsontype.String:
+		switch val.StringValue() {
+		case "STRING":
+			*v = ProjectCapabilityIssueMutationFieldsType(0)
+		case "NUMBER":
+			*v = ProjectCapabilityIssueMutationFieldsType(1)
+		case "WORK_ISSUE_TYPE":
+			*v = ProjectCapabilityIssueMutationFieldsType(2)
+		case "WORK_ISSUE_PRIORITY":
+			*v = ProjectCapabilityIssueMutationFieldsType(3)
+		case "STRING_ARRAY":
+			*v = ProjectCapabilityIssueMutationFieldsType(4)
+		case "USER":
+			*v = ProjectCapabilityIssueMutationFieldsType(5)
+		case "ATTACHMENT":
+			*v = ProjectCapabilityIssueMutationFieldsType(6)
+		}
+	}
+	return nil
+}
+
+// UnmarshalJSON unmarshals the enum value
+func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalJSON(buf []byte) error {
+	var val string
+	if err := json.Unmarshal(buf, &val); err != nil {
+		return err
+	}
+	switch val {
+	case "STRING":
+		*v = 0
+	case "NUMBER":
+		*v = 1
+	case "WORK_ISSUE_TYPE":
+		*v = 2
+	case "WORK_ISSUE_PRIORITY":
+		*v = 3
+	case "STRING_ARRAY":
+		*v = 4
+	case "USER":
+		*v = 5
+	case "ATTACHMENT":
+		*v = 6
+	}
+	return nil
+}
+
+// MarshalJSON marshals the enum value
+func (v ProjectCapabilityIssueMutationFieldsType) MarshalJSON() ([]byte, error) {
+	switch v {
+	case 0:
+		return json.Marshal("STRING")
+	case 1:
+		return json.Marshal("NUMBER")
+	case 2:
+		return json.Marshal("WORK_ISSUE_TYPE")
+	case 3:
+		return json.Marshal("WORK_ISSUE_PRIORITY")
+	case 4:
+		return json.Marshal("STRING_ARRAY")
+	case 5:
+		return json.Marshal("USER")
+	case 6:
+		return json.Marshal("ATTACHMENT")
+	}
+	return nil, fmt.Errorf("unexpected enum value")
+}
+
+// String returns the string value for IssueMutationFieldsType
+func (v ProjectCapabilityIssueMutationFieldsType) String() string {
+	switch int32(v) {
+	case 0:
+		return "STRING"
+	case 1:
+		return "NUMBER"
+	case 2:
+		return "WORK_ISSUE_TYPE"
+	case 3:
+		return "WORK_ISSUE_PRIORITY"
+	case 4:
+		return "STRING_ARRAY"
+	case 5:
+		return "USER"
+	case 6:
+		return "ATTACHMENT"
+	}
+	return "unset"
+}
+
+// FromInterface for decoding from an interface
+func (v *ProjectCapabilityIssueMutationFieldsType) FromInterface(o interface{}) error {
+	switch val := o.(type) {
+	case ProjectCapabilityIssueMutationFieldsType:
+		*v = val
+	case int32:
+		*v = ProjectCapabilityIssueMutationFieldsType(int32(val))
+	case int:
+		*v = ProjectCapabilityIssueMutationFieldsType(int32(val))
+	case string:
+		switch val {
+		case "STRING":
+			*v = ProjectCapabilityIssueMutationFieldsType(0)
+		case "NUMBER":
+			*v = ProjectCapabilityIssueMutationFieldsType(1)
+		case "WORK_ISSUE_TYPE":
+			*v = ProjectCapabilityIssueMutationFieldsType(2)
+		case "WORK_ISSUE_PRIORITY":
+			*v = ProjectCapabilityIssueMutationFieldsType(3)
+		case "STRING_ARRAY":
+			*v = ProjectCapabilityIssueMutationFieldsType(4)
+		case "USER":
+			*v = ProjectCapabilityIssueMutationFieldsType(5)
+		case "ATTACHMENT":
+			*v = ProjectCapabilityIssueMutationFieldsType(6)
+		}
+	}
+	return nil
+}
+
+const (
+	// ProjectCapabilityIssueMutationFieldsTypeString is the enumeration value for string
+	ProjectCapabilityIssueMutationFieldsTypeString ProjectCapabilityIssueMutationFieldsType = 0
+	// ProjectCapabilityIssueMutationFieldsTypeNumber is the enumeration value for number
+	ProjectCapabilityIssueMutationFieldsTypeNumber ProjectCapabilityIssueMutationFieldsType = 1
+	// ProjectCapabilityIssueMutationFieldsTypeWorkIssueType is the enumeration value for work_issue_type
+	ProjectCapabilityIssueMutationFieldsTypeWorkIssueType ProjectCapabilityIssueMutationFieldsType = 2
+	// ProjectCapabilityIssueMutationFieldsTypeWorkIssuePriority is the enumeration value for work_issue_priority
+	ProjectCapabilityIssueMutationFieldsTypeWorkIssuePriority ProjectCapabilityIssueMutationFieldsType = 3
+	// ProjectCapabilityIssueMutationFieldsTypeStringArray is the enumeration value for string_array
+	ProjectCapabilityIssueMutationFieldsTypeStringArray ProjectCapabilityIssueMutationFieldsType = 4
+	// ProjectCapabilityIssueMutationFieldsTypeUser is the enumeration value for user
+	ProjectCapabilityIssueMutationFieldsTypeUser ProjectCapabilityIssueMutationFieldsType = 5
+	// ProjectCapabilityIssueMutationFieldsTypeAttachment is the enumeration value for attachment
+	ProjectCapabilityIssueMutationFieldsTypeAttachment ProjectCapabilityIssueMutationFieldsType = 6
+)
+
+// ProjectCapabilityIssueMutationFieldsValues represents the object structure for values
+type ProjectCapabilityIssueMutationFieldsValues struct {
+	// Name the display name of this value
+	Name *string `json:"name,omitempty" codec:"name,omitempty" bson:"name" yaml:"name,omitempty" faker:"-"`
+	// RefID the source-system id of this value
+	RefID *string `json:"ref_id,omitempty" codec:"ref_id,omitempty" bson:"ref_id" yaml:"ref_id,omitempty" faker:"-"`
+}
+
+func toProjectCapabilityIssueMutationFieldsValuesObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectCapabilityIssueMutationFieldsValues:
+		return v.ToMap()
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectCapabilityIssueMutationFieldsValues) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// Name the display name of this value
+		"name": toProjectCapabilityIssueMutationFieldsValuesObject(o.Name, true),
+		// RefID the source-system id of this value
+		"ref_id": toProjectCapabilityIssueMutationFieldsValuesObject(o.RefID, true),
+	}
+}
+
+func (o *ProjectCapabilityIssueMutationFieldsValues) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectCapabilityIssueMutationFieldsValues) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["name"].(*string); ok {
+		o.Name = val
+	} else if val, ok := kv["name"].(string); ok {
+		o.Name = &val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Name = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(*string); ok {
+		o.RefID = val
+	} else if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = &val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.RefID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	o.setDefaults(false)
+}
+
+// ProjectCapabilityIssueMutationFields represents the object structure for issue_mutation_fields
+type ProjectCapabilityIssueMutationFields struct {
+	// AlwaysRequired indicates that this field is always required when creating new issues for this project
+	AlwaysRequired bool `json:"always_required" codec:"always_required" bson:"always_required" yaml:"always_required" faker:"-"`
+	// Description the description of this field
+	Description *string `json:"description,omitempty" codec:"description,omitempty" bson:"description" yaml:"description,omitempty" faker:"-"`
+	// Immutable if this field can only be set on create
+	Immutable bool `json:"immutable" codec:"immutable" bson:"immutable" yaml:"immutable" faker:"-"`
+	// Name the name of the field, to be displayed
+	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
+	// RefID the source-system id or identifier for this field
+	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
+	// RequiredByTypes a list of types for which this field is required, should be a list of ref_ids
+	RequiredByTypes []string `json:"required_by_types" codec:"required_by_types" bson:"required_by_types" yaml:"required_by_types" faker:"-"`
+	// Type the type of value this field holds
+	Type ProjectCapabilityIssueMutationFieldsType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
+	// Values possible values for this field to be selected from, only valid for type 'STRING_ARRAY'
+	Values []ProjectCapabilityIssueMutationFieldsValues `json:"values" codec:"values" bson:"values" yaml:"values" faker:"-"`
+}
+
+func toProjectCapabilityIssueMutationFieldsObject(o interface{}, isoptional bool) interface{} {
+	switch v := o.(type) {
+	case *ProjectCapabilityIssueMutationFields:
+		return v.ToMap()
+
+	case ProjectCapabilityIssueMutationFieldsType:
+		return v.String()
+
+	case []ProjectCapabilityIssueMutationFieldsValues:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
+	default:
+		return o
+	}
+}
+
+// ToMap returns the object as a map
+func (o *ProjectCapabilityIssueMutationFields) ToMap() map[string]interface{} {
+	o.setDefaults(true)
+	return map[string]interface{}{
+		// AlwaysRequired indicates that this field is always required when creating new issues for this project
+		"always_required": toProjectCapabilityIssueMutationFieldsObject(o.AlwaysRequired, false),
+		// Description the description of this field
+		"description": toProjectCapabilityIssueMutationFieldsObject(o.Description, true),
+		// Immutable if this field can only be set on create
+		"immutable": toProjectCapabilityIssueMutationFieldsObject(o.Immutable, false),
+		// Name the name of the field, to be displayed
+		"name": toProjectCapabilityIssueMutationFieldsObject(o.Name, false),
+		// RefID the source-system id or identifier for this field
+		"ref_id": toProjectCapabilityIssueMutationFieldsObject(o.RefID, false),
+		// RequiredByTypes a list of types for which this field is required, should be a list of ref_ids
+		"required_by_types": toProjectCapabilityIssueMutationFieldsObject(o.RequiredByTypes, false),
+		// Type the type of value this field holds
+		"type": toProjectCapabilityIssueMutationFieldsObject(o.Type, false),
+		// Values possible values for this field to be selected from, only valid for type 'STRING_ARRAY'
+		"values": toProjectCapabilityIssueMutationFieldsObject(o.Values, false),
+	}
+}
+
+func (o *ProjectCapabilityIssueMutationFields) setDefaults(frommap bool) {
+
+	if frommap {
+		o.FromMap(map[string]interface{}{})
+	}
+}
+
+// FromMap attempts to load data into object from a map
+func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}) {
+
+	// if coming from db
+	if id, ok := kv["_id"]; ok && id != "" {
+		kv["id"] = id
+	}
+	if val, ok := kv["always_required"].(bool); ok {
+		o.AlwaysRequired = val
+	} else {
+		if val, ok := kv["always_required"]; ok {
+			if val == nil {
+				o.AlwaysRequired = false
+			} else {
+				o.AlwaysRequired = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["description"].(*string); ok {
+		o.Description = val
+	} else if val, ok := kv["description"].(string); ok {
+		o.Description = &val
+	} else {
+		if val, ok := kv["description"]; ok {
+			if val == nil {
+				o.Description = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Description = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["immutable"].(bool); ok {
+		o.Immutable = val
+	} else {
+		if val, ok := kv["immutable"]; ok {
+			if val == nil {
+				o.Immutable = false
+			} else {
+				o.Immutable = number.ToBoolAny(val)
+			}
+		}
+	}
+	if val, ok := kv["name"].(string); ok {
+		o.Name = val
+	} else {
+		if val, ok := kv["name"]; ok {
+			if val == nil {
+				o.Name = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.Name = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["ref_id"].(string); ok {
+		o.RefID = val
+	} else {
+		if val, ok := kv["ref_id"]; ok {
+			if val == nil {
+				o.RefID = ""
+			} else {
+				v := pstrings.Value(val)
+				if v != "" {
+					if m, ok := val.(map[string]interface{}); ok && m != nil {
+						val = pjson.Stringify(m)
+					}
+				} else {
+					val = v
+				}
+				o.RefID = fmt.Sprintf("%v", val)
+			}
+		}
+	}
+	if val, ok := kv["required_by_types"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for required_by_types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for required_by_types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for required_by_types field")
+				}
+			}
+			o.RequiredByTypes = na
+		}
+	}
+	if o.RequiredByTypes == nil {
+		o.RequiredByTypes = make([]string, 0)
+	}
+	if val, ok := kv["type"].(ProjectCapabilityIssueMutationFieldsType); ok {
+		o.Type = val
+	} else {
+		if em, ok := kv["type"].(map[string]interface{}); ok {
+
+			ev := em["work.type"].(string)
+			switch ev {
+			case "string", "STRING":
+				o.Type = 0
+			case "number", "NUMBER":
+				o.Type = 1
+			case "work_issue_type", "WORK_ISSUE_TYPE":
+				o.Type = 2
+			case "work_issue_priority", "WORK_ISSUE_PRIORITY":
+				o.Type = 3
+			case "string_array", "STRING_ARRAY":
+				o.Type = 4
+			case "user", "USER":
+				o.Type = 5
+			case "attachment", "ATTACHMENT":
+				o.Type = 6
+			}
+		}
+		if em, ok := kv["type"].(string); ok {
+			switch em {
+			case "string", "STRING":
+				o.Type = 0
+			case "number", "NUMBER":
+				o.Type = 1
+			case "work_issue_type", "WORK_ISSUE_TYPE":
+				o.Type = 2
+			case "work_issue_priority", "WORK_ISSUE_PRIORITY":
+				o.Type = 3
+			case "string_array", "STRING_ARRAY":
+				o.Type = 4
+			case "user", "USER":
+				o.Type = 5
+			case "attachment", "ATTACHMENT":
+				o.Type = 6
+			}
+		}
+	}
+
+	if o == nil {
+
+		o.Values = make([]ProjectCapabilityIssueMutationFieldsValues, 0)
+
+	}
+	if val, ok := kv["values"]; ok {
+		if sv, ok := val.([]ProjectCapabilityIssueMutationFieldsValues); ok {
+			o.Values = sv
+		} else if sp, ok := val.([]*ProjectCapabilityIssueMutationFieldsValues); ok {
+			o.Values = o.Values[:0]
+			for _, e := range sp {
+				o.Values = append(o.Values, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectCapabilityIssueMutationFieldsValues); ok {
+					o.Values = append(o.Values, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectCapabilityIssueMutationFieldsValues
+					fm.FromMap(av)
+					o.Values = append(o.Values, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectCapabilityIssueMutationFieldsValues
+					av.FromMap(bkv)
+					o.Values = append(o.Values, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectCapabilityIssueMutationFieldsValues); ok {
+					o.Values = append(o.Values, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectCapabilityIssueMutationFieldsValues
+					fm.FromMap(r)
+					o.Values = append(o.Values, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectCapabilityIssueMutationFieldsValues{}
+					fm.FromMap(r)
+					o.Values = append(o.Values, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectCapabilityIssueMutationFieldsValues
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.Values = append(o.Values, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
+	o.setDefaults(false)
+}
+
 // ProjectCapability the project capabilities for a given integration
 type ProjectCapability struct {
 	// Active indicates that this model is displayed in a source system, false if the model is deleted
@@ -92,6 +670,8 @@ type ProjectCapability struct {
 	InProgressStates bool `json:"in_progress_states" codec:"in_progress_states" bson:"in_progress_states" yaml:"in_progress_states" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IssueMutationFields fields that are available for mutation, either on an issue create or update
+	IssueMutationFields []ProjectCapabilityIssueMutationFields `json:"issue_mutation_fields" codec:"issue_mutation_fields" bson:"issue_mutation_fields" yaml:"issue_mutation_fields" faker:"-"`
 	// KanbanBoards if the project supports agile kanban boards
 	KanbanBoards bool `json:"kanban_boards" codec:"kanban_boards" bson:"kanban_boards" yaml:"kanban_boards" faker:"-"`
 	// LinkedIssues if the project supports issue linking such as blocked issues, related issues, etc
@@ -129,6 +709,13 @@ func toProjectCapabilityObject(o interface{}, isoptional bool) interface{} {
 	case *ProjectCapability:
 		return v.ToMap()
 
+	case []ProjectCapabilityIssueMutationFields:
+		arr := make([]interface{}, 0)
+		for _, i := range v {
+			arr = append(arr, i.ToMap())
+		}
+		return arr
+
 	default:
 		return o
 	}
@@ -165,6 +752,9 @@ func NewProjectCapabilityID(customerID string, ProjectID string) string {
 }
 
 func (o *ProjectCapability) setDefaults(frommap bool) {
+	if o.IssueMutationFields == nil {
+		o.IssueMutationFields = make([]ProjectCapabilityIssueMutationFields, 0)
+	}
 
 	if o.ID == "" {
 		o.ID = hash.Values(o.CustomerID, o.ProjectID)
@@ -357,6 +947,7 @@ func (o *ProjectCapability) ToMap() map[string]interface{} {
 		"id":                      toProjectCapabilityObject(o.ID, false),
 		"in_progress_states":      toProjectCapabilityObject(o.InProgressStates, false),
 		"integration_instance_id": toProjectCapabilityObject(o.IntegrationInstanceID, true),
+		"issue_mutation_fields":   toProjectCapabilityObject(o.IssueMutationFields, false),
 		"kanban_boards":           toProjectCapabilityObject(o.KanbanBoards, false),
 		"linked_issues":           toProjectCapabilityObject(o.LinkedIssues, false),
 		"parents":                 toProjectCapabilityObject(o.Parents, false),
@@ -502,6 +1093,70 @@ func (o *ProjectCapability) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.IssueMutationFields = make([]ProjectCapabilityIssueMutationFields, 0)
+
+	}
+	if val, ok := kv["issue_mutation_fields"]; ok {
+		if sv, ok := val.([]ProjectCapabilityIssueMutationFields); ok {
+			o.IssueMutationFields = sv
+		} else if sp, ok := val.([]*ProjectCapabilityIssueMutationFields); ok {
+			o.IssueMutationFields = o.IssueMutationFields[:0]
+			for _, e := range sp {
+				o.IssueMutationFields = append(o.IssueMutationFields, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectCapabilityIssueMutationFields); ok {
+					o.IssueMutationFields = append(o.IssueMutationFields, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectCapabilityIssueMutationFields
+					fm.FromMap(av)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectCapabilityIssueMutationFields
+					av.FromMap(bkv)
+					o.IssueMutationFields = append(o.IssueMutationFields, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectCapabilityIssueMutationFields); ok {
+					o.IssueMutationFields = append(o.IssueMutationFields, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectCapabilityIssueMutationFields
+					fm.FromMap(r)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectCapabilityIssueMutationFields{}
+					fm.FromMap(r)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectCapabilityIssueMutationFields
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueMutationFields = append(o.IssueMutationFields, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["kanban_boards"].(bool); ok {
 		o.KanbanBoards = val
 	} else {
@@ -665,6 +1320,7 @@ func (o *ProjectCapability) Hash() string {
 	args = append(args, o.ID)
 	args = append(args, o.InProgressStates)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.IssueMutationFields)
 	args = append(args, o.KanbanBoards)
 	args = append(args, o.LinkedIssues)
 	args = append(args, o.Parents)
@@ -708,6 +1364,8 @@ type ProjectCapabilityPartial struct {
 	Epics *bool `json:"epics,omitempty"`
 	// InProgressStates if the project supports the ability to transition from in progress states
 	InProgressStates *bool `json:"in_progress_states,omitempty"`
+	// IssueMutationFields fields that are available for mutation, either on an issue create or update
+	IssueMutationFields []ProjectCapabilityIssueMutationFields `json:"issue_mutation_fields,omitempty"`
 	// KanbanBoards if the project supports agile kanban boards
 	KanbanBoards *bool `json:"kanban_boards,omitempty"`
 	// LinkedIssues if the project supports issue linking such as blocked issues, related issues, etc
@@ -736,25 +1394,34 @@ func (o *ProjectCapabilityPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *ProjectCapabilityPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"active":             toProjectCapabilityObject(o.Active, true),
-		"attachments":        toProjectCapabilityObject(o.Attachments, true),
-		"change_logs":        toProjectCapabilityObject(o.ChangeLogs, true),
-		"due_dates":          toProjectCapabilityObject(o.DueDates, true),
-		"epics":              toProjectCapabilityObject(o.Epics, true),
-		"in_progress_states": toProjectCapabilityObject(o.InProgressStates, true),
-		"kanban_boards":      toProjectCapabilityObject(o.KanbanBoards, true),
-		"linked_issues":      toProjectCapabilityObject(o.LinkedIssues, true),
-		"parents":            toProjectCapabilityObject(o.Parents, true),
-		"priorities":         toProjectCapabilityObject(o.Priorities, true),
-		"project_id":         toProjectCapabilityObject(o.ProjectID, true),
-		"resolutions":        toProjectCapabilityObject(o.Resolutions, true),
-		"sprints":            toProjectCapabilityObject(o.Sprints, true),
-		"story_points":       toProjectCapabilityObject(o.StoryPoints, true),
+		"active":                toProjectCapabilityObject(o.Active, true),
+		"attachments":           toProjectCapabilityObject(o.Attachments, true),
+		"change_logs":           toProjectCapabilityObject(o.ChangeLogs, true),
+		"due_dates":             toProjectCapabilityObject(o.DueDates, true),
+		"epics":                 toProjectCapabilityObject(o.Epics, true),
+		"in_progress_states":    toProjectCapabilityObject(o.InProgressStates, true),
+		"issue_mutation_fields": toProjectCapabilityObject(o.IssueMutationFields, true),
+		"kanban_boards":         toProjectCapabilityObject(o.KanbanBoards, true),
+		"linked_issues":         toProjectCapabilityObject(o.LinkedIssues, true),
+		"parents":               toProjectCapabilityObject(o.Parents, true),
+		"priorities":            toProjectCapabilityObject(o.Priorities, true),
+		"project_id":            toProjectCapabilityObject(o.ProjectID, true),
+		"resolutions":           toProjectCapabilityObject(o.Resolutions, true),
+		"sprints":               toProjectCapabilityObject(o.Sprints, true),
+		"story_points":          toProjectCapabilityObject(o.StoryPoints, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
 			delete(kv, k)
 		} else {
+
+			if k == "issue_mutation_fields" {
+				if arr, ok := v.([]ProjectCapabilityIssueMutationFields); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
 		}
 	}
 	return kv
@@ -887,6 +1554,70 @@ func (o *ProjectCapabilityPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+
+	if o == nil {
+
+		o.IssueMutationFields = make([]ProjectCapabilityIssueMutationFields, 0)
+
+	}
+	if val, ok := kv["issue_mutation_fields"]; ok {
+		if sv, ok := val.([]ProjectCapabilityIssueMutationFields); ok {
+			o.IssueMutationFields = sv
+		} else if sp, ok := val.([]*ProjectCapabilityIssueMutationFields); ok {
+			o.IssueMutationFields = o.IssueMutationFields[:0]
+			for _, e := range sp {
+				o.IssueMutationFields = append(o.IssueMutationFields, *e)
+			}
+		} else if a, ok := val.(primitive.A); ok {
+			for _, ae := range a {
+				if av, ok := ae.(ProjectCapabilityIssueMutationFields); ok {
+					o.IssueMutationFields = append(o.IssueMutationFields, av)
+				} else if av, ok := ae.(primitive.M); ok {
+					var fm ProjectCapabilityIssueMutationFields
+					fm.FromMap(av)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				} else {
+					b, _ := json.Marshal(ae)
+					bkv := make(map[string]interface{})
+					json.Unmarshal(b, &bkv)
+					var av ProjectCapabilityIssueMutationFields
+					av.FromMap(bkv)
+					o.IssueMutationFields = append(o.IssueMutationFields, av)
+				}
+			}
+		} else if arr, ok := val.([]interface{}); ok {
+			for _, item := range arr {
+				if r, ok := item.(ProjectCapabilityIssueMutationFields); ok {
+					o.IssueMutationFields = append(o.IssueMutationFields, r)
+				} else if r, ok := item.(map[string]interface{}); ok {
+					var fm ProjectCapabilityIssueMutationFields
+					fm.FromMap(r)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				} else if r, ok := item.(primitive.M); ok {
+					fm := ProjectCapabilityIssueMutationFields{}
+					fm.FromMap(r)
+					o.IssueMutationFields = append(o.IssueMutationFields, fm)
+				}
+			}
+		} else {
+			arr := reflect.ValueOf(val)
+			if arr.Kind() == reflect.Slice {
+				for i := 0; i < arr.Len(); i++ {
+					item := arr.Index(i)
+					if item.CanAddr() {
+						v := item.Addr().MethodByName("ToMap")
+						if !v.IsNil() {
+							m := v.Call([]reflect.Value{})
+							var fm ProjectCapabilityIssueMutationFields
+							fm.FromMap(m[0].Interface().(map[string]interface{}))
+							o.IssueMutationFields = append(o.IssueMutationFields, fm)
+						}
+					}
+				}
+			}
+		}
+	}
+
 	if val, ok := kv["kanban_boards"].(*bool); ok {
 		o.KanbanBoards = val
 	} else if val, ok := kv["kanban_boards"].(bool); ok {
