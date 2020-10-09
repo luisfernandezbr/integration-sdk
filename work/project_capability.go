@@ -138,6 +138,12 @@ func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalBSONValue(t bsontype
 			*v = ProjectCapabilityIssueMutationFieldsType(5)
 		case "ATTACHMENT":
 			*v = ProjectCapabilityIssueMutationFieldsType(6)
+		case "TEXTBOX":
+			*v = ProjectCapabilityIssueMutationFieldsType(7)
+		case "EPIC":
+			*v = ProjectCapabilityIssueMutationFieldsType(8)
+		case "WORK_SPRINT":
+			*v = ProjectCapabilityIssueMutationFieldsType(9)
 		}
 	}
 	return nil
@@ -164,6 +170,12 @@ func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalJSON(buf []byte) err
 		*v = 5
 	case "ATTACHMENT":
 		*v = 6
+	case "TEXTBOX":
+		*v = 7
+	case "EPIC":
+		*v = 8
+	case "WORK_SPRINT":
+		*v = 9
 	}
 	return nil
 }
@@ -185,6 +197,12 @@ func (v ProjectCapabilityIssueMutationFieldsType) MarshalJSON() ([]byte, error) 
 		return json.Marshal("USER")
 	case 6:
 		return json.Marshal("ATTACHMENT")
+	case 7:
+		return json.Marshal("TEXTBOX")
+	case 8:
+		return json.Marshal("EPIC")
+	case 9:
+		return json.Marshal("WORK_SPRINT")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -206,6 +224,12 @@ func (v ProjectCapabilityIssueMutationFieldsType) String() string {
 		return "USER"
 	case 6:
 		return "ATTACHMENT"
+	case 7:
+		return "TEXTBOX"
+	case 8:
+		return "EPIC"
+	case 9:
+		return "WORK_SPRINT"
 	}
 	return "unset"
 }
@@ -235,6 +259,12 @@ func (v *ProjectCapabilityIssueMutationFieldsType) FromInterface(o interface{}) 
 			*v = ProjectCapabilityIssueMutationFieldsType(5)
 		case "ATTACHMENT":
 			*v = ProjectCapabilityIssueMutationFieldsType(6)
+		case "TEXTBOX":
+			*v = ProjectCapabilityIssueMutationFieldsType(7)
+		case "EPIC":
+			*v = ProjectCapabilityIssueMutationFieldsType(8)
+		case "WORK_SPRINT":
+			*v = ProjectCapabilityIssueMutationFieldsType(9)
 		}
 	}
 	return nil
@@ -255,6 +285,12 @@ const (
 	ProjectCapabilityIssueMutationFieldsTypeUser ProjectCapabilityIssueMutationFieldsType = 5
 	// ProjectCapabilityIssueMutationFieldsTypeAttachment is the enumeration value for attachment
 	ProjectCapabilityIssueMutationFieldsTypeAttachment ProjectCapabilityIssueMutationFieldsType = 6
+	// ProjectCapabilityIssueMutationFieldsTypeTextbox is the enumeration value for textbox
+	ProjectCapabilityIssueMutationFieldsTypeTextbox ProjectCapabilityIssueMutationFieldsType = 7
+	// ProjectCapabilityIssueMutationFieldsTypeEpic is the enumeration value for epic
+	ProjectCapabilityIssueMutationFieldsTypeEpic ProjectCapabilityIssueMutationFieldsType = 8
+	// ProjectCapabilityIssueMutationFieldsTypeWorkSprint is the enumeration value for work_sprint
+	ProjectCapabilityIssueMutationFieldsTypeWorkSprint ProjectCapabilityIssueMutationFieldsType = 9
 )
 
 // ProjectCapabilityIssueMutationFieldsValues represents the object structure for values
@@ -349,7 +385,7 @@ type ProjectCapabilityIssueMutationFields struct {
 	Name string `json:"name" codec:"name" bson:"name" yaml:"name" faker:"-"`
 	// RefID the source-system id or identifier for this field
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
-	// RequiredByTypes a list of types for which this field is required, should be a list of ref_ids
+	// RequiredByTypes a list of types for which this field is required, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
 	RequiredByTypes []string `json:"required_by_types" codec:"required_by_types" bson:"required_by_types" yaml:"required_by_types" faker:"-"`
 	// Type the type of value this field holds
 	Type ProjectCapabilityIssueMutationFieldsType `json:"type" codec:"type" bson:"type" yaml:"type" faker:"-"`
@@ -391,7 +427,7 @@ func (o *ProjectCapabilityIssueMutationFields) ToMap() map[string]interface{} {
 		"name": toProjectCapabilityIssueMutationFieldsObject(o.Name, false),
 		// RefID the source-system id or identifier for this field
 		"ref_id": toProjectCapabilityIssueMutationFieldsObject(o.RefID, false),
-		// RequiredByTypes a list of types for which this field is required, should be a list of ref_ids
+		// RequiredByTypes a list of types for which this field is required, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
 		"required_by_types": toProjectCapabilityIssueMutationFieldsObject(o.RequiredByTypes, false),
 		// Type the type of value this field holds
 		"type": toProjectCapabilityIssueMutationFieldsObject(o.Type, false),
@@ -562,6 +598,12 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 				o.Type = 5
 			case "attachment", "ATTACHMENT":
 				o.Type = 6
+			case "textbox", "TEXTBOX":
+				o.Type = 7
+			case "epic", "EPIC":
+				o.Type = 8
+			case "work_sprint", "WORK_SPRINT":
+				o.Type = 9
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -580,6 +622,12 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 				o.Type = 5
 			case "attachment", "ATTACHMENT":
 				o.Type = 6
+			case "textbox", "TEXTBOX":
+				o.Type = 7
+			case "epic", "EPIC":
+				o.Type = 8
+			case "work_sprint", "WORK_SPRINT":
+				o.Type = 9
 			}
 		}
 	}
