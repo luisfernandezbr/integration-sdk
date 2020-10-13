@@ -57,6 +57,8 @@ const (
 	ProjectCapabilityModelIssueMutationFieldsColumn = "issue_mutation_fields"
 	// ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn is the column json value always_required
 	ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn = "always_required"
+	// ProjectCapabilityModelIssueMutationFieldsAvailableForTypesColumn is the column json value available_for_types
+	ProjectCapabilityModelIssueMutationFieldsAvailableForTypesColumn = "available_for_types"
 	// ProjectCapabilityModelIssueMutationFieldsDescriptionColumn is the column json value description
 	ProjectCapabilityModelIssueMutationFieldsDescriptionColumn = "description"
 	// ProjectCapabilityModelIssueMutationFieldsImmutableColumn is the column json value immutable
@@ -377,6 +379,8 @@ func (o *ProjectCapabilityIssueMutationFieldsValues) FromMap(kv map[string]inter
 type ProjectCapabilityIssueMutationFields struct {
 	// AlwaysRequired indicates that this field is always required when creating new issues for this project
 	AlwaysRequired bool `json:"always_required" codec:"always_required" bson:"always_required" yaml:"always_required" faker:"-"`
+	// AvailableForTypes a list of types for which this field is available, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
+	AvailableForTypes []string `json:"available_for_types" codec:"available_for_types" bson:"available_for_types" yaml:"available_for_types" faker:"-"`
 	// Description the description of this field
 	Description *string `json:"description,omitempty" codec:"description,omitempty" bson:"description" yaml:"description,omitempty" faker:"-"`
 	// Immutable if this field can only be set on create
@@ -419,6 +423,8 @@ func (o *ProjectCapabilityIssueMutationFields) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		// AlwaysRequired indicates that this field is always required when creating new issues for this project
 		"always_required": toProjectCapabilityIssueMutationFieldsObject(o.AlwaysRequired, false),
+		// AvailableForTypes a list of types for which this field is available, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
+		"available_for_types": toProjectCapabilityIssueMutationFieldsObject(o.AvailableForTypes, false),
 		// Description the description of this field
 		"description": toProjectCapabilityIssueMutationFieldsObject(o.Description, true),
 		// Immutable if this field can only be set on create
@@ -460,6 +466,56 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 				o.AlwaysRequired = number.ToBoolAny(val)
 			}
 		}
+	}
+	if val, ok := kv["available_for_types"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
+			} else {
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for available_for_types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for available_for_types field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for available_for_types field")
+				}
+			}
+			o.AvailableForTypes = na
+		}
+	}
+	if o.AvailableForTypes == nil {
+		o.AvailableForTypes = make([]string, 0)
 	}
 	if val, ok := kv["description"].(*string); ok {
 		o.Description = val
