@@ -111,6 +111,8 @@ const (
 	IssueModelDueDateRfc3339Column = "rfc3339"
 	// IssueModelEpicIDColumn is the column json value epic_id
 	IssueModelEpicIDColumn = "epic_id"
+	// IssueModelEpicNameColumn is the column json value epic_name
+	IssueModelEpicNameColumn = "epic_name"
 	// IssueModelIDColumn is the column json value id
 	IssueModelIDColumn = "id"
 	// IssueModelIdentifierColumn is the column json value identifier
@@ -2162,6 +2164,8 @@ type Issue struct {
 	DueDate IssueDueDate `json:"-"`
 	// EpicID epic issue id, if any
 	EpicID *string `json:"epic_id,omitempty" codec:"epic_id,omitempty" bson:"epic_id" yaml:"epic_id,omitempty" faker:"-"`
+	// EpicName an optional name for the epic if this issue mapped type is an epic
+	EpicName *string `json:"epic_name,omitempty" codec:"epic_name,omitempty" bson:"epic_name" yaml:"epic_name,omitempty" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
@@ -2486,6 +2490,7 @@ func (o *Issue) ToMap() map[string]interface{} {
 		"description":             toIssueObject(o.Description, false),
 		"due_date":                toIssueObject(o.DueDate, false),
 		"epic_id":                 toIssueObject(o.EpicID, true),
+		"epic_name":               toIssueObject(o.EpicName, true),
 		"id":                      toIssueObject(o.ID, false),
 		"identifier":              toIssueObject(o.Identifier, false),
 		"integration_instance_id": toIssueObject(o.IntegrationInstanceID, true),
@@ -2814,6 +2819,23 @@ func (o *Issue) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.EpicID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["epic_name"].(*string); ok {
+		o.EpicName = val
+	} else if val, ok := kv["epic_name"].(string); ok {
+		o.EpicName = &val
+	} else {
+		if val, ok := kv["epic_name"]; ok {
+			if val == nil {
+				o.EpicName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EpicName = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -3540,6 +3562,7 @@ func (o *Issue) Hash() string {
 	args = append(args, o.Description)
 	args = append(args, o.DueDate)
 	args = append(args, o.EpicID)
+	args = append(args, o.EpicName)
 	args = append(args, o.ID)
 	args = append(args, o.Identifier)
 	args = append(args, o.IntegrationInstanceID)
@@ -3602,6 +3625,8 @@ type IssuePartial struct {
 	Description *string `json:"description,omitempty"`
 	// EpicID epic issue id, if any
 	EpicID *string `json:"epic_id,omitempty"`
+	// EpicName an optional name for the epic if this issue mapped type is an epic
+	EpicName *string `json:"epic_name,omitempty"`
 	// Identifier the common identifier for the issue (for example EXM-1 instead of 1000 for jira)
 	Identifier *string `json:"identifier,omitempty"`
 	// LinkedIssues links between issues
@@ -3668,6 +3693,7 @@ func (o *IssuePartial) ToMap() map[string]interface{} {
 		"creator_ref_id":     toIssueObject(o.CreatorRefID, true),
 		"description":        toIssueObject(o.Description, true),
 		"epic_id":            toIssueObject(o.EpicID, true),
+		"epic_name":          toIssueObject(o.EpicName, true),
 		"identifier":         toIssueObject(o.Identifier, true),
 		"linked_issues":      toIssueObject(o.LinkedIssues, true),
 		"parent_id":          toIssueObject(o.ParentID, true),
@@ -4052,6 +4078,23 @@ func (o *IssuePartial) FromMap(kv map[string]interface{}) {
 					val = kv["string"]
 				}
 				o.EpicID = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["epic_name"].(*string); ok {
+		o.EpicName = val
+	} else if val, ok := kv["epic_name"].(string); ok {
+		o.EpicName = &val
+	} else {
+		if val, ok := kv["epic_name"]; ok {
+			if val == nil {
+				o.EpicName = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.EpicName = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}

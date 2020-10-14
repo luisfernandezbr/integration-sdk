@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"reflect"
+	"strings"
 	"time"
 
 	"github.com/bxcodec/faker"
@@ -15,9 +16,11 @@ import (
 	"github.com/pinpt/go-common/v10/hash"
 	pjson "github.com/pinpt/go-common/v10/json"
 	"github.com/pinpt/go-common/v10/number"
+	"github.com/pinpt/go-common/v10/slice"
 	pstrings "github.com/pinpt/go-common/v10/strings"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/bson/bsontype"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 const (
@@ -32,10 +35,8 @@ const (
 const (
 	// DeploymentModelAutomatedColumn is the column json value automated
 	DeploymentModelAutomatedColumn = "automated"
-	// DeploymentModelBuildRefIDColumn is the column json value build_ref_id
-	DeploymentModelBuildRefIDColumn = "build_ref_id"
-	// DeploymentModelCommitShaColumn is the column json value commit_sha
-	DeploymentModelCommitShaColumn = "commit_sha"
+	// DeploymentModelBuildRefIdsColumn is the column json value build_ref_ids
+	DeploymentModelBuildRefIdsColumn = "build_ref_ids"
 	// DeploymentModelCustomerIDColumn is the column json value customer_id
 	DeploymentModelCustomerIDColumn = "customer_id"
 	// DeploymentModelEndDateColumn is the column json value end_date
@@ -56,8 +57,8 @@ const (
 	DeploymentModelRefIDColumn = "ref_id"
 	// DeploymentModelRefTypeColumn is the column json value ref_type
 	DeploymentModelRefTypeColumn = "ref_type"
-	// DeploymentModelRepoNameColumn is the column json value repo_name
-	DeploymentModelRepoNameColumn = "repo_name"
+	// DeploymentModelShasColumn is the column json value shas
+	DeploymentModelShasColumn = "shas"
 	// DeploymentModelStartDateColumn is the column json value start_date
 	DeploymentModelStartDateColumn = "start_date"
 	// DeploymentModelStartDateEpochColumn is the column json value epoch
@@ -437,12 +438,14 @@ func (v *DeploymentStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) erro
 		*v = DeploymentStatus(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
-		case "PASS":
+		case "RUNNING":
 			*v = DeploymentStatus(0)
-		case "FAIL":
+		case "PASS":
 			*v = DeploymentStatus(1)
-		case "CANCEL":
+		case "FAIL":
 			*v = DeploymentStatus(2)
+		case "CANCEL":
+			*v = DeploymentStatus(3)
 		}
 	}
 	return nil
@@ -455,12 +458,14 @@ func (v *DeploymentStatus) UnmarshalJSON(buf []byte) error {
 		return err
 	}
 	switch val {
-	case "PASS":
+	case "RUNNING":
 		*v = 0
-	case "FAIL":
+	case "PASS":
 		*v = 1
-	case "CANCEL":
+	case "FAIL":
 		*v = 2
+	case "CANCEL":
+		*v = 3
 	}
 	return nil
 }
@@ -469,10 +474,12 @@ func (v *DeploymentStatus) UnmarshalJSON(buf []byte) error {
 func (v DeploymentStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return json.Marshal("PASS")
+		return json.Marshal("RUNNING")
 	case 1:
-		return json.Marshal("FAIL")
+		return json.Marshal("PASS")
 	case 2:
+		return json.Marshal("FAIL")
+	case 3:
 		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -482,10 +489,12 @@ func (v DeploymentStatus) MarshalJSON() ([]byte, error) {
 func (v DeploymentStatus) String() string {
 	switch int32(v) {
 	case 0:
-		return "PASS"
+		return "RUNNING"
 	case 1:
-		return "FAIL"
+		return "PASS"
 	case 2:
+		return "FAIL"
+	case 3:
 		return "CANCEL"
 	}
 	return "unset"
@@ -502,34 +511,36 @@ func (v *DeploymentStatus) FromInterface(o interface{}) error {
 		*v = DeploymentStatus(int32(val))
 	case string:
 		switch val {
-		case "PASS":
+		case "RUNNING":
 			*v = DeploymentStatus(0)
-		case "FAIL":
+		case "PASS":
 			*v = DeploymentStatus(1)
-		case "CANCEL":
+		case "FAIL":
 			*v = DeploymentStatus(2)
+		case "CANCEL":
+			*v = DeploymentStatus(3)
 		}
 	}
 	return nil
 }
 
 const (
+	// DeploymentStatusRunning is the enumeration value for running
+	DeploymentStatusRunning DeploymentStatus = 0
 	// DeploymentStatusPass is the enumeration value for pass
-	DeploymentStatusPass DeploymentStatus = 0
+	DeploymentStatusPass DeploymentStatus = 1
 	// DeploymentStatusFail is the enumeration value for fail
-	DeploymentStatusFail DeploymentStatus = 1
+	DeploymentStatusFail DeploymentStatus = 2
 	// DeploymentStatusCancel is the enumeration value for cancel
-	DeploymentStatusCancel DeploymentStatus = 2
+	DeploymentStatusCancel DeploymentStatus = 3
 )
 
-// Deployment an individual deployment
+// Deployment an individual deployment in a continous deployment system
 type Deployment struct {
 	// Automated if the deployment was automated or manual
 	Automated bool `json:"automated" codec:"automated" bson:"automated" yaml:"automated" faker:"-"`
-	// BuildRefID the build id that is associated with the deployment (if any)
-	BuildRefID string `json:"build_ref_id" codec:"build_ref_id" bson:"build_ref_id" yaml:"build_ref_id" faker:"-"`
-	// CommitSha the commit sha for the commit that triggered the deployment
-	CommitSha string `json:"commit_sha" codec:"commit_sha" bson:"commit_sha" yaml:"commit_sha" faker:"-"`
+	// BuildRefIds the build ids that is associated with the deployment (if any)
+	BuildRefIds []string `json:"build_ref_ids" codec:"build_ref_ids" bson:"build_ref_ids" yaml:"build_ref_ids" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndDate the date when the deployment finished
@@ -544,8 +555,8 @@ type Deployment struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// RepoName the name of the repo
-	RepoName string `json:"repo_name" codec:"repo_name" bson:"repo_name" yaml:"repo_name" faker:"-"`
+	// Shas the commit shas for the commit that triggered the deployment
+	Shas []string `json:"shas" codec:"shas" bson:"shas" yaml:"shas" faker:"-"`
 	// StartDate the date when the deployment started
 	StartDate DeploymentStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the deployment
@@ -615,6 +626,12 @@ func NewDeploymentID(customerID string, refType string, refID string) string {
 }
 
 func (o *Deployment) setDefaults(frommap bool) {
+	if o.BuildRefIds == nil {
+		o.BuildRefIds = make([]string, 0)
+	}
+	if o.Shas == nil {
+		o.Shas = make([]string, 0)
+	}
 
 	if o.ID == "" {
 		// we will attempt to generate a consistent, unique ID from a hash
@@ -761,18 +778,17 @@ func (o *Deployment) IsEqual(other *Deployment) bool {
 func (o *Deployment) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
-		"automated":    toDeploymentObject(o.Automated, false),
-		"build_ref_id": toDeploymentObject(o.BuildRefID, false),
-		"commit_sha":   toDeploymentObject(o.CommitSha, false),
-		"customer_id":  toDeploymentObject(o.CustomerID, false),
-		"end_date":     toDeploymentObject(o.EndDate, false),
+		"automated":     toDeploymentObject(o.Automated, false),
+		"build_ref_ids": toDeploymentObject(o.BuildRefIds, false),
+		"customer_id":   toDeploymentObject(o.CustomerID, false),
+		"end_date":      toDeploymentObject(o.EndDate, false),
 
 		"environment":             o.Environment.String(),
 		"id":                      toDeploymentObject(o.ID, false),
 		"integration_instance_id": toDeploymentObject(o.IntegrationInstanceID, true),
 		"ref_id":                  toDeploymentObject(o.RefID, false),
 		"ref_type":                toDeploymentObject(o.RefType, false),
-		"repo_name":               toDeploymentObject(o.RepoName, false),
+		"shas":                    toDeploymentObject(o.Shas, false),
 		"start_date":              toDeploymentObject(o.StartDate, false),
 
 		"status":   o.Status.String(),
@@ -801,43 +817,55 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["build_ref_id"].(string); ok {
-		o.BuildRefID = val
-	} else {
-		if val, ok := kv["build_ref_id"]; ok {
-			if val == nil {
-				o.BuildRefID = ""
+	if val, ok := kv["build_ref_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for build_ref_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for build_ref_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
 					}
 				} else {
-					val = v
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for build_ref_ids field")
 				}
-				o.BuildRefID = fmt.Sprintf("%v", val)
 			}
+			o.BuildRefIds = na
 		}
 	}
-	if val, ok := kv["commit_sha"].(string); ok {
-		o.CommitSha = val
-	} else {
-		if val, ok := kv["commit_sha"]; ok {
-			if val == nil {
-				o.CommitSha = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.CommitSha = fmt.Sprintf("%v", val)
-			}
-		}
+	if o.BuildRefIds == nil {
+		o.BuildRefIds = make([]string, 0)
 	}
 	if val, ok := kv["customer_id"].(string); ok {
 		o.CustomerID = val
@@ -1001,24 +1029,55 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["repo_name"].(string); ok {
-		o.RepoName = val
-	} else {
-		if val, ok := kv["repo_name"]; ok {
-			if val == nil {
-				o.RepoName = ""
+	if val, ok := kv["shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
 					}
 				} else {
-					val = v
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for shas field")
 				}
-				o.RepoName = fmt.Sprintf("%v", val)
 			}
+			o.Shas = na
 		}
+	}
+	if o.Shas == nil {
+		o.Shas = make([]string, 0)
 	}
 
 	if val, ok := kv["start_date"]; ok {
@@ -1058,22 +1117,26 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 
 			ev := em["cicd.status"].(string)
 			switch ev {
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 0
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 1
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 2
+			case "cancel", "CANCEL":
+				o.Status = 3
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 0
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 1
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 2
+			case "cancel", "CANCEL":
+				o.Status = 3
 			}
 		}
 	}
@@ -1101,8 +1164,7 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 func (o *Deployment) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Automated)
-	args = append(args, o.BuildRefID)
-	args = append(args, o.CommitSha)
+	args = append(args, o.BuildRefIds)
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndDate)
 	args = append(args, o.Environment)
@@ -1110,7 +1172,7 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.RepoName)
+	args = append(args, o.Shas)
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
 	args = append(args, o.URL)
@@ -1136,16 +1198,14 @@ func (o *Deployment) GetIntegrationInstanceID() *string {
 type DeploymentPartial struct {
 	// Automated if the deployment was automated or manual
 	Automated *bool `json:"automated,omitempty"`
-	// BuildRefID the build id that is associated with the deployment (if any)
-	BuildRefID *string `json:"build_ref_id,omitempty"`
-	// CommitSha the commit sha for the commit that triggered the deployment
-	CommitSha *string `json:"commit_sha,omitempty"`
+	// BuildRefIds the build ids that is associated with the deployment (if any)
+	BuildRefIds []string `json:"build_ref_ids,omitempty"`
 	// EndDate the date when the deployment finished
 	EndDate *DeploymentEndDate `json:"end_date,omitempty"`
 	// Environment the environment for the deployment
 	Environment *DeploymentEnvironment `json:"environment,omitempty"`
-	// RepoName the name of the repo
-	RepoName *string `json:"repo_name,omitempty"`
+	// Shas the commit shas for the commit that triggered the deployment
+	Shas []string `json:"shas,omitempty"`
 	// StartDate the date when the deployment started
 	StartDate *DeploymentStartDate `json:"start_date,omitempty"`
 	// Status the status of the deployment
@@ -1164,13 +1224,12 @@ func (o *DeploymentPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *DeploymentPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"automated":    toDeploymentObject(o.Automated, true),
-		"build_ref_id": toDeploymentObject(o.BuildRefID, true),
-		"commit_sha":   toDeploymentObject(o.CommitSha, true),
-		"end_date":     toDeploymentObject(o.EndDate, true),
+		"automated":     toDeploymentObject(o.Automated, true),
+		"build_ref_ids": toDeploymentObject(o.BuildRefIds, true),
+		"end_date":      toDeploymentObject(o.EndDate, true),
 
 		"environment": toDeploymentEnvironmentEnum(o.Environment),
-		"repo_name":   toDeploymentObject(o.RepoName, true),
+		"shas":        toDeploymentObject(o.Shas, true),
 		"start_date":  toDeploymentObject(o.StartDate, true),
 
 		"status": toDeploymentStatusEnum(o.Status),
@@ -1180,9 +1239,25 @@ func (o *DeploymentPartial) ToMap() map[string]interface{} {
 		if v == nil || reflect.ValueOf(v).IsZero() {
 			delete(kv, k)
 		} else {
+
+			if k == "build_ref_ids" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
+						delete(kv, k)
+					}
+				}
+			}
 			if k == "end_date" {
 				if dt, ok := v.(*DeploymentEndDate); ok {
 					if dt.Epoch == 0 && dt.Offset == 0 && dt.Rfc3339 == "" {
+						delete(kv, k)
+					}
+				}
+			}
+
+			if k == "shas" {
+				if arr, ok := v.([]string); ok {
+					if len(arr) == 0 {
 						delete(kv, k)
 					}
 				}
@@ -1241,39 +1316,55 @@ func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["build_ref_id"].(*string); ok {
-		o.BuildRefID = val
-	} else if val, ok := kv["build_ref_id"].(string); ok {
-		o.BuildRefID = &val
-	} else {
-		if val, ok := kv["build_ref_id"]; ok {
-			if val == nil {
-				o.BuildRefID = pstrings.Pointer("")
+	if val, ok := kv["build_ref_ids"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for build_ref_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for build_ref_ids field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for build_ref_ids field")
 				}
-				o.BuildRefID = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
+			o.BuildRefIds = na
 		}
 	}
-	if val, ok := kv["commit_sha"].(*string); ok {
-		o.CommitSha = val
-	} else if val, ok := kv["commit_sha"].(string); ok {
-		o.CommitSha = &val
-	} else {
-		if val, ok := kv["commit_sha"]; ok {
-			if val == nil {
-				o.CommitSha = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.CommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
+	if o.BuildRefIds == nil {
+		o.BuildRefIds = make([]string, 0)
 	}
 
 	if o.EndDate == nil {
@@ -1343,22 +1434,55 @@ func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["repo_name"].(*string); ok {
-		o.RepoName = val
-	} else if val, ok := kv["repo_name"].(string); ok {
-		o.RepoName = &val
-	} else {
-		if val, ok := kv["repo_name"]; ok {
-			if val == nil {
-				o.RepoName = pstrings.Pointer("")
+	if val, ok := kv["shas"]; ok {
+		if val != nil {
+			na := make([]string, 0)
+			if a, ok := val.([]string); ok {
+				na = append(na, a...)
 			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
+				if a, ok := val.([]interface{}); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							if badMap, ok := ae.(map[interface{}]interface{}); ok {
+								ae = slice.ConvertToStringToInterface(badMap)
+							}
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else if s, ok := val.(string); ok {
+					for _, sv := range strings.Split(s, ",") {
+						na = append(na, strings.TrimSpace(sv))
+					}
+				} else if a, ok := val.(primitive.A); ok {
+					for _, ae := range a {
+						if av, ok := ae.(string); ok {
+							na = append(na, av)
+						} else {
+							b, _ := json.Marshal(ae)
+							var av string
+							if err := json.Unmarshal(b, &av); err != nil {
+								panic("unsupported type for shas field entry: " + reflect.TypeOf(ae).String())
+							}
+							na = append(na, av)
+						}
+					}
+				} else {
+					fmt.Println(reflect.TypeOf(val).String())
+					panic("unsupported type for shas field")
 				}
-				o.RepoName = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
+			o.Shas = na
 		}
+	}
+	if o.Shas == nil {
+		o.Shas = make([]string, 0)
 	}
 
 	if o.StartDate == nil {
@@ -1411,12 +1535,14 @@ func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
 				// this is an enum pointer
 				if em, ok := val.(string); ok {
 					switch em {
-					case "pass", "PASS":
+					case "running", "RUNNING":
 						o.Status = toDeploymentStatusPointer(0)
-					case "fail", "FAIL":
+					case "pass", "PASS":
 						o.Status = toDeploymentStatusPointer(1)
-					case "cancel", "CANCEL":
+					case "fail", "FAIL":
 						o.Status = toDeploymentStatusPointer(2)
+					case "cancel", "CANCEL":
+						o.Status = toDeploymentStatusPointer(3)
 					}
 				}
 			}

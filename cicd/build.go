@@ -32,8 +32,6 @@ const (
 const (
 	// BuildModelAutomatedColumn is the column json value automated
 	BuildModelAutomatedColumn = "automated"
-	// BuildModelCommitShaColumn is the column json value commit_sha
-	BuildModelCommitShaColumn = "commit_sha"
 	// BuildModelCustomerIDColumn is the column json value customer_id
 	BuildModelCustomerIDColumn = "customer_id"
 	// BuildModelEndDateColumn is the column json value end_date
@@ -54,8 +52,8 @@ const (
 	BuildModelRefIDColumn = "ref_id"
 	// BuildModelRefTypeColumn is the column json value ref_type
 	BuildModelRefTypeColumn = "ref_type"
-	// BuildModelRepoNameColumn is the column json value repo_name
-	BuildModelRepoNameColumn = "repo_name"
+	// BuildModelShaColumn is the column json value sha
+	BuildModelShaColumn = "sha"
 	// BuildModelStartDateColumn is the column json value start_date
 	BuildModelStartDateColumn = "start_date"
 	// BuildModelStartDateEpochColumn is the column json value epoch
@@ -435,12 +433,14 @@ func (v *BuildStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 		*v = BuildStatus(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
-		case "PASS":
+		case "RUNNING":
 			*v = BuildStatus(0)
-		case "FAIL":
+		case "PASS":
 			*v = BuildStatus(1)
-		case "CANCEL":
+		case "FAIL":
 			*v = BuildStatus(2)
+		case "CANCEL":
+			*v = BuildStatus(3)
 		}
 	}
 	return nil
@@ -453,12 +453,14 @@ func (v *BuildStatus) UnmarshalJSON(buf []byte) error {
 		return err
 	}
 	switch val {
-	case "PASS":
+	case "RUNNING":
 		*v = 0
-	case "FAIL":
+	case "PASS":
 		*v = 1
-	case "CANCEL":
+	case "FAIL":
 		*v = 2
+	case "CANCEL":
+		*v = 3
 	}
 	return nil
 }
@@ -467,10 +469,12 @@ func (v *BuildStatus) UnmarshalJSON(buf []byte) error {
 func (v BuildStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return json.Marshal("PASS")
+		return json.Marshal("RUNNING")
 	case 1:
-		return json.Marshal("FAIL")
+		return json.Marshal("PASS")
 	case 2:
+		return json.Marshal("FAIL")
+	case 3:
 		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -480,10 +484,12 @@ func (v BuildStatus) MarshalJSON() ([]byte, error) {
 func (v BuildStatus) String() string {
 	switch int32(v) {
 	case 0:
-		return "PASS"
+		return "RUNNING"
 	case 1:
-		return "FAIL"
+		return "PASS"
 	case 2:
+		return "FAIL"
+	case 3:
 		return "CANCEL"
 	}
 	return "unset"
@@ -500,32 +506,34 @@ func (v *BuildStatus) FromInterface(o interface{}) error {
 		*v = BuildStatus(int32(val))
 	case string:
 		switch val {
-		case "PASS":
+		case "RUNNING":
 			*v = BuildStatus(0)
-		case "FAIL":
+		case "PASS":
 			*v = BuildStatus(1)
-		case "CANCEL":
+		case "FAIL":
 			*v = BuildStatus(2)
+		case "CANCEL":
+			*v = BuildStatus(3)
 		}
 	}
 	return nil
 }
 
 const (
+	// BuildStatusRunning is the enumeration value for running
+	BuildStatusRunning BuildStatus = 0
 	// BuildStatusPass is the enumeration value for pass
-	BuildStatusPass BuildStatus = 0
+	BuildStatusPass BuildStatus = 1
 	// BuildStatusFail is the enumeration value for fail
-	BuildStatusFail BuildStatus = 1
+	BuildStatusFail BuildStatus = 2
 	// BuildStatusCancel is the enumeration value for cancel
-	BuildStatusCancel BuildStatus = 2
+	BuildStatusCancel BuildStatus = 3
 )
 
-// Build an individual build
+// Build an individual build in a continous integration system
 type Build struct {
 	// Automated if the build was automated or manual
 	Automated bool `json:"automated" codec:"automated" bson:"automated" yaml:"automated" faker:"-"`
-	// CommitSha the commit sha for the commit that triggered the build
-	CommitSha string `json:"commit_sha" codec:"commit_sha" bson:"commit_sha" yaml:"commit_sha" faker:"-"`
 	// CustomerID the customer id for the model instance
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// EndDate the date when the build finished
@@ -540,8 +548,8 @@ type Build struct {
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
-	// RepoName the name of the repo
-	RepoName string `json:"repo_name" codec:"repo_name" bson:"repo_name" yaml:"repo_name" faker:"-"`
+	// Sha the commit sha for the commit that triggered the build
+	Sha string `json:"sha" codec:"sha" bson:"sha" yaml:"sha" faker:"-"`
 	// StartDate the date when the build started
 	StartDate BuildStartDate `json:"start_date" codec:"start_date" bson:"start_date" yaml:"start_date" faker:"-"`
 	// Status the status of the build
@@ -758,7 +766,6 @@ func (o *Build) ToMap() map[string]interface{} {
 	o.setDefaults(false)
 	return map[string]interface{}{
 		"automated":   toBuildObject(o.Automated, false),
-		"commit_sha":  toBuildObject(o.CommitSha, false),
 		"customer_id": toBuildObject(o.CustomerID, false),
 		"end_date":    toBuildObject(o.EndDate, false),
 
@@ -767,7 +774,7 @@ func (o *Build) ToMap() map[string]interface{} {
 		"integration_instance_id": toBuildObject(o.IntegrationInstanceID, true),
 		"ref_id":                  toBuildObject(o.RefID, false),
 		"ref_type":                toBuildObject(o.RefType, false),
-		"repo_name":               toBuildObject(o.RepoName, false),
+		"sha":                     toBuildObject(o.Sha, false),
 		"start_date":              toBuildObject(o.StartDate, false),
 
 		"status":   o.Status.String(),
@@ -793,25 +800,6 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 				o.Automated = false
 			} else {
 				o.Automated = number.ToBoolAny(val)
-			}
-		}
-	}
-	if val, ok := kv["commit_sha"].(string); ok {
-		o.CommitSha = val
-	} else {
-		if val, ok := kv["commit_sha"]; ok {
-			if val == nil {
-				o.CommitSha = ""
-			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
-				}
-				o.CommitSha = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -977,12 +965,12 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["repo_name"].(string); ok {
-		o.RepoName = val
+	if val, ok := kv["sha"].(string); ok {
+		o.Sha = val
 	} else {
-		if val, ok := kv["repo_name"]; ok {
+		if val, ok := kv["sha"]; ok {
 			if val == nil {
-				o.RepoName = ""
+				o.Sha = ""
 			} else {
 				v := pstrings.Value(val)
 				if v != "" {
@@ -992,7 +980,7 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 				} else {
 					val = v
 				}
-				o.RepoName = fmt.Sprintf("%v", val)
+				o.Sha = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -1034,22 +1022,26 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 
 			ev := em["cicd.status"].(string)
 			switch ev {
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 0
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 1
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 2
+			case "cancel", "CANCEL":
+				o.Status = 3
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 0
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 1
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 2
+			case "cancel", "CANCEL":
+				o.Status = 3
 			}
 		}
 	}
@@ -1077,7 +1069,6 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 func (o *Build) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.Automated)
-	args = append(args, o.CommitSha)
 	args = append(args, o.CustomerID)
 	args = append(args, o.EndDate)
 	args = append(args, o.Environment)
@@ -1085,7 +1076,7 @@ func (o *Build) Hash() string {
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
-	args = append(args, o.RepoName)
+	args = append(args, o.Sha)
 	args = append(args, o.StartDate)
 	args = append(args, o.Status)
 	args = append(args, o.URL)
@@ -1111,14 +1102,12 @@ func (o *Build) GetIntegrationInstanceID() *string {
 type BuildPartial struct {
 	// Automated if the build was automated or manual
 	Automated *bool `json:"automated,omitempty"`
-	// CommitSha the commit sha for the commit that triggered the build
-	CommitSha *string `json:"commit_sha,omitempty"`
 	// EndDate the date when the build finished
 	EndDate *BuildEndDate `json:"end_date,omitempty"`
 	// Environment the environment for the build
 	Environment *BuildEnvironment `json:"environment,omitempty"`
-	// RepoName the name of the repo
-	RepoName *string `json:"repo_name,omitempty"`
+	// Sha the commit sha for the commit that triggered the build
+	Sha *string `json:"sha,omitempty"`
 	// StartDate the date when the build started
 	StartDate *BuildStartDate `json:"start_date,omitempty"`
 	// Status the status of the build
@@ -1137,12 +1126,11 @@ func (o *BuildPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *BuildPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"automated":  toBuildObject(o.Automated, true),
-		"commit_sha": toBuildObject(o.CommitSha, true),
-		"end_date":   toBuildObject(o.EndDate, true),
+		"automated": toBuildObject(o.Automated, true),
+		"end_date":  toBuildObject(o.EndDate, true),
 
 		"environment": toBuildEnvironmentEnum(o.Environment),
-		"repo_name":   toBuildObject(o.RepoName, true),
+		"sha":         toBuildObject(o.Sha, true),
 		"start_date":  toBuildObject(o.StartDate, true),
 
 		"status": toBuildStatusEnum(o.Status),
@@ -1210,23 +1198,6 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 					val = kv["bool"]
 				}
 				o.Automated = number.BoolPointer(number.ToBoolAny(val))
-			}
-		}
-	}
-	if val, ok := kv["commit_sha"].(*string); ok {
-		o.CommitSha = val
-	} else if val, ok := kv["commit_sha"].(string); ok {
-		o.CommitSha = &val
-	} else {
-		if val, ok := kv["commit_sha"]; ok {
-			if val == nil {
-				o.CommitSha = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.CommitSha = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1298,20 +1269,20 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["repo_name"].(*string); ok {
-		o.RepoName = val
-	} else if val, ok := kv["repo_name"].(string); ok {
-		o.RepoName = &val
+	if val, ok := kv["sha"].(*string); ok {
+		o.Sha = val
+	} else if val, ok := kv["sha"].(string); ok {
+		o.Sha = &val
 	} else {
-		if val, ok := kv["repo_name"]; ok {
+		if val, ok := kv["sha"]; ok {
 			if val == nil {
-				o.RepoName = pstrings.Pointer("")
+				o.Sha = pstrings.Pointer("")
 			} else {
 				// if coming in as map, convert it back
 				if kv, ok := val.(map[string]interface{}); ok {
 					val = kv["string"]
 				}
-				o.RepoName = pstrings.Pointer(fmt.Sprintf("%v", val))
+				o.Sha = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
@@ -1366,12 +1337,14 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 				// this is an enum pointer
 				if em, ok := val.(string); ok {
 					switch em {
-					case "pass", "PASS":
+					case "running", "RUNNING":
 						o.Status = toBuildStatusPointer(0)
-					case "fail", "FAIL":
+					case "pass", "PASS":
 						o.Status = toBuildStatusPointer(1)
-					case "cancel", "CANCEL":
+					case "fail", "FAIL":
 						o.Status = toBuildStatusPointer(2)
+					case "cancel", "CANCEL":
+						o.Status = toBuildStatusPointer(3)
 					}
 				}
 			}

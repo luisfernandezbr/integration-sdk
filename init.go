@@ -10,6 +10,7 @@ import (
 	dm_cicd "github.com/pinpt/integration-sdk/cicd"
 	dm_codequality "github.com/pinpt/integration-sdk/codequality"
 	dm_customer "github.com/pinpt/integration-sdk/customer"
+	dm_security "github.com/pinpt/integration-sdk/security"
 	dm_sourcecode "github.com/pinpt/integration-sdk/sourcecode"
 	dm_web "github.com/pinpt/integration-sdk/web"
 	dm_work "github.com/pinpt/integration-sdk/work"
@@ -302,6 +303,10 @@ func New(name datamodel.ModelNameType) datamodel.Model {
 		o := new(dm_customer.Team)
 		o.FromMap(map[string]interface{}{})
 		return o
+	case "security.Advisory":
+		o := new(dm_security.Advisory)
+		o.FromMap(map[string]interface{}{})
+		return o
 	case "sourcecode.Blame":
 		o := new(dm_sourcecode.Blame)
 		o.FromMap(map[string]interface{}{})
@@ -563,6 +568,8 @@ func NewPartial(name datamodel.ModelNameType) datamodel.PartialModel {
 		return new(dm_customer.CostCenterPartial)
 	case "customer.Team":
 		return new(dm_customer.TeamPartial)
+	case "security.Advisory":
+		return new(dm_security.AdvisoryPartial)
 	case "sourcecode.Blame":
 		return new(dm_sourcecode.BlamePartial)
 	case "sourcecode.Branch":
@@ -800,6 +807,7 @@ func GetModelNames() []datamodel.ModelNameType {
 		datamodel.ModelNameType("codequality.Project"),
 		datamodel.ModelNameType("customer.CostCenter"),
 		datamodel.ModelNameType("customer.Team"),
+		datamodel.ModelNameType("security.Advisory"),
 		datamodel.ModelNameType("sourcecode.Blame"),
 		datamodel.ModelNameType("sourcecode.Branch"),
 		datamodel.ModelNameType("sourcecode.Commit"),
