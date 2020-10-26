@@ -437,14 +437,16 @@ func (v *BuildStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) error {
 		*v = BuildStatus(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
-		case "RUNNING":
+		case "CREATED":
 			*v = BuildStatus(0)
-		case "PASS":
+		case "RUNNING":
 			*v = BuildStatus(1)
-		case "FAIL":
+		case "PASS":
 			*v = BuildStatus(2)
-		case "CANCEL":
+		case "FAIL":
 			*v = BuildStatus(3)
+		case "CANCEL":
+			*v = BuildStatus(4)
 		}
 	}
 	return nil
@@ -457,14 +459,16 @@ func (v *BuildStatus) UnmarshalJSON(buf []byte) error {
 		return err
 	}
 	switch val {
-	case "RUNNING":
+	case "CREATED":
 		*v = 0
-	case "PASS":
+	case "RUNNING":
 		*v = 1
-	case "FAIL":
+	case "PASS":
 		*v = 2
-	case "CANCEL":
+	case "FAIL":
 		*v = 3
+	case "CANCEL":
+		*v = 4
 	}
 	return nil
 }
@@ -473,12 +477,14 @@ func (v *BuildStatus) UnmarshalJSON(buf []byte) error {
 func (v BuildStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return json.Marshal("RUNNING")
+		return json.Marshal("CREATED")
 	case 1:
-		return json.Marshal("PASS")
+		return json.Marshal("RUNNING")
 	case 2:
-		return json.Marshal("FAIL")
+		return json.Marshal("PASS")
 	case 3:
+		return json.Marshal("FAIL")
+	case 4:
 		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -488,12 +494,14 @@ func (v BuildStatus) MarshalJSON() ([]byte, error) {
 func (v BuildStatus) String() string {
 	switch int32(v) {
 	case 0:
-		return "RUNNING"
+		return "CREATED"
 	case 1:
-		return "PASS"
+		return "RUNNING"
 	case 2:
-		return "FAIL"
+		return "PASS"
 	case 3:
+		return "FAIL"
+	case 4:
 		return "CANCEL"
 	}
 	return "unset"
@@ -510,28 +518,32 @@ func (v *BuildStatus) FromInterface(o interface{}) error {
 		*v = BuildStatus(int32(val))
 	case string:
 		switch val {
-		case "RUNNING":
+		case "CREATED":
 			*v = BuildStatus(0)
-		case "PASS":
+		case "RUNNING":
 			*v = BuildStatus(1)
-		case "FAIL":
+		case "PASS":
 			*v = BuildStatus(2)
-		case "CANCEL":
+		case "FAIL":
 			*v = BuildStatus(3)
+		case "CANCEL":
+			*v = BuildStatus(4)
 		}
 	}
 	return nil
 }
 
 const (
+	// BuildStatusCreated is the enumeration value for created
+	BuildStatusCreated BuildStatus = 0
 	// BuildStatusRunning is the enumeration value for running
-	BuildStatusRunning BuildStatus = 0
+	BuildStatusRunning BuildStatus = 1
 	// BuildStatusPass is the enumeration value for pass
-	BuildStatusPass BuildStatus = 1
+	BuildStatusPass BuildStatus = 2
 	// BuildStatusFail is the enumeration value for fail
-	BuildStatusFail BuildStatus = 2
+	BuildStatusFail BuildStatus = 3
 	// BuildStatusCancel is the enumeration value for cancel
-	BuildStatusCancel BuildStatus = 3
+	BuildStatusCancel BuildStatus = 4
 )
 
 // Build an individual build in a continous integration system
@@ -1066,26 +1078,30 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 
 			ev := em["cicd.status"].(string)
 			switch ev {
-			case "running", "RUNNING":
+			case "created", "CREATED":
 				o.Status = 0
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 1
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 2
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 3
+			case "cancel", "CANCEL":
+				o.Status = 4
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
-			case "running", "RUNNING":
+			case "created", "CREATED":
 				o.Status = 0
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 1
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 2
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 3
+			case "cancel", "CANCEL":
+				o.Status = 4
 			}
 		}
 	}
@@ -1423,14 +1439,16 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 				// this is an enum pointer
 				if em, ok := val.(string); ok {
 					switch em {
-					case "running", "RUNNING":
+					case "created", "CREATED":
 						o.Status = toBuildStatusPointer(0)
-					case "pass", "PASS":
+					case "running", "RUNNING":
 						o.Status = toBuildStatusPointer(1)
-					case "fail", "FAIL":
+					case "pass", "PASS":
 						o.Status = toBuildStatusPointer(2)
-					case "cancel", "CANCEL":
+					case "fail", "FAIL":
 						o.Status = toBuildStatusPointer(3)
+					case "cancel", "CANCEL":
+						o.Status = toBuildStatusPointer(4)
 					}
 				}
 			}
