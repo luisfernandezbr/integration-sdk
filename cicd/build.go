@@ -48,6 +48,10 @@ const (
 	BuildModelIDColumn = "id"
 	// BuildModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	BuildModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// BuildModelMessageColumn is the column json value message
+	BuildModelMessageColumn = "message"
+	// BuildModelPullrequestURLColumn is the column json value pullrequest_url
+	BuildModelPullrequestURLColumn = "pullrequest_url"
 	// BuildModelRefIDColumn is the column json value ref_id
 	BuildModelRefIDColumn = "ref_id"
 	// BuildModelRefTypeColumn is the column json value ref_type
@@ -544,6 +548,10 @@ type Build struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// Message an optional message about the build
+	Message *string `json:"message,omitempty" codec:"message,omitempty" bson:"message" yaml:"message,omitempty" faker:"-"`
+	// PullrequestURL the pull request url that triggered this build
+	PullrequestURL *string `json:"pullrequest_url,omitempty" codec:"pullrequest_url,omitempty" bson:"pullrequest_url" yaml:"pullrequest_url,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -772,6 +780,8 @@ func (o *Build) ToMap() map[string]interface{} {
 		"environment":             o.Environment.String(),
 		"id":                      toBuildObject(o.ID, false),
 		"integration_instance_id": toBuildObject(o.IntegrationInstanceID, true),
+		"message":                 toBuildObject(o.Message, true),
+		"pullrequest_url":         toBuildObject(o.PullrequestURL, true),
 		"ref_id":                  toBuildObject(o.RefID, false),
 		"ref_type":                toBuildObject(o.RefType, false),
 		"sha":                     toBuildObject(o.Sha, false),
@@ -927,6 +937,40 @@ func (o *Build) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["message"].(*string); ok {
+		o.Message = val
+	} else if val, ok := kv["message"].(string); ok {
+		o.Message = &val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Message = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["pullrequest_url"].(*string); ok {
+		o.PullrequestURL = val
+	} else if val, ok := kv["pullrequest_url"].(string); ok {
+		o.PullrequestURL = &val
+	} else {
+		if val, ok := kv["pullrequest_url"]; ok {
+			if val == nil {
+				o.PullrequestURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullrequestURL = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1074,6 +1118,8 @@ func (o *Build) Hash() string {
 	args = append(args, o.Environment)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.Message)
+	args = append(args, o.PullrequestURL)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Sha)
@@ -1106,6 +1152,10 @@ type BuildPartial struct {
 	EndDate *BuildEndDate `json:"end_date,omitempty"`
 	// Environment the environment for the build
 	Environment *BuildEnvironment `json:"environment,omitempty"`
+	// Message an optional message about the build
+	Message *string `json:"message,omitempty"`
+	// PullrequestURL the pull request url that triggered this build
+	PullrequestURL *string `json:"pullrequest_url,omitempty"`
 	// Sha the commit sha for the commit that triggered the build
 	Sha *string `json:"sha,omitempty"`
 	// StartDate the date when the build started
@@ -1129,9 +1179,11 @@ func (o *BuildPartial) ToMap() map[string]interface{} {
 		"automated": toBuildObject(o.Automated, true),
 		"end_date":  toBuildObject(o.EndDate, true),
 
-		"environment": toBuildEnvironmentEnum(o.Environment),
-		"sha":         toBuildObject(o.Sha, true),
-		"start_date":  toBuildObject(o.StartDate, true),
+		"environment":     toBuildEnvironmentEnum(o.Environment),
+		"message":         toBuildObject(o.Message, true),
+		"pullrequest_url": toBuildObject(o.PullrequestURL, true),
+		"sha":             toBuildObject(o.Sha, true),
+		"start_date":      toBuildObject(o.StartDate, true),
 
 		"status": toBuildStatusEnum(o.Status),
 		"url":    toBuildObject(o.URL, true),
@@ -1266,6 +1318,40 @@ func (o *BuildPartial) FromMap(kv map[string]interface{}) {
 						o.Environment = toBuildEnvironmentPointer(5)
 					}
 				}
+			}
+		}
+	}
+	if val, ok := kv["message"].(*string); ok {
+		o.Message = val
+	} else if val, ok := kv["message"].(string); ok {
+		o.Message = &val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Message = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
+	if val, ok := kv["pullrequest_url"].(*string); ok {
+		o.PullrequestURL = val
+	} else if val, ok := kv["pullrequest_url"].(string); ok {
+		o.PullrequestURL = &val
+	} else {
+		if val, ok := kv["pullrequest_url"]; ok {
+			if val == nil {
+				o.PullrequestURL = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.PullrequestURL = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}

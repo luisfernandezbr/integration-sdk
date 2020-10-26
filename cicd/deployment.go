@@ -53,6 +53,8 @@ const (
 	DeploymentModelIDColumn = "id"
 	// DeploymentModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	DeploymentModelIntegrationInstanceIDColumn = "integration_instance_id"
+	// DeploymentModelMessageColumn is the column json value message
+	DeploymentModelMessageColumn = "message"
 	// DeploymentModelRefIDColumn is the column json value ref_id
 	DeploymentModelRefIDColumn = "ref_id"
 	// DeploymentModelRefTypeColumn is the column json value ref_type
@@ -551,6 +553,8 @@ type Deployment struct {
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
 	// IntegrationInstanceID the integration instance id
 	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// Message an optional message about the build
+	Message *string `json:"message,omitempty" codec:"message,omitempty" bson:"message" yaml:"message,omitempty" faker:"-"`
 	// RefID the source system id for the model instance
 	RefID string `json:"ref_id" codec:"ref_id" bson:"ref_id" yaml:"ref_id" faker:"-"`
 	// RefType the source system identifier for the model instance
@@ -786,6 +790,7 @@ func (o *Deployment) ToMap() map[string]interface{} {
 		"environment":             o.Environment.String(),
 		"id":                      toDeploymentObject(o.ID, false),
 		"integration_instance_id": toDeploymentObject(o.IntegrationInstanceID, true),
+		"message":                 toDeploymentObject(o.Message, true),
 		"ref_id":                  toDeploymentObject(o.RefID, false),
 		"ref_type":                toDeploymentObject(o.RefType, false),
 		"shas":                    toDeploymentObject(o.Shas, false),
@@ -991,6 +996,23 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
+	if val, ok := kv["message"].(*string); ok {
+		o.Message = val
+	} else if val, ok := kv["message"].(string); ok {
+		o.Message = &val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Message = pstrings.Pointer(fmt.Sprintf("%v", val))
+			}
+		}
+	}
 	if val, ok := kv["ref_id"].(string); ok {
 		o.RefID = val
 	} else {
@@ -1170,6 +1192,7 @@ func (o *Deployment) Hash() string {
 	args = append(args, o.Environment)
 	args = append(args, o.ID)
 	args = append(args, o.IntegrationInstanceID)
+	args = append(args, o.Message)
 	args = append(args, o.RefID)
 	args = append(args, o.RefType)
 	args = append(args, o.Shas)
@@ -1204,6 +1227,8 @@ type DeploymentPartial struct {
 	EndDate *DeploymentEndDate `json:"end_date,omitempty"`
 	// Environment the environment for the deployment
 	Environment *DeploymentEnvironment `json:"environment,omitempty"`
+	// Message an optional message about the build
+	Message *string `json:"message,omitempty"`
 	// Shas the commit shas for the commit that triggered the deployment
 	Shas []string `json:"shas,omitempty"`
 	// StartDate the date when the deployment started
@@ -1229,6 +1254,7 @@ func (o *DeploymentPartial) ToMap() map[string]interface{} {
 		"end_date":      toDeploymentObject(o.EndDate, true),
 
 		"environment": toDeploymentEnvironmentEnum(o.Environment),
+		"message":     toDeploymentObject(o.Message, true),
 		"shas":        toDeploymentObject(o.Shas, true),
 		"start_date":  toDeploymentObject(o.StartDate, true),
 
@@ -1431,6 +1457,23 @@ func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
 						o.Environment = toDeploymentEnvironmentPointer(5)
 					}
 				}
+			}
+		}
+	}
+	if val, ok := kv["message"].(*string); ok {
+		o.Message = val
+	} else if val, ok := kv["message"].(string); ok {
+		o.Message = &val
+	} else {
+		if val, ok := kv["message"]; ok {
+			if val == nil {
+				o.Message = pstrings.Pointer("")
+			} else {
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
+				}
+				o.Message = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
