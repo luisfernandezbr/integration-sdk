@@ -440,14 +440,16 @@ func (v *DeploymentStatus) UnmarshalBSONValue(t bsontype.Type, data []byte) erro
 		*v = DeploymentStatus(val.Int32())
 	case bsontype.String:
 		switch val.StringValue() {
-		case "RUNNING":
+		case "CREATED":
 			*v = DeploymentStatus(0)
-		case "PASS":
+		case "RUNNING":
 			*v = DeploymentStatus(1)
-		case "FAIL":
+		case "PASS":
 			*v = DeploymentStatus(2)
-		case "CANCEL":
+		case "FAIL":
 			*v = DeploymentStatus(3)
+		case "CANCEL":
+			*v = DeploymentStatus(4)
 		}
 	}
 	return nil
@@ -460,14 +462,16 @@ func (v *DeploymentStatus) UnmarshalJSON(buf []byte) error {
 		return err
 	}
 	switch val {
-	case "RUNNING":
+	case "CREATED":
 		*v = 0
-	case "PASS":
+	case "RUNNING":
 		*v = 1
-	case "FAIL":
+	case "PASS":
 		*v = 2
-	case "CANCEL":
+	case "FAIL":
 		*v = 3
+	case "CANCEL":
+		*v = 4
 	}
 	return nil
 }
@@ -476,12 +480,14 @@ func (v *DeploymentStatus) UnmarshalJSON(buf []byte) error {
 func (v DeploymentStatus) MarshalJSON() ([]byte, error) {
 	switch v {
 	case 0:
-		return json.Marshal("RUNNING")
+		return json.Marshal("CREATED")
 	case 1:
-		return json.Marshal("PASS")
+		return json.Marshal("RUNNING")
 	case 2:
-		return json.Marshal("FAIL")
+		return json.Marshal("PASS")
 	case 3:
+		return json.Marshal("FAIL")
+	case 4:
 		return json.Marshal("CANCEL")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
@@ -491,12 +497,14 @@ func (v DeploymentStatus) MarshalJSON() ([]byte, error) {
 func (v DeploymentStatus) String() string {
 	switch int32(v) {
 	case 0:
-		return "RUNNING"
+		return "CREATED"
 	case 1:
-		return "PASS"
+		return "RUNNING"
 	case 2:
-		return "FAIL"
+		return "PASS"
 	case 3:
+		return "FAIL"
+	case 4:
 		return "CANCEL"
 	}
 	return "unset"
@@ -513,28 +521,32 @@ func (v *DeploymentStatus) FromInterface(o interface{}) error {
 		*v = DeploymentStatus(int32(val))
 	case string:
 		switch val {
-		case "RUNNING":
+		case "CREATED":
 			*v = DeploymentStatus(0)
-		case "PASS":
+		case "RUNNING":
 			*v = DeploymentStatus(1)
-		case "FAIL":
+		case "PASS":
 			*v = DeploymentStatus(2)
-		case "CANCEL":
+		case "FAIL":
 			*v = DeploymentStatus(3)
+		case "CANCEL":
+			*v = DeploymentStatus(4)
 		}
 	}
 	return nil
 }
 
 const (
+	// DeploymentStatusCreated is the enumeration value for created
+	DeploymentStatusCreated DeploymentStatus = 0
 	// DeploymentStatusRunning is the enumeration value for running
-	DeploymentStatusRunning DeploymentStatus = 0
+	DeploymentStatusRunning DeploymentStatus = 1
 	// DeploymentStatusPass is the enumeration value for pass
-	DeploymentStatusPass DeploymentStatus = 1
+	DeploymentStatusPass DeploymentStatus = 2
 	// DeploymentStatusFail is the enumeration value for fail
-	DeploymentStatusFail DeploymentStatus = 2
+	DeploymentStatusFail DeploymentStatus = 3
 	// DeploymentStatusCancel is the enumeration value for cancel
-	DeploymentStatusCancel DeploymentStatus = 3
+	DeploymentStatusCancel DeploymentStatus = 4
 )
 
 // Deployment an individual deployment in a continous deployment system
@@ -1139,26 +1151,30 @@ func (o *Deployment) FromMap(kv map[string]interface{}) {
 
 			ev := em["cicd.status"].(string)
 			switch ev {
-			case "running", "RUNNING":
+			case "created", "CREATED":
 				o.Status = 0
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 1
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 2
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 3
+			case "cancel", "CANCEL":
+				o.Status = 4
 			}
 		}
 		if em, ok := kv["status"].(string); ok {
 			switch em {
-			case "running", "RUNNING":
+			case "created", "CREATED":
 				o.Status = 0
-			case "pass", "PASS":
+			case "running", "RUNNING":
 				o.Status = 1
-			case "fail", "FAIL":
+			case "pass", "PASS":
 				o.Status = 2
-			case "cancel", "CANCEL":
+			case "fail", "FAIL":
 				o.Status = 3
+			case "cancel", "CANCEL":
+				o.Status = 4
 			}
 		}
 	}
@@ -1578,14 +1594,16 @@ func (o *DeploymentPartial) FromMap(kv map[string]interface{}) {
 				// this is an enum pointer
 				if em, ok := val.(string); ok {
 					switch em {
-					case "running", "RUNNING":
+					case "created", "CREATED":
 						o.Status = toDeploymentStatusPointer(0)
-					case "pass", "PASS":
+					case "running", "RUNNING":
 						o.Status = toDeploymentStatusPointer(1)
-					case "fail", "FAIL":
+					case "pass", "PASS":
 						o.Status = toDeploymentStatusPointer(2)
-					case "cancel", "CANCEL":
+					case "fail", "FAIL":
 						o.Status = toDeploymentStatusPointer(3)
+					case "cancel", "CANCEL":
+						o.Status = toDeploymentStatusPointer(4)
 					}
 				}
 			}
