@@ -55,6 +55,8 @@ const (
 	ProjectCapabilityModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ProjectCapabilityModelIssueMutationFieldsColumn is the column json value issue_mutation_fields
 	ProjectCapabilityModelIssueMutationFieldsColumn = "issue_mutation_fields"
+	// ProjectCapabilityModelIssueMutationFieldsAlwaysAvailableColumn is the column json value always_available
+	ProjectCapabilityModelIssueMutationFieldsAlwaysAvailableColumn = "always_available"
 	// ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn is the column json value always_required
 	ProjectCapabilityModelIssueMutationFieldsAlwaysRequiredColumn = "always_required"
 	// ProjectCapabilityModelIssueMutationFieldsAvailableForTypesColumn is the column json value available_for_types
@@ -389,6 +391,8 @@ func (o *ProjectCapabilityIssueMutationFieldsValues) FromMap(kv map[string]inter
 
 // ProjectCapabilityIssueMutationFields represents the object structure for issue_mutation_fields
 type ProjectCapabilityIssueMutationFields struct {
+	// AlwaysAvailable indicates that this field is always available when creating new issues for this project
+	AlwaysAvailable bool `json:"always_available" codec:"always_available" bson:"always_available" yaml:"always_available" faker:"-"`
 	// AlwaysRequired indicates that this field is always required when creating new issues for this project
 	AlwaysRequired bool `json:"always_required" codec:"always_required" bson:"always_required" yaml:"always_required" faker:"-"`
 	// AvailableForTypes a list of types for which this field is available, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
@@ -433,6 +437,8 @@ func toProjectCapabilityIssueMutationFieldsObject(o interface{}, isoptional bool
 func (o *ProjectCapabilityIssueMutationFields) ToMap() map[string]interface{} {
 	o.setDefaults(true)
 	return map[string]interface{}{
+		// AlwaysAvailable indicates that this field is always available when creating new issues for this project
+		"always_available": toProjectCapabilityIssueMutationFieldsObject(o.AlwaysAvailable, false),
 		// AlwaysRequired indicates that this field is always required when creating new issues for this project
 		"always_required": toProjectCapabilityIssueMutationFieldsObject(o.AlwaysRequired, false),
 		// AvailableForTypes a list of types for which this field is available, this field is ignored if field type is 'WORK_ISSUE_TYPE', should be a list of ref_ids
@@ -467,6 +473,17 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 	// if coming from db
 	if id, ok := kv["_id"]; ok && id != "" {
 		kv["id"] = id
+	}
+	if val, ok := kv["always_available"].(bool); ok {
+		o.AlwaysAvailable = val
+	} else {
+		if val, ok := kv["always_available"]; ok {
+			if val == nil {
+				o.AlwaysAvailable = false
+			} else {
+				o.AlwaysAvailable = number.ToBoolAny(val)
+			}
+		}
 	}
 	if val, ok := kv["always_required"].(bool); ok {
 		o.AlwaysRequired = val
