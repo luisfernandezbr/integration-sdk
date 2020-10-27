@@ -150,6 +150,8 @@ func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalBSONValue(t bsontype
 			*v = ProjectCapabilityIssueMutationFieldsType(9)
 		case "WORK_ISSUE":
 			*v = ProjectCapabilityIssueMutationFieldsType(10)
+		case "DATE":
+			*v = ProjectCapabilityIssueMutationFieldsType(11)
 		}
 	}
 	return nil
@@ -184,6 +186,8 @@ func (v *ProjectCapabilityIssueMutationFieldsType) UnmarshalJSON(buf []byte) err
 		*v = 9
 	case "WORK_ISSUE":
 		*v = 10
+	case "DATE":
+		*v = 11
 	}
 	return nil
 }
@@ -213,6 +217,8 @@ func (v ProjectCapabilityIssueMutationFieldsType) MarshalJSON() ([]byte, error) 
 		return json.Marshal("WORK_SPRINT")
 	case 10:
 		return json.Marshal("WORK_ISSUE")
+	case 11:
+		return json.Marshal("DATE")
 	}
 	return nil, fmt.Errorf("unexpected enum value")
 }
@@ -242,6 +248,8 @@ func (v ProjectCapabilityIssueMutationFieldsType) String() string {
 		return "WORK_SPRINT"
 	case 10:
 		return "WORK_ISSUE"
+	case 11:
+		return "DATE"
 	}
 	return "unset"
 }
@@ -279,6 +287,8 @@ func (v *ProjectCapabilityIssueMutationFieldsType) FromInterface(o interface{}) 
 			*v = ProjectCapabilityIssueMutationFieldsType(9)
 		case "WORK_ISSUE":
 			*v = ProjectCapabilityIssueMutationFieldsType(10)
+		case "DATE":
+			*v = ProjectCapabilityIssueMutationFieldsType(11)
 		}
 	}
 	return nil
@@ -307,6 +317,8 @@ const (
 	ProjectCapabilityIssueMutationFieldsTypeWorkSprint ProjectCapabilityIssueMutationFieldsType = 9
 	// ProjectCapabilityIssueMutationFieldsTypeWorkIssue is the enumeration value for work_issue
 	ProjectCapabilityIssueMutationFieldsTypeWorkIssue ProjectCapabilityIssueMutationFieldsType = 10
+	// ProjectCapabilityIssueMutationFieldsTypeDate is the enumeration value for date
+	ProjectCapabilityIssueMutationFieldsTypeDate ProjectCapabilityIssueMutationFieldsType = 11
 )
 
 // ProjectCapabilityIssueMutationFieldsValues represents the object structure for values
@@ -691,6 +703,8 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 				o.Type = 9
 			case "work_issue", "WORK_ISSUE":
 				o.Type = 10
+			case "date", "DATE":
+				o.Type = 11
 			}
 		}
 		if em, ok := kv["type"].(string); ok {
@@ -717,6 +731,8 @@ func (o *ProjectCapabilityIssueMutationFields) FromMap(kv map[string]interface{}
 				o.Type = 9
 			case "work_issue", "WORK_ISSUE":
 				o.Type = 10
+			case "date", "DATE":
+				o.Type = 11
 			}
 		}
 	}
