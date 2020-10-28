@@ -594,9 +594,10 @@ type ProjectErrorPageInfo struct {
 
 // ProjectErrorConnection is a grapqhl connection
 type ProjectErrorConnection struct {
-	Edges      []*ProjectErrorEdge  `json:"edges,omitempty"`
-	PageInfo   ProjectErrorPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64               `json:"totalCount,omitempty"`
+	Edges      []*ProjectErrorEdge   `json:"edges,omitempty"`
+	PageInfo   ProjectErrorPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  ProjectErrorCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64                `json:"totalCount,omitempty"`
 }
 
 // ProjectErrorEdge is a grapqhl edge
@@ -649,6 +650,7 @@ type ProjectErrorQueryInput struct {
 	Query   *ProjectErrorQuery `json:"query,omitempty"`
 	OrderBy *string            `json:"orderBy,omitempty"`
 	Order   ProjectErrorOrder  `json:"order,omitempty"`
+	NoCache boolean            `json:"nocache,omitempty"`
 }
 
 // NewProjectErrorQuery is a convenience for building a *ProjectErrorQuery
@@ -674,9 +676,32 @@ func FindProjectError(client graphql.Client, id string) (*ProjectError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoProjectErrorQuery($id: ID) {\n")
+	sb.WriteString("query GoProjectErrorQuery($id: ID!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectError(_id: $id) {\n")
+	sb.WriteString(getProjectErrorQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneProjectErrorData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindProjectErrorWithoutCache will query an ProjectError by id avoiding the cache
+func FindProjectErrorWithoutCache(client graphql.Client, id string) (*ProjectError, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoProjectErrorQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tProjectError(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getProjectErrorQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -708,14 +733,19 @@ func FindProjectErrors(client graphql.Client, input *ProjectErrorQueryInput) (*P
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoProjectErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectErrorColumnEnum) {\n")
+	sb.WriteString("query GoProjectErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectErrorColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
-	sb.WriteString("\t\tProjectErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tProjectErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

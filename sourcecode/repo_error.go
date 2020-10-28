@@ -594,9 +594,10 @@ type RepoErrorPageInfo struct {
 
 // RepoErrorConnection is a grapqhl connection
 type RepoErrorConnection struct {
-	Edges      []*RepoErrorEdge  `json:"edges,omitempty"`
-	PageInfo   RepoErrorPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64            `json:"totalCount,omitempty"`
+	Edges      []*RepoErrorEdge   `json:"edges,omitempty"`
+	PageInfo   RepoErrorPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  RepoErrorCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64             `json:"totalCount,omitempty"`
 }
 
 // RepoErrorEdge is a grapqhl edge
@@ -649,6 +650,7 @@ type RepoErrorQueryInput struct {
 	Query   *RepoErrorQuery `json:"query,omitempty"`
 	OrderBy *string         `json:"orderBy,omitempty"`
 	Order   RepoErrorOrder  `json:"order,omitempty"`
+	NoCache boolean         `json:"nocache,omitempty"`
 }
 
 // NewRepoErrorQuery is a convenience for building a *RepoErrorQuery
@@ -674,9 +676,32 @@ func FindRepoError(client graphql.Client, id string) (*RepoError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoRepoErrorQuery($id: ID) {\n")
+	sb.WriteString("query GoRepoErrorQuery($id: ID!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoError(_id: $id) {\n")
+	sb.WriteString(getRepoErrorQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneRepoErrorData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindRepoErrorWithoutCache will query an RepoError by id avoiding the cache
+func FindRepoErrorWithoutCache(client graphql.Client, id string) (*RepoError, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoRepoErrorQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tsourcecode {\n")
+	sb.WriteString("\t\tRepoError(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getRepoErrorQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -708,14 +733,19 @@ func FindRepoErrors(client graphql.Client, input *RepoErrorQueryInput) (*RepoErr
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoRepoErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoErrorColumnEnum) {\n")
+	sb.WriteString("query GoRepoErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoErrorColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
-	sb.WriteString("\t\tRepoErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tRepoErrors(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

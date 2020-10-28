@@ -672,9 +672,10 @@ type ExportCompletePageInfo struct {
 
 // ExportCompleteConnection is a grapqhl connection
 type ExportCompleteConnection struct {
-	Edges      []*ExportCompleteEdge  `json:"edges,omitempty"`
-	PageInfo   ExportCompletePageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64                 `json:"totalCount,omitempty"`
+	Edges      []*ExportCompleteEdge   `json:"edges,omitempty"`
+	PageInfo   ExportCompletePageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  ExportCompleteCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64                  `json:"totalCount,omitempty"`
 }
 
 // ExportCompleteEdge is a grapqhl edge
@@ -727,6 +728,7 @@ type ExportCompleteQueryInput struct {
 	Query   *ExportCompleteQuery `json:"query,omitempty"`
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ExportCompleteOrder  `json:"order,omitempty"`
+	NoCache boolean              `json:"nocache,omitempty"`
 }
 
 // NewExportCompleteQuery is a convenience for building a *ExportCompleteQuery
@@ -752,9 +754,32 @@ func FindExportComplete(client graphql.Client, id string) (*ExportComplete, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoExportCompleteQuery($id: ID) {\n")
+	sb.WriteString("query GoExportCompleteQuery($id: ID!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportComplete(_id: $id) {\n")
+	sb.WriteString(getExportCompleteQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneExportCompleteData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindExportCompleteWithoutCache will query an ExportComplete by id avoiding the cache
+func FindExportCompleteWithoutCache(client graphql.Client, id string) (*ExportComplete, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoExportCompleteQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tExportComplete(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getExportCompleteQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -786,14 +811,19 @@ func FindExportCompletes(client graphql.Client, input *ExportCompleteQueryInput)
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoExportCompleteQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportCompleteColumnEnum) {\n")
+	sb.WriteString("query GoExportCompleteQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportCompleteColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
-	sb.WriteString("\t\tExportCompletes(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tExportCompletes(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

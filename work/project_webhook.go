@@ -640,9 +640,10 @@ type ProjectWebhookPageInfo struct {
 
 // ProjectWebhookConnection is a grapqhl connection
 type ProjectWebhookConnection struct {
-	Edges      []*ProjectWebhookEdge  `json:"edges,omitempty"`
-	PageInfo   ProjectWebhookPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64                 `json:"totalCount,omitempty"`
+	Edges      []*ProjectWebhookEdge   `json:"edges,omitempty"`
+	PageInfo   ProjectWebhookPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  ProjectWebhookCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64                  `json:"totalCount,omitempty"`
 }
 
 // ProjectWebhookEdge is a grapqhl edge
@@ -695,6 +696,7 @@ type ProjectWebhookQueryInput struct {
 	Query   *ProjectWebhookQuery `json:"query,omitempty"`
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ProjectWebhookOrder  `json:"order,omitempty"`
+	NoCache boolean              `json:"nocache,omitempty"`
 }
 
 // NewProjectWebhookQuery is a convenience for building a *ProjectWebhookQuery
@@ -720,9 +722,32 @@ func FindProjectWebhook(client graphql.Client, id string) (*ProjectWebhook, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoProjectWebhookQuery($id: ID) {\n")
+	sb.WriteString("query GoProjectWebhookQuery($id: ID!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectWebhook(_id: $id) {\n")
+	sb.WriteString(getProjectWebhookQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneProjectWebhookData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindProjectWebhookWithoutCache will query an ProjectWebhook by id avoiding the cache
+func FindProjectWebhookWithoutCache(client graphql.Client, id string) (*ProjectWebhook, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoProjectWebhookQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tProjectWebhook(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getProjectWebhookQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -754,14 +779,19 @@ func FindProjectWebhooks(client graphql.Client, input *ProjectWebhookQueryInput)
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoProjectWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectWebhookColumnEnum) {\n")
+	sb.WriteString("query GoProjectWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectWebhookColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
-	sb.WriteString("\t\tProjectWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tProjectWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

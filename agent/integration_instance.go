@@ -2462,9 +2462,10 @@ type IntegrationInstancePageInfo struct {
 
 // IntegrationInstanceConnection is a grapqhl connection
 type IntegrationInstanceConnection struct {
-	Edges      []*IntegrationInstanceEdge  `json:"edges,omitempty"`
-	PageInfo   IntegrationInstancePageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64                      `json:"totalCount,omitempty"`
+	Edges      []*IntegrationInstanceEdge   `json:"edges,omitempty"`
+	PageInfo   IntegrationInstancePageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  IntegrationInstanceCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64                       `json:"totalCount,omitempty"`
 }
 
 // IntegrationInstanceEdge is a grapqhl edge
@@ -2517,6 +2518,7 @@ type IntegrationInstanceQueryInput struct {
 	Query   *IntegrationInstanceQuery `json:"query,omitempty"`
 	OrderBy *string                   `json:"orderBy,omitempty"`
 	Order   IntegrationInstanceOrder  `json:"order,omitempty"`
+	NoCache boolean                   `json:"nocache,omitempty"`
 }
 
 // NewIntegrationInstanceQuery is a convenience for building a *IntegrationInstanceQuery
@@ -2542,9 +2544,32 @@ func FindIntegrationInstance(client graphql.Client, id string) (*IntegrationInst
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoIntegrationInstanceQuery($id: ID) {\n")
+	sb.WriteString("query GoIntegrationInstanceQuery($id: ID!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tIntegrationInstance(_id: $id) {\n")
+	sb.WriteString(getIntegrationInstanceQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneIntegrationInstanceData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindIntegrationInstanceWithoutCache will query an IntegrationInstance by id avoiding the cache
+func FindIntegrationInstanceWithoutCache(client graphql.Client, id string) (*IntegrationInstance, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoIntegrationInstanceQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tIntegrationInstance(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getIntegrationInstanceQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -2576,14 +2601,19 @@ func FindIntegrationInstances(client graphql.Client, input *IntegrationInstanceQ
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoIntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceColumnEnum) {\n")
+	sb.WriteString("query GoIntegrationInstanceQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
-	sb.WriteString("\t\tIntegrationInstances(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tIntegrationInstances(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

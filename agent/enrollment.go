@@ -1349,9 +1349,10 @@ type EnrollmentPageInfo struct {
 
 // EnrollmentConnection is a grapqhl connection
 type EnrollmentConnection struct {
-	Edges      []*EnrollmentEdge  `json:"edges,omitempty"`
-	PageInfo   EnrollmentPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64             `json:"totalCount,omitempty"`
+	Edges      []*EnrollmentEdge   `json:"edges,omitempty"`
+	PageInfo   EnrollmentPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  EnrollmentCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64              `json:"totalCount,omitempty"`
 }
 
 // EnrollmentEdge is a grapqhl edge
@@ -1404,6 +1405,7 @@ type EnrollmentQueryInput struct {
 	Query   *EnrollmentQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   EnrollmentOrder  `json:"order,omitempty"`
+	NoCache boolean          `json:"nocache,omitempty"`
 }
 
 // NewEnrollmentQuery is a convenience for building a *EnrollmentQuery
@@ -1429,9 +1431,32 @@ func FindEnrollment(client graphql.Client, id string) (*Enrollment, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoEnrollmentQuery($id: ID) {\n")
+	sb.WriteString("query GoEnrollmentQuery($id: ID!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tEnrollment(_id: $id) {\n")
+	sb.WriteString(getEnrollmentQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneEnrollmentData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindEnrollmentWithoutCache will query an Enrollment by id avoiding the cache
+func FindEnrollmentWithoutCache(client graphql.Client, id string) (*Enrollment, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoEnrollmentQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tEnrollment(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getEnrollmentQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -1463,14 +1488,19 @@ func FindEnrollments(client graphql.Client, input *EnrollmentQueryInput) (*Enrol
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoEnrollmentQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentEnrollmentColumnEnum) {\n")
+	sb.WriteString("query GoEnrollmentQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentEnrollmentColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
-	sb.WriteString("\t\tEnrollments(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tEnrollments(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

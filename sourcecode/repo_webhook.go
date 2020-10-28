@@ -640,9 +640,10 @@ type RepoWebhookPageInfo struct {
 
 // RepoWebhookConnection is a grapqhl connection
 type RepoWebhookConnection struct {
-	Edges      []*RepoWebhookEdge  `json:"edges,omitempty"`
-	PageInfo   RepoWebhookPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64              `json:"totalCount,omitempty"`
+	Edges      []*RepoWebhookEdge   `json:"edges,omitempty"`
+	PageInfo   RepoWebhookPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  RepoWebhookCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64               `json:"totalCount,omitempty"`
 }
 
 // RepoWebhookEdge is a grapqhl edge
@@ -695,6 +696,7 @@ type RepoWebhookQueryInput struct {
 	Query   *RepoWebhookQuery `json:"query,omitempty"`
 	OrderBy *string           `json:"orderBy,omitempty"`
 	Order   RepoWebhookOrder  `json:"order,omitempty"`
+	NoCache boolean           `json:"nocache,omitempty"`
 }
 
 // NewRepoWebhookQuery is a convenience for building a *RepoWebhookQuery
@@ -720,9 +722,32 @@ func FindRepoWebhook(client graphql.Client, id string) (*RepoWebhook, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoRepoWebhookQuery($id: ID) {\n")
+	sb.WriteString("query GoRepoWebhookQuery($id: ID!) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoWebhook(_id: $id) {\n")
+	sb.WriteString(getRepoWebhookQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneRepoWebhookData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindRepoWebhookWithoutCache will query an RepoWebhook by id avoiding the cache
+func FindRepoWebhookWithoutCache(client graphql.Client, id string) (*RepoWebhook, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoRepoWebhookQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tsourcecode {\n")
+	sb.WriteString("\t\tRepoWebhook(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getRepoWebhookQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -754,14 +779,19 @@ func FindRepoWebhooks(client graphql.Client, input *RepoWebhookQueryInput) (*Rep
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoRepoWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoWebhookColumnEnum) {\n")
+	sb.WriteString("query GoRepoWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoWebhookColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
-	sb.WriteString("\t\tRepoWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tRepoWebhooks(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

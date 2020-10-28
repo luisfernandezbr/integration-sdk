@@ -1004,9 +1004,10 @@ type TeamPageInfo struct {
 
 // TeamConnection is a grapqhl connection
 type TeamConnection struct {
-	Edges      []*TeamEdge  `json:"edges,omitempty"`
-	PageInfo   TeamPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64       `json:"totalCount,omitempty"`
+	Edges      []*TeamEdge   `json:"edges,omitempty"`
+	PageInfo   TeamPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  TeamCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64        `json:"totalCount,omitempty"`
 }
 
 // TeamEdge is a grapqhl edge
@@ -1059,6 +1060,7 @@ type TeamQueryInput struct {
 	Query   *TeamQuery `json:"query,omitempty"`
 	OrderBy *string    `json:"orderBy,omitempty"`
 	Order   TeamOrder  `json:"order,omitempty"`
+	NoCache boolean    `json:"nocache,omitempty"`
 }
 
 // NewTeamQuery is a convenience for building a *TeamQuery
@@ -1084,9 +1086,32 @@ func FindTeam(client graphql.Client, id string) (*Team, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoTeamQuery($id: ID) {\n")
+	sb.WriteString("query GoTeamQuery($id: ID!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tTeam(_id: $id) {\n")
+	sb.WriteString(getTeamQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneTeamData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindTeamWithoutCache will query an Team by id avoiding the cache
+func FindTeamWithoutCache(client graphql.Client, id string) (*Team, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoTeamQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tTeam(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getTeamQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -1118,14 +1143,19 @@ func FindTeams(client graphql.Client, input *TeamQueryInput) (*TeamConnection, e
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoTeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerTeamColumnEnum) {\n")
+	sb.WriteString("query GoTeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerTeamColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
-	sb.WriteString("\t\tTeams(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tTeams(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

@@ -774,9 +774,10 @@ type ConfigPageInfo struct {
 
 // ConfigConnection is a grapqhl connection
 type ConfigConnection struct {
-	Edges      []*ConfigEdge  `json:"edges,omitempty"`
-	PageInfo   ConfigPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64         `json:"totalCount,omitempty"`
+	Edges      []*ConfigEdge   `json:"edges,omitempty"`
+	PageInfo   ConfigPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  ConfigCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64          `json:"totalCount,omitempty"`
 }
 
 // ConfigEdge is a grapqhl edge
@@ -829,6 +830,7 @@ type ConfigQueryInput struct {
 	Query   *ConfigQuery `json:"query,omitempty"`
 	OrderBy *string      `json:"orderBy,omitempty"`
 	Order   ConfigOrder  `json:"order,omitempty"`
+	NoCache boolean      `json:"nocache,omitempty"`
 }
 
 // NewConfigQuery is a convenience for building a *ConfigQuery
@@ -854,9 +856,32 @@ func FindConfig(client graphql.Client, id string) (*Config, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoConfigQuery($id: ID) {\n")
+	sb.WriteString("query GoConfigQuery($id: ID!) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tConfig(_id: $id) {\n")
+	sb.WriteString(getConfigQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneConfigData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindConfigWithoutCache will query an Config by id avoiding the cache
+func FindConfigWithoutCache(client graphql.Client, id string) (*Config, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoConfigQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\twork {\n")
+	sb.WriteString("\t\tConfig(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getConfigQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -888,14 +913,19 @@ func FindConfigs(client graphql.Client, input *ConfigQueryInput) (*ConfigConnect
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoConfigQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkConfigColumnEnum) {\n")
+	sb.WriteString("query GoConfigQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkConfigColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
-	sb.WriteString("\t\tConfigs(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tConfigs(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

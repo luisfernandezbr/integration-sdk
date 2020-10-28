@@ -576,9 +576,10 @@ type CostCenterPageInfo struct {
 
 // CostCenterConnection is a grapqhl connection
 type CostCenterConnection struct {
-	Edges      []*CostCenterEdge  `json:"edges,omitempty"`
-	PageInfo   CostCenterPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64             `json:"totalCount,omitempty"`
+	Edges      []*CostCenterEdge   `json:"edges,omitempty"`
+	PageInfo   CostCenterPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  CostCenterCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64              `json:"totalCount,omitempty"`
 }
 
 // CostCenterEdge is a grapqhl edge
@@ -631,6 +632,7 @@ type CostCenterQueryInput struct {
 	Query   *CostCenterQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   CostCenterOrder  `json:"order,omitempty"`
+	NoCache boolean          `json:"nocache,omitempty"`
 }
 
 // NewCostCenterQuery is a convenience for building a *CostCenterQuery
@@ -656,9 +658,32 @@ func FindCostCenter(client graphql.Client, id string) (*CostCenter, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoCostCenterQuery($id: ID) {\n")
+	sb.WriteString("query GoCostCenterQuery($id: ID!) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tCostCenter(_id: $id) {\n")
+	sb.WriteString(getCostCenterQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneCostCenterData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindCostCenterWithoutCache will query an CostCenter by id avoiding the cache
+func FindCostCenterWithoutCache(client graphql.Client, id string) (*CostCenter, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoCostCenterQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tcustomer {\n")
+	sb.WriteString("\t\tCostCenter(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getCostCenterQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -690,14 +715,19 @@ func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostC
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoCostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum) {\n")
+	sb.WriteString("query GoCostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
-	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tCostCenters(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")

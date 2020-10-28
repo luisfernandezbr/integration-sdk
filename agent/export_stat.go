@@ -692,9 +692,10 @@ type ExportStatPageInfo struct {
 
 // ExportStatConnection is a grapqhl connection
 type ExportStatConnection struct {
-	Edges      []*ExportStatEdge  `json:"edges,omitempty"`
-	PageInfo   ExportStatPageInfo `json:"pageInfo,omitempty"`
-	TotalCount *int64             `json:"totalCount,omitempty"`
+	Edges      []*ExportStatEdge   `json:"edges,omitempty"`
+	PageInfo   ExportStatPageInfo  `json:"pageInfo,omitempty"`
+	CacheInfo  ExportStatCacheInfo `json:"cacheInfo,omitempty"`
+	TotalCount *int64              `json:"totalCount,omitempty"`
 }
 
 // ExportStatEdge is a grapqhl edge
@@ -747,6 +748,7 @@ type ExportStatQueryInput struct {
 	Query   *ExportStatQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   ExportStatOrder  `json:"order,omitempty"`
+	NoCache boolean          `json:"nocache,omitempty"`
 }
 
 // NewExportStatQuery is a convenience for building a *ExportStatQuery
@@ -772,9 +774,32 @@ func FindExportStat(client graphql.Client, id string) (*ExportStat, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoExportStatQuery($id: ID) {\n")
+	sb.WriteString("query GoExportStatQuery($id: ID!) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportStat(_id: $id) {\n")
+	sb.WriteString(getExportStatQueryFields())
+	sb.WriteString("\t\t}\n")
+	sb.WriteString("\t}\n")
+	sb.WriteString("}\n")
+	var res QueryOneExportStatData
+	if err := client.Query(sb.String(), variables, &res); err != nil {
+		return nil, err
+	}
+	if res.Data != nil {
+		return res.Data.Object, nil
+	}
+	return nil, nil
+}
+
+// FindExportStatWithoutCache will query an ExportStat by id avoiding the cache
+func FindExportStatWithoutCache(client graphql.Client, id string) (*ExportStat, error) {
+	variables := make(graphql.Variables)
+	variables["id"] = id
+	variables["nocache"] = true
+	var sb strings.Builder
+	sb.WriteString("query GoExportStatQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("\tagent {\n")
+	sb.WriteString("\t\tExportStat(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getExportStatQueryFields())
 	sb.WriteString("\t\t}\n")
 	sb.WriteString("\t}\n")
@@ -806,14 +831,19 @@ func FindExportStats(client graphql.Client, input *ExportStatQueryInput) (*Expor
 		}
 	}
 	var sb strings.Builder
-	sb.WriteString("query GoExportStatQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportStatColumnEnum) {\n")
+	sb.WriteString("query GoExportStatQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportStatColumnEnum, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
-	sb.WriteString("\t\tExportStats(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order) {\n")
+	sb.WriteString("\t\tExportStats(first: $first last: $last before: $before after: $after query: $query orderBy: $orderBy order: $order nocache: $nocache) {\n")
 	sb.WriteString("\t\t\tpageInfo {\n")
 	sb.WriteString("\t\t\t\tstartCursor\n")
 	sb.WriteString("\t\t\t\tendCursor\n")
 	sb.WriteString("\t\t\t\thasNextPage\n")
 	sb.WriteString("\t\t\t\thasPreviousPage\n")
+	sb.WriteString("\t\t\t}\n")
+	sb.WriteString("\t\t\tcacheInfo {\n")
+	sb.WriteString("\t\t\t\tcached\n")
+	sb.WriteString("\t\t\t\tid\n")
+	sb.WriteString("\t\t\t\tetag\n")
 	sb.WriteString("\t\t\t}\n")
 	sb.WriteString("\t\t\ttotalCount\n")
 	sb.WriteString("\t\t\tedges {\n")
