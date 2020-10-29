@@ -625,7 +625,7 @@ func (o *ExportStat) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportStat) GetHydrationQuery() string {
-	return `query GoExportStatQuery($id: ID) {
+	return `query GoExportStatQuery($id: ID!) {
 	agent {
 		ExportStat(_id: $id) {
 			created_date {

@@ -713,7 +713,7 @@ func (o *Config) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Config) GetHydrationQuery() string {
-	return `query GoConfigQuery($id: ID) {
+	return `query GoConfigQuery($id: ID!) {
 	work {
 		Config(_id: $id) {
 			created_ts

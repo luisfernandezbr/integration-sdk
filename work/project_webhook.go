@@ -579,7 +579,7 @@ func (o *ProjectWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectWebhook) GetHydrationQuery() string {
-	return `query GoProjectWebhookQuery($id: ID) {
+	return `query GoProjectWebhookQuery($id: ID!) {
 	work {
 		ProjectWebhook(_id: $id) {
 			created_ts

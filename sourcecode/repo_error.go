@@ -539,7 +539,7 @@ func (o *RepoError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoError) GetHydrationQuery() string {
-	return `query GoRepoErrorQuery($id: ID) {
+	return `query GoRepoErrorQuery($id: ID!) {
 	sourcecode {
 		RepoError(_id: $id) {
 			created_ts

@@ -539,7 +539,7 @@ func (o *ProjectError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectError) GetHydrationQuery() string {
-	return `query GoProjectErrorQuery($id: ID) {
+	return `query GoProjectErrorQuery($id: ID!) {
 	work {
 		ProjectError(_id: $id) {
 			created_ts

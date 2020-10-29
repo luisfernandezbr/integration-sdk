@@ -579,7 +579,7 @@ func (o *RepoWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoWebhook) GetHydrationQuery() string {
-	return `query GoRepoWebhookQuery($id: ID) {
+	return `query GoRepoWebhookQuery($id: ID!) {
 	sourcecode {
 		RepoWebhook(_id: $id) {
 			created_ts

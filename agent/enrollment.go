@@ -1216,7 +1216,7 @@ func (o *Enrollment) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Enrollment) GetHydrationQuery() string {
-	return `query GoEnrollmentQuery($id: ID) {
+	return `query GoEnrollmentQuery($id: ID!) {
 	agent {
 		Enrollment(_id: $id) {
 			agent_version

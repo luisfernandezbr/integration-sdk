@@ -518,7 +518,7 @@ func (o *CostCenter) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *CostCenter) GetHydrationQuery() string {
-	return `query GoCostCenterQuery($id: ID) {
+	return `query GoCostCenterQuery($id: ID!) {
 	customer {
 		CostCenter(_id: $id) {
 			active

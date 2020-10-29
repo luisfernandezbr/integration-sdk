@@ -916,7 +916,7 @@ func (o *Team) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {
-	return `query GoTeamQuery($id: ID) {
+	return `query GoTeamQuery($id: ID!) {
 	customer {
 		Team(_id: $id) {
 			active
