@@ -670,6 +670,13 @@ type ExportCompletePageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// ExportCompleteCacheInfo is the grapqhl CacheInfo
+type ExportCompleteCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // ExportCompleteConnection is a grapqhl connection
 type ExportCompleteConnection struct {
 	Edges      []*ExportCompleteEdge   `json:"edges,omitempty"`
@@ -728,7 +735,7 @@ type ExportCompleteQueryInput struct {
 	Query   *ExportCompleteQuery `json:"query,omitempty"`
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ExportCompleteOrder  `json:"order,omitempty"`
-	NoCache boolean              `json:"nocache,omitempty"`
+	NoCache bool                 `json:"nocache,omitempty"`
 }
 
 // NewExportCompleteQuery is a convenience for building a *ExportCompleteQuery

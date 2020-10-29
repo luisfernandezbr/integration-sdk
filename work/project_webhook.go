@@ -638,6 +638,13 @@ type ProjectWebhookPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// ProjectWebhookCacheInfo is the grapqhl CacheInfo
+type ProjectWebhookCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // ProjectWebhookConnection is a grapqhl connection
 type ProjectWebhookConnection struct {
 	Edges      []*ProjectWebhookEdge   `json:"edges,omitempty"`
@@ -696,7 +703,7 @@ type ProjectWebhookQueryInput struct {
 	Query   *ProjectWebhookQuery `json:"query,omitempty"`
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ProjectWebhookOrder  `json:"order,omitempty"`
-	NoCache boolean              `json:"nocache,omitempty"`
+	NoCache bool                 `json:"nocache,omitempty"`
 }
 
 // NewProjectWebhookQuery is a convenience for building a *ProjectWebhookQuery

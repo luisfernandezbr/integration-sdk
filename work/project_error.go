@@ -592,6 +592,13 @@ type ProjectErrorPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// ProjectErrorCacheInfo is the grapqhl CacheInfo
+type ProjectErrorCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // ProjectErrorConnection is a grapqhl connection
 type ProjectErrorConnection struct {
 	Edges      []*ProjectErrorEdge   `json:"edges,omitempty"`
@@ -650,7 +657,7 @@ type ProjectErrorQueryInput struct {
 	Query   *ProjectErrorQuery `json:"query,omitempty"`
 	OrderBy *string            `json:"orderBy,omitempty"`
 	Order   ProjectErrorOrder  `json:"order,omitempty"`
-	NoCache boolean            `json:"nocache,omitempty"`
+	NoCache bool               `json:"nocache,omitempty"`
 }
 
 // NewProjectErrorQuery is a convenience for building a *ProjectErrorQuery

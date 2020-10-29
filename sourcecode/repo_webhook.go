@@ -638,6 +638,13 @@ type RepoWebhookPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// RepoWebhookCacheInfo is the grapqhl CacheInfo
+type RepoWebhookCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // RepoWebhookConnection is a grapqhl connection
 type RepoWebhookConnection struct {
 	Edges      []*RepoWebhookEdge   `json:"edges,omitempty"`
@@ -696,7 +703,7 @@ type RepoWebhookQueryInput struct {
 	Query   *RepoWebhookQuery `json:"query,omitempty"`
 	OrderBy *string           `json:"orderBy,omitempty"`
 	Order   RepoWebhookOrder  `json:"order,omitempty"`
-	NoCache boolean           `json:"nocache,omitempty"`
+	NoCache bool              `json:"nocache,omitempty"`
 }
 
 // NewRepoWebhookQuery is a convenience for building a *RepoWebhookQuery

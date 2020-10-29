@@ -574,6 +574,13 @@ type CostCenterPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// CostCenterCacheInfo is the grapqhl CacheInfo
+type CostCenterCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // CostCenterConnection is a grapqhl connection
 type CostCenterConnection struct {
 	Edges      []*CostCenterEdge   `json:"edges,omitempty"`
@@ -632,7 +639,7 @@ type CostCenterQueryInput struct {
 	Query   *CostCenterQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   CostCenterOrder  `json:"order,omitempty"`
-	NoCache boolean          `json:"nocache,omitempty"`
+	NoCache bool             `json:"nocache,omitempty"`
 }
 
 // NewCostCenterQuery is a convenience for building a *CostCenterQuery

@@ -1002,6 +1002,13 @@ type TeamPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// TeamCacheInfo is the grapqhl CacheInfo
+type TeamCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // TeamConnection is a grapqhl connection
 type TeamConnection struct {
 	Edges      []*TeamEdge   `json:"edges,omitempty"`
@@ -1060,7 +1067,7 @@ type TeamQueryInput struct {
 	Query   *TeamQuery `json:"query,omitempty"`
 	OrderBy *string    `json:"orderBy,omitempty"`
 	Order   TeamOrder  `json:"order,omitempty"`
-	NoCache boolean    `json:"nocache,omitempty"`
+	NoCache bool       `json:"nocache,omitempty"`
 }
 
 // NewTeamQuery is a convenience for building a *TeamQuery

@@ -1262,6 +1262,13 @@ type IntegrationInstanceStatPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// IntegrationInstanceStatCacheInfo is the grapqhl CacheInfo
+type IntegrationInstanceStatCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // IntegrationInstanceStatConnection is a grapqhl connection
 type IntegrationInstanceStatConnection struct {
 	Edges      []*IntegrationInstanceStatEdge   `json:"edges,omitempty"`
@@ -1320,7 +1327,7 @@ type IntegrationInstanceStatQueryInput struct {
 	Query   *IntegrationInstanceStatQuery `json:"query,omitempty"`
 	OrderBy *string                       `json:"orderBy,omitempty"`
 	Order   IntegrationInstanceStatOrder  `json:"order,omitempty"`
-	NoCache boolean                       `json:"nocache,omitempty"`
+	NoCache bool                          `json:"nocache,omitempty"`
 }
 
 // NewIntegrationInstanceStatQuery is a convenience for building a *IntegrationInstanceStatQuery

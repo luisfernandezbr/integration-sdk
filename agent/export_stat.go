@@ -690,6 +690,13 @@ type ExportStatPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// ExportStatCacheInfo is the grapqhl CacheInfo
+type ExportStatCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // ExportStatConnection is a grapqhl connection
 type ExportStatConnection struct {
 	Edges      []*ExportStatEdge   `json:"edges,omitempty"`
@@ -748,7 +755,7 @@ type ExportStatQueryInput struct {
 	Query   *ExportStatQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   ExportStatOrder  `json:"order,omitempty"`
-	NoCache boolean          `json:"nocache,omitempty"`
+	NoCache bool             `json:"nocache,omitempty"`
 }
 
 // NewExportStatQuery is a convenience for building a *ExportStatQuery

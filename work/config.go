@@ -772,6 +772,13 @@ type ConfigPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// ConfigCacheInfo is the grapqhl CacheInfo
+type ConfigCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // ConfigConnection is a grapqhl connection
 type ConfigConnection struct {
 	Edges      []*ConfigEdge   `json:"edges,omitempty"`
@@ -830,7 +837,7 @@ type ConfigQueryInput struct {
 	Query   *ConfigQuery `json:"query,omitempty"`
 	OrderBy *string      `json:"orderBy,omitempty"`
 	Order   ConfigOrder  `json:"order,omitempty"`
-	NoCache boolean      `json:"nocache,omitempty"`
+	NoCache bool         `json:"nocache,omitempty"`
 }
 
 // NewConfigQuery is a convenience for building a *ConfigQuery

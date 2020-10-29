@@ -1347,6 +1347,13 @@ type EnrollmentPageInfo struct {
 	HasPreviousPage bool   `json:"hasPreviousPage,omitempty"`
 }
 
+// EnrollmentCacheInfo is the grapqhl CacheInfo
+type EnrollmentCacheInfo struct {
+	Cached bool    `json:"cached,omitempty"`
+	ID     *string `json:"id,omitempty"`
+	ETag   *string `json:"etag,omitempty"`
+}
+
 // EnrollmentConnection is a grapqhl connection
 type EnrollmentConnection struct {
 	Edges      []*EnrollmentEdge   `json:"edges,omitempty"`
@@ -1405,7 +1412,7 @@ type EnrollmentQueryInput struct {
 	Query   *EnrollmentQuery `json:"query,omitempty"`
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   EnrollmentOrder  `json:"order,omitempty"`
-	NoCache boolean          `json:"nocache,omitempty"`
+	NoCache bool             `json:"nocache,omitempty"`
 }
 
 // NewEnrollmentQuery is a convenience for building a *EnrollmentQuery
