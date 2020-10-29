@@ -579,9 +579,9 @@ func (o *RepoWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoWebhook) GetHydrationQuery() string {
-	return `query GoRepoWebhookQuery($id: ID!) {
+	return `query GoRepoWebhookQuery($id: ID, $nocache: Boolean) {
 	sourcecode {
-		RepoWebhook(_id: $id) {
+		RepoWebhook(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			enabled
@@ -729,7 +729,7 @@ func FindRepoWebhook(client graphql.Client, id string) (*RepoWebhook, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoRepoWebhookQuery($id: ID!) {\n")
+	sb.WriteString("query GoRepoWebhookQuery($id: ID) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoWebhook(_id: $id) {\n")
 	sb.WriteString(getRepoWebhookQueryFields())
@@ -752,7 +752,7 @@ func FindRepoWebhookWithoutCache(client graphql.Client, id string) (*RepoWebhook
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoRepoWebhookQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoRepoWebhookQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoWebhook(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getRepoWebhookQueryFields())

@@ -518,9 +518,9 @@ func (o *CostCenter) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *CostCenter) GetHydrationQuery() string {
-	return `query GoCostCenterQuery($id: ID!) {
+	return `query GoCostCenterQuery($id: ID, $nocache: Boolean) {
 	customer {
-		CostCenter(_id: $id) {
+		CostCenter(_id: $id, nocache: $nocache) {
 			active
 			cost
 			created_ts
@@ -665,7 +665,7 @@ func FindCostCenter(client graphql.Client, id string) (*CostCenter, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoCostCenterQuery($id: ID!) {\n")
+	sb.WriteString("query GoCostCenterQuery($id: ID) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tCostCenter(_id: $id) {\n")
 	sb.WriteString(getCostCenterQueryFields())
@@ -688,7 +688,7 @@ func FindCostCenterWithoutCache(client graphql.Client, id string) (*CostCenter, 
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoCostCenterQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoCostCenterQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tCostCenter(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getCostCenterQueryFields())

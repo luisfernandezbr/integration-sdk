@@ -713,9 +713,9 @@ func (o *Config) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Config) GetHydrationQuery() string {
-	return `query GoConfigQuery($id: ID!) {
+	return `query GoConfigQuery($id: ID, $nocache: Boolean) {
 	work {
-		Config(_id: $id) {
+		Config(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			_id
@@ -863,7 +863,7 @@ func FindConfig(client graphql.Client, id string) (*Config, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoConfigQuery($id: ID!) {\n")
+	sb.WriteString("query GoConfigQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tConfig(_id: $id) {\n")
 	sb.WriteString(getConfigQueryFields())
@@ -886,7 +886,7 @@ func FindConfigWithoutCache(client graphql.Client, id string) (*Config, error) {
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoConfigQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoConfigQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tConfig(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getConfigQueryFields())

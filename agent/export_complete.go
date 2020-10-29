@@ -602,9 +602,9 @@ func (o *ExportComplete) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportComplete) GetHydrationQuery() string {
-	return `query GoExportCompleteQuery($id: ID!) {
+	return `query GoExportCompleteQuery($id: ID, $nocache: Boolean) {
 	agent {
-		ExportComplete(_id: $id) {
+		ExportComplete(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			ended_ts
@@ -761,7 +761,7 @@ func FindExportComplete(client graphql.Client, id string) (*ExportComplete, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoExportCompleteQuery($id: ID!) {\n")
+	sb.WriteString("query GoExportCompleteQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportComplete(_id: $id) {\n")
 	sb.WriteString(getExportCompleteQueryFields())
@@ -784,7 +784,7 @@ func FindExportCompleteWithoutCache(client graphql.Client, id string) (*ExportCo
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoExportCompleteQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoExportCompleteQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportComplete(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getExportCompleteQueryFields())

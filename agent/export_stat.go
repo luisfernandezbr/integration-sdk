@@ -625,9 +625,9 @@ func (o *ExportStat) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportStat) GetHydrationQuery() string {
-	return `query GoExportStatQuery($id: ID!) {
+	return `query GoExportStatQuery($id: ID, $nocache: Boolean) {
 	agent {
-		ExportStat(_id: $id) {
+		ExportStat(_id: $id, nocache: $nocache) {
 			created_date {
 			epoch
 			offset
@@ -781,7 +781,7 @@ func FindExportStat(client graphql.Client, id string) (*ExportStat, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoExportStatQuery($id: ID!) {\n")
+	sb.WriteString("query GoExportStatQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportStat(_id: $id) {\n")
 	sb.WriteString(getExportStatQueryFields())
@@ -804,7 +804,7 @@ func FindExportStatWithoutCache(client graphql.Client, id string) (*ExportStat, 
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoExportStatQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoExportStatQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tExportStat(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getExportStatQueryFields())

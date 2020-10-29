@@ -539,9 +539,9 @@ func (o *ProjectError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectError) GetHydrationQuery() string {
-	return `query GoProjectErrorQuery($id: ID!) {
+	return `query GoProjectErrorQuery($id: ID, $nocache: Boolean) {
 	work {
-		ProjectError(_id: $id) {
+		ProjectError(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			error_message
@@ -683,7 +683,7 @@ func FindProjectError(client graphql.Client, id string) (*ProjectError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoProjectErrorQuery($id: ID!) {\n")
+	sb.WriteString("query GoProjectErrorQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectError(_id: $id) {\n")
 	sb.WriteString(getProjectErrorQueryFields())
@@ -706,7 +706,7 @@ func FindProjectErrorWithoutCache(client graphql.Client, id string) (*ProjectErr
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoProjectErrorQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoProjectErrorQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectError(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getProjectErrorQueryFields())

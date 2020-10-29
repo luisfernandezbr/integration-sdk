@@ -539,9 +539,9 @@ func (o *RepoError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoError) GetHydrationQuery() string {
-	return `query GoRepoErrorQuery($id: ID!) {
+	return `query GoRepoErrorQuery($id: ID, $nocache: Boolean) {
 	sourcecode {
-		RepoError(_id: $id) {
+		RepoError(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			error_message
@@ -683,7 +683,7 @@ func FindRepoError(client graphql.Client, id string) (*RepoError, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoRepoErrorQuery($id: ID!) {\n")
+	sb.WriteString("query GoRepoErrorQuery($id: ID) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoError(_id: $id) {\n")
 	sb.WriteString(getRepoErrorQueryFields())
@@ -706,7 +706,7 @@ func FindRepoErrorWithoutCache(client graphql.Client, id string) (*RepoError, er
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoRepoErrorQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoRepoErrorQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tsourcecode {\n")
 	sb.WriteString("\t\tRepoError(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getRepoErrorQueryFields())

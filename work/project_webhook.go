@@ -579,9 +579,9 @@ func (o *ProjectWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectWebhook) GetHydrationQuery() string {
-	return `query GoProjectWebhookQuery($id: ID!) {
+	return `query GoProjectWebhookQuery($id: ID, $nocache: Boolean) {
 	work {
-		ProjectWebhook(_id: $id) {
+		ProjectWebhook(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			enabled
@@ -729,7 +729,7 @@ func FindProjectWebhook(client graphql.Client, id string) (*ProjectWebhook, erro
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoProjectWebhookQuery($id: ID!) {\n")
+	sb.WriteString("query GoProjectWebhookQuery($id: ID) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectWebhook(_id: $id) {\n")
 	sb.WriteString(getProjectWebhookQueryFields())
@@ -752,7 +752,7 @@ func FindProjectWebhookWithoutCache(client graphql.Client, id string) (*ProjectW
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoProjectWebhookQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoProjectWebhookQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\twork {\n")
 	sb.WriteString("\t\tProjectWebhook(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getProjectWebhookQueryFields())

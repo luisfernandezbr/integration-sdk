@@ -916,9 +916,9 @@ func (o *Team) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {
-	return `query GoTeamQuery($id: ID!) {
+	return `query GoTeamQuery($id: ID, $nocache: Boolean) {
 	customer {
-		Team(_id: $id) {
+		Team(_id: $id, nocache: $nocache) {
 			active
 			children_ids
 			created_ts
@@ -1093,7 +1093,7 @@ func FindTeam(client graphql.Client, id string) (*Team, error) {
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoTeamQuery($id: ID!) {\n")
+	sb.WriteString("query GoTeamQuery($id: ID) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tTeam(_id: $id) {\n")
 	sb.WriteString(getTeamQueryFields())
@@ -1116,7 +1116,7 @@ func FindTeamWithoutCache(client graphql.Client, id string) (*Team, error) {
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoTeamQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoTeamQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tcustomer {\n")
 	sb.WriteString("\t\tTeam(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getTeamQueryFields())

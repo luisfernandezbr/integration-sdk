@@ -1143,9 +1143,9 @@ func (o *IntegrationInstanceStat) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *IntegrationInstanceStat) GetHydrationQuery() string {
-	return `query GoIntegrationInstanceStatQuery($id: ID!) {
+	return `query GoIntegrationInstanceStatQuery($id: ID, $nocache: Boolean) {
 	agent {
-		IntegrationInstanceStat(_id: $id) {
+		IntegrationInstanceStat(_id: $id, nocache: $nocache) {
 			created_ts
 			customer_id
 			_id
@@ -1353,7 +1353,7 @@ func FindIntegrationInstanceStat(client graphql.Client, id string) (*Integration
 	variables := make(graphql.Variables)
 	variables["id"] = id
 	var sb strings.Builder
-	sb.WriteString("query GoIntegrationInstanceStatQuery($id: ID!) {\n")
+	sb.WriteString("query GoIntegrationInstanceStatQuery($id: ID) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tIntegrationInstanceStat(_id: $id) {\n")
 	sb.WriteString(getIntegrationInstanceStatQueryFields())
@@ -1376,7 +1376,7 @@ func FindIntegrationInstanceStatWithoutCache(client graphql.Client, id string) (
 	variables["id"] = id
 	variables["nocache"] = true
 	var sb strings.Builder
-	sb.WriteString("query GoIntegrationInstanceStatQuery($id: ID!, $nocache: Boolean) {\n")
+	sb.WriteString("query GoIntegrationInstanceStatQuery($id: ID, $nocache: Boolean) {\n")
 	sb.WriteString("\tagent {\n")
 	sb.WriteString("\t\tIntegrationInstanceStat(_id: $id, nocache: $nocache) {\n")
 	sb.WriteString(getIntegrationInstanceStatQueryFields())
