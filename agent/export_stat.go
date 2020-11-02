@@ -174,7 +174,7 @@ type ExportStat struct {
 	// RefType the source system identifier for the model instance
 	RefType string `json:"ref_type" codec:"ref_type" bson:"ref_type" yaml:"ref_type" faker:"-"`
 	// TTLStartsAt the date the record will expire
-	TTLStartsAt string `json:"ttl_starts_at" codec:"ttl_starts_at" bson:"ttl_starts_at" yaml:"ttl_starts_at" faker:"-"`
+	TTLStartsAt *string `json:"ttl_starts_at,omitempty" codec:"ttl_starts_at,omitempty" bson:"ttl_starts_at" yaml:"ttl_starts_at,omitempty" faker:"-"`
 	// UpdatedAt the date the record was updated in Epoch time
 	UpdatedAt int64 `json:"updated_ts" codec:"updated_ts" bson:"updated_ts" yaml:"updated_ts" faker:"-"`
 	// Hashcode stores the hash of the value of this object whereby two objects with the same hashcode are functionality equal
@@ -385,7 +385,7 @@ func (o *ExportStat) ToMap() map[string]interface{} {
 		"job_id":                  toExportStatObject(o.JobID, false),
 		"ref_id":                  toExportStatObject(o.RefID, false),
 		"ref_type":                toExportStatObject(o.RefType, false),
-		"ttl_starts_at":           toExportStatObject(o.TTLStartsAt, false),
+		"ttl_starts_at":           toExportStatObject(o.TTLStartsAt, true),
 		"updated_ts":              toExportStatObject(o.UpdatedAt, false),
 		"hashcode":                toExportStatObject(o.Hashcode, false),
 	}
@@ -559,22 +559,20 @@ func (o *ExportStat) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["ttl_starts_at"].(string); ok {
+	if val, ok := kv["ttl_starts_at"].(*string); ok {
 		o.TTLStartsAt = val
+	} else if val, ok := kv["ttl_starts_at"].(string); ok {
+		o.TTLStartsAt = &val
 	} else {
 		if val, ok := kv["ttl_starts_at"]; ok {
 			if val == nil {
-				o.TTLStartsAt = ""
+				o.TTLStartsAt = pstrings.Pointer("")
 			} else {
-				v := pstrings.Value(val)
-				if v != "" {
-					if m, ok := val.(map[string]interface{}); ok && m != nil {
-						val = pjson.Stringify(m)
-					}
-				} else {
-					val = v
+				// if coming in as map, convert it back
+				if kv, ok := val.(map[string]interface{}); ok {
+					val = kv["string"]
 				}
-				o.TTLStartsAt = fmt.Sprintf("%v", val)
+				o.TTLStartsAt = pstrings.Pointer(fmt.Sprintf("%v", val))
 			}
 		}
 	}
