@@ -834,6 +834,7 @@ func FindExportStats(client graphql.Client, input *ExportStatQueryInput) (*Expor
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoExportStatQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportStatColumnEnum, $nocache: Boolean) {\n")
@@ -874,6 +875,33 @@ func FindExportStatsPaginated(client graphql.Client, query *ExportStatQuery, pag
 	input := &ExportStatQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindExportStats(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindExportStatsPaginatedWithoutCache will query for any ExportStats matching the query and return each page callback
+func FindExportStatsPaginatedWithoutCache(client graphql.Client, query *ExportStatQuery, pageSize int64, callback FindExportStatsPaginatedCallback) error {
+	input := &ExportStatQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindExportStats(client, input)

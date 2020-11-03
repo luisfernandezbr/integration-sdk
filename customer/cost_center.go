@@ -720,6 +720,7 @@ func FindCostCenters(client graphql.Client, input *CostCenterQueryInput) (*CostC
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoCostCenterQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerCostCenterColumnEnum, $nocache: Boolean) {\n")
@@ -760,6 +761,33 @@ func FindCostCentersPaginated(client graphql.Client, query *CostCenterQuery, pag
 	input := &CostCenterQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindCostCenters(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindCostCentersPaginatedWithoutCache will query for any CostCenters matching the query and return each page callback
+func FindCostCentersPaginatedWithoutCache(client graphql.Client, query *CostCenterQuery, pageSize int64, callback FindCostCentersPaginatedCallback) error {
+	input := &CostCenterQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindCostCenters(client, input)

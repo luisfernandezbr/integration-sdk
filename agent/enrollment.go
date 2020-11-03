@@ -1493,6 +1493,7 @@ func FindEnrollments(client graphql.Client, input *EnrollmentQueryInput) (*Enrol
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoEnrollmentQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentEnrollmentColumnEnum, $nocache: Boolean) {\n")
@@ -1533,6 +1534,33 @@ func FindEnrollmentsPaginated(client graphql.Client, query *EnrollmentQuery, pag
 	input := &EnrollmentQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindEnrollments(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindEnrollmentsPaginatedWithoutCache will query for any Enrollments matching the query and return each page callback
+func FindEnrollmentsPaginatedWithoutCache(client graphql.Client, query *EnrollmentQuery, pageSize int64, callback FindEnrollmentsPaginatedCallback) error {
+	input := &EnrollmentQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindEnrollments(client, input)

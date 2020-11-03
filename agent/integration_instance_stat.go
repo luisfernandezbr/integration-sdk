@@ -1408,6 +1408,7 @@ func FindIntegrationInstanceStats(client graphql.Client, input *IntegrationInsta
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoIntegrationInstanceStatQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentIntegrationInstanceStatColumnEnum, $nocache: Boolean) {\n")
@@ -1448,6 +1449,33 @@ func FindIntegrationInstanceStatsPaginated(client graphql.Client, query *Integra
 	input := &IntegrationInstanceStatQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindIntegrationInstanceStats(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindIntegrationInstanceStatsPaginatedWithoutCache will query for any IntegrationInstanceStats matching the query and return each page callback
+func FindIntegrationInstanceStatsPaginatedWithoutCache(client graphql.Client, query *IntegrationInstanceStatQuery, pageSize int64, callback FindIntegrationInstanceStatsPaginatedCallback) error {
+	input := &IntegrationInstanceStatQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindIntegrationInstanceStats(client, input)

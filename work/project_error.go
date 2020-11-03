@@ -738,6 +738,7 @@ func FindProjectErrors(client graphql.Client, input *ProjectErrorQueryInput) (*P
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoProjectErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectErrorColumnEnum, $nocache: Boolean) {\n")
@@ -778,6 +779,33 @@ func FindProjectErrorsPaginated(client graphql.Client, query *ProjectErrorQuery,
 	input := &ProjectErrorQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindProjectErrors(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindProjectErrorsPaginatedWithoutCache will query for any ProjectErrors matching the query and return each page callback
+func FindProjectErrorsPaginatedWithoutCache(client graphql.Client, query *ProjectErrorQuery, pageSize int64, callback FindProjectErrorsPaginatedCallback) error {
+	input := &ProjectErrorQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindProjectErrors(client, input)

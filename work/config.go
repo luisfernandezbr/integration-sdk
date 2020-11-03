@@ -918,6 +918,7 @@ func FindConfigs(client graphql.Client, input *ConfigQueryInput) (*ConfigConnect
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoConfigQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkConfigColumnEnum, $nocache: Boolean) {\n")
@@ -958,6 +959,33 @@ func FindConfigsPaginated(client graphql.Client, query *ConfigQuery, pageSize in
 	input := &ConfigQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindConfigs(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindConfigsPaginatedWithoutCache will query for any Configs matching the query and return each page callback
+func FindConfigsPaginatedWithoutCache(client graphql.Client, query *ConfigQuery, pageSize int64, callback FindConfigsPaginatedCallback) error {
+	input := &ConfigQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindConfigs(client, input)

@@ -816,6 +816,7 @@ func FindExportCompletes(client graphql.Client, input *ExportCompleteQueryInput)
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoExportCompleteQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: AgentExportCompleteColumnEnum, $nocache: Boolean) {\n")
@@ -856,6 +857,33 @@ func FindExportCompletesPaginated(client graphql.Client, query *ExportCompleteQu
 	input := &ExportCompleteQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindExportCompletes(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindExportCompletesPaginatedWithoutCache will query for any ExportCompletes matching the query and return each page callback
+func FindExportCompletesPaginatedWithoutCache(client graphql.Client, query *ExportCompleteQuery, pageSize int64, callback FindExportCompletesPaginatedCallback) error {
+	input := &ExportCompleteQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindExportCompletes(client, input)

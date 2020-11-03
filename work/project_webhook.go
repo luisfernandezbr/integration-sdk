@@ -784,6 +784,7 @@ func FindProjectWebhooks(client graphql.Client, input *ProjectWebhookQueryInput)
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoProjectWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: WorkProjectWebhookColumnEnum, $nocache: Boolean) {\n")
@@ -824,6 +825,33 @@ func FindProjectWebhooksPaginated(client graphql.Client, query *ProjectWebhookQu
 	input := &ProjectWebhookQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindProjectWebhooks(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindProjectWebhooksPaginatedWithoutCache will query for any ProjectWebhooks matching the query and return each page callback
+func FindProjectWebhooksPaginatedWithoutCache(client graphql.Client, query *ProjectWebhookQuery, pageSize int64, callback FindProjectWebhooksPaginatedCallback) error {
+	input := &ProjectWebhookQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindProjectWebhooks(client, input)

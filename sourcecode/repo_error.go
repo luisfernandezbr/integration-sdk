@@ -738,6 +738,7 @@ func FindRepoErrors(client graphql.Client, input *RepoErrorQueryInput) (*RepoErr
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoRepoErrorQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoErrorColumnEnum, $nocache: Boolean) {\n")
@@ -778,6 +779,33 @@ func FindRepoErrorsPaginated(client graphql.Client, query *RepoErrorQuery, pageS
 	input := &RepoErrorQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindRepoErrors(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindRepoErrorsPaginatedWithoutCache will query for any RepoErrors matching the query and return each page callback
+func FindRepoErrorsPaginatedWithoutCache(client graphql.Client, query *RepoErrorQuery, pageSize int64, callback FindRepoErrorsPaginatedCallback) error {
+	input := &RepoErrorQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindRepoErrors(client, input)

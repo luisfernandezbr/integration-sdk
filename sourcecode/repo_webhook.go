@@ -784,6 +784,7 @@ func FindRepoWebhooks(client graphql.Client, input *RepoWebhookQueryInput) (*Rep
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoRepoWebhookQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: SourcecodeRepoWebhookColumnEnum, $nocache: Boolean) {\n")
@@ -824,6 +825,33 @@ func FindRepoWebhooksPaginated(client graphql.Client, query *RepoWebhookQuery, p
 	input := &RepoWebhookQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindRepoWebhooks(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindRepoWebhooksPaginatedWithoutCache will query for any RepoWebhooks matching the query and return each page callback
+func FindRepoWebhooksPaginatedWithoutCache(client graphql.Client, query *RepoWebhookQuery, pageSize int64, callback FindRepoWebhooksPaginatedCallback) error {
+	input := &RepoWebhookQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindRepoWebhooks(client, input)

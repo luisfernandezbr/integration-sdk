@@ -1148,6 +1148,7 @@ func FindTeams(client graphql.Client, input *TeamQueryInput) (*TeamConnection, e
 		if input.Order != nil {
 			variables["order"] = *input.Order
 		}
+		variables["nocache"] = input.NoCache
 	}
 	var sb strings.Builder
 	sb.WriteString("query GoTeamQueryMany($first: Int, $last: Int, $before: Cursor, $after: Cursor, $query: QueryInput, $order: SortOrderEnum, $orderBy: CustomerTeamColumnEnum, $nocache: Boolean) {\n")
@@ -1188,6 +1189,33 @@ func FindTeamsPaginated(client graphql.Client, query *TeamQuery, pageSize int64,
 	input := &TeamQueryInput{
 		First: &pageSize,
 		Query: query,
+	}
+	for {
+		res, err := FindTeams(client, input)
+		if err != nil {
+			return err
+		}
+		if res == nil {
+			break
+		}
+		ok, err := callback(res)
+		if err != nil {
+			return err
+		}
+		if !ok || !res.PageInfo.HasNextPage {
+			break
+		}
+		input.After = &res.PageInfo.EndCursor
+	}
+	return nil
+}
+
+// FindTeamsPaginatedWithoutCache will query for any Teams matching the query and return each page callback
+func FindTeamsPaginatedWithoutCache(client graphql.Client, query *TeamQuery, pageSize int64, callback FindTeamsPaginatedCallback) error {
+	input := &TeamQueryInput{
+		First:   &pageSize,
+		Query:   query,
+		NoCache: true,
 	}
 	for {
 		res, err := FindTeams(client, input)
