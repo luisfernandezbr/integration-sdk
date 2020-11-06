@@ -713,9 +713,9 @@ func (o *Config) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Config) GetHydrationQuery() string {
-	return `query GoConfigQuery($id: ID, $nocache: Boolean) {
+	return `query GoConfigQuery($id: ID, $nocache: Boolean, $etag: String) {
 	work {
-		Config(_id: $id, nocache: $nocache) {
+		Config(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			_id
@@ -838,6 +838,7 @@ type ConfigQueryInput struct {
 	OrderBy *string      `json:"orderBy,omitempty"`
 	Order   ConfigOrder  `json:"order,omitempty"`
 	NoCache bool         `json:"nocache,omitempty"`
+	ETag    *string      `json:"etag,omitempty"`
 }
 
 // NewConfigQuery is a convenience for building a *ConfigQuery

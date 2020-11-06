@@ -590,9 +590,9 @@ func (o *IntegrationCapability) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *IntegrationCapability) GetHydrationQuery() string {
-	return `query GoIntegrationCapabilityQuery($id: ID, $nocache: Boolean) {
+	return `query GoIntegrationCapabilityQuery($id: ID, $nocache: Boolean, $etag: String) {
 	agent {
-		IntegrationCapability(_id: $id, nocache: $nocache) {
+		IntegrationCapability(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			_id
@@ -706,6 +706,7 @@ type IntegrationCapabilityQueryInput struct {
 	OrderBy *string                     `json:"orderBy,omitempty"`
 	Order   IntegrationCapabilityOrder  `json:"order,omitempty"`
 	NoCache bool                        `json:"nocache,omitempty"`
+	ETag    *string                     `json:"etag,omitempty"`
 }
 
 // NewIntegrationCapabilityQuery is a convenience for building a *IntegrationCapabilityQuery

@@ -602,9 +602,9 @@ func (o *ExportComplete) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportComplete) GetHydrationQuery() string {
-	return `query GoExportCompleteQuery($id: ID, $nocache: Boolean) {
+	return `query GoExportCompleteQuery($id: ID, $nocache: Boolean, $etag: String) {
 	agent {
-		ExportComplete(_id: $id, nocache: $nocache) {
+		ExportComplete(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			ended_ts
@@ -736,6 +736,7 @@ type ExportCompleteQueryInput struct {
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ExportCompleteOrder  `json:"order,omitempty"`
 	NoCache bool                 `json:"nocache,omitempty"`
+	ETag    *string              `json:"etag,omitempty"`
 }
 
 // NewExportCompleteQuery is a convenience for building a *ExportCompleteQuery

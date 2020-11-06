@@ -2248,9 +2248,9 @@ func (o *IntegrationInstance) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *IntegrationInstance) GetHydrationQuery() string {
-	return `query GoIntegrationInstanceQuery($id: ID, $nocache: Boolean) {
+	return `query GoIntegrationInstanceQuery($id: ID, $nocache: Boolean, $etag: String) {
 	agent {
-		IntegrationInstance(_id: $id, nocache: $nocache) {
+		IntegrationInstance(_id: $id, nocache: $nocache, etag: $etag) {
 			active
 			auto_configure
 			config
@@ -2526,6 +2526,7 @@ type IntegrationInstanceQueryInput struct {
 	OrderBy *string                   `json:"orderBy,omitempty"`
 	Order   IntegrationInstanceOrder  `json:"order,omitempty"`
 	NoCache bool                      `json:"nocache,omitempty"`
+	ETag    *string                   `json:"etag,omitempty"`
 }
 
 // NewIntegrationInstanceQuery is a convenience for building a *IntegrationInstanceQuery

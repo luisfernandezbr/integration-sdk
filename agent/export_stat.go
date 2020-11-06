@@ -623,9 +623,9 @@ func (o *ExportStat) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ExportStat) GetHydrationQuery() string {
-	return `query GoExportStatQuery($id: ID, $nocache: Boolean) {
+	return `query GoExportStatQuery($id: ID, $nocache: Boolean, $etag: String) {
 	agent {
-		ExportStat(_id: $id, nocache: $nocache) {
+		ExportStat(_id: $id, nocache: $nocache, etag: $etag) {
 			created_date {
 			epoch
 			offset
@@ -754,6 +754,7 @@ type ExportStatQueryInput struct {
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   ExportStatOrder  `json:"order,omitempty"`
 	NoCache bool             `json:"nocache,omitempty"`
+	ETag    *string          `json:"etag,omitempty"`
 }
 
 // NewExportStatQuery is a convenience for building a *ExportStatQuery

@@ -518,9 +518,9 @@ func (o *CostCenter) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *CostCenter) GetHydrationQuery() string {
-	return `query GoCostCenterQuery($id: ID, $nocache: Boolean) {
+	return `query GoCostCenterQuery($id: ID, $nocache: Boolean, $etag: String) {
 	customer {
-		CostCenter(_id: $id, nocache: $nocache) {
+		CostCenter(_id: $id, nocache: $nocache, etag: $etag) {
 			active
 			cost
 			created_ts
@@ -640,6 +640,7 @@ type CostCenterQueryInput struct {
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   CostCenterOrder  `json:"order,omitempty"`
 	NoCache bool             `json:"nocache,omitempty"`
+	ETag    *string          `json:"etag,omitempty"`
 }
 
 // NewCostCenterQuery is a convenience for building a *CostCenterQuery

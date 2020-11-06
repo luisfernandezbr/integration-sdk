@@ -539,9 +539,9 @@ func (o *ProjectError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectError) GetHydrationQuery() string {
-	return `query GoProjectErrorQuery($id: ID, $nocache: Boolean) {
+	return `query GoProjectErrorQuery($id: ID, $nocache: Boolean, $etag: String) {
 	work {
-		ProjectError(_id: $id, nocache: $nocache) {
+		ProjectError(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			error_message
@@ -658,6 +658,7 @@ type ProjectErrorQueryInput struct {
 	OrderBy *string            `json:"orderBy,omitempty"`
 	Order   ProjectErrorOrder  `json:"order,omitempty"`
 	NoCache bool               `json:"nocache,omitempty"`
+	ETag    *string            `json:"etag,omitempty"`
 }
 
 // NewProjectErrorQuery is a convenience for building a *ProjectErrorQuery

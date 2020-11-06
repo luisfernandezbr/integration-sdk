@@ -1216,9 +1216,9 @@ func (o *Enrollment) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Enrollment) GetHydrationQuery() string {
-	return `query GoEnrollmentQuery($id: ID, $nocache: Boolean) {
+	return `query GoEnrollmentQuery($id: ID, $nocache: Boolean, $etag: String) {
 	agent {
-		Enrollment(_id: $id, nocache: $nocache) {
+		Enrollment(_id: $id, nocache: $nocache, etag: $etag) {
 			agent_version
 			architecture
 			created_date {
@@ -1413,6 +1413,7 @@ type EnrollmentQueryInput struct {
 	OrderBy *string          `json:"orderBy,omitempty"`
 	Order   EnrollmentOrder  `json:"order,omitempty"`
 	NoCache bool             `json:"nocache,omitempty"`
+	ETag    *string          `json:"etag,omitempty"`
 }
 
 // NewEnrollmentQuery is a convenience for building a *EnrollmentQuery

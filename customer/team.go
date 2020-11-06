@@ -916,9 +916,9 @@ func (o *Team) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *Team) GetHydrationQuery() string {
-	return `query GoTeamQuery($id: ID, $nocache: Boolean) {
+	return `query GoTeamQuery($id: ID, $nocache: Boolean, $etag: String) {
 	customer {
-		Team(_id: $id, nocache: $nocache) {
+		Team(_id: $id, nocache: $nocache, etag: $etag) {
 			active
 			children_ids
 			created_ts
@@ -1068,6 +1068,7 @@ type TeamQueryInput struct {
 	OrderBy *string    `json:"orderBy,omitempty"`
 	Order   TeamOrder  `json:"order,omitempty"`
 	NoCache bool       `json:"nocache,omitempty"`
+	ETag    *string    `json:"etag,omitempty"`
 }
 
 // NewTeamQuery is a convenience for building a *TeamQuery

@@ -579,9 +579,9 @@ func (o *RepoWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoWebhook) GetHydrationQuery() string {
-	return `query GoRepoWebhookQuery($id: ID, $nocache: Boolean) {
+	return `query GoRepoWebhookQuery($id: ID, $nocache: Boolean, $etag: String) {
 	sourcecode {
-		RepoWebhook(_id: $id, nocache: $nocache) {
+		RepoWebhook(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			enabled
@@ -704,6 +704,7 @@ type RepoWebhookQueryInput struct {
 	OrderBy *string           `json:"orderBy,omitempty"`
 	Order   RepoWebhookOrder  `json:"order,omitempty"`
 	NoCache bool              `json:"nocache,omitempty"`
+	ETag    *string           `json:"etag,omitempty"`
 }
 
 // NewRepoWebhookQuery is a convenience for building a *RepoWebhookQuery

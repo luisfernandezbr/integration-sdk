@@ -579,9 +579,9 @@ func (o *ProjectWebhook) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *ProjectWebhook) GetHydrationQuery() string {
-	return `query GoProjectWebhookQuery($id: ID, $nocache: Boolean) {
+	return `query GoProjectWebhookQuery($id: ID, $nocache: Boolean, $etag: String) {
 	work {
-		ProjectWebhook(_id: $id, nocache: $nocache) {
+		ProjectWebhook(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			enabled
@@ -704,6 +704,7 @@ type ProjectWebhookQueryInput struct {
 	OrderBy *string              `json:"orderBy,omitempty"`
 	Order   ProjectWebhookOrder  `json:"order,omitempty"`
 	NoCache bool                 `json:"nocache,omitempty"`
+	ETag    *string              `json:"etag,omitempty"`
 }
 
 // NewProjectWebhookQuery is a convenience for building a *ProjectWebhookQuery

@@ -539,9 +539,9 @@ func (o *RepoError) GetIntegrationInstanceID() *string {
 // GetHydrationQuery returns a query for all fields, and one level deep of relations.
 // This query requires "id" to be in the query variables.
 func (o *RepoError) GetHydrationQuery() string {
-	return `query GoRepoErrorQuery($id: ID, $nocache: Boolean) {
+	return `query GoRepoErrorQuery($id: ID, $nocache: Boolean, $etag: String) {
 	sourcecode {
-		RepoError(_id: $id, nocache: $nocache) {
+		RepoError(_id: $id, nocache: $nocache, etag: $etag) {
 			created_ts
 			customer_id
 			error_message
@@ -658,6 +658,7 @@ type RepoErrorQueryInput struct {
 	OrderBy *string         `json:"orderBy,omitempty"`
 	Order   RepoErrorOrder  `json:"order,omitempty"`
 	NoCache bool            `json:"nocache,omitempty"`
+	ETag    *string         `json:"etag,omitempty"`
 }
 
 // NewRepoErrorQuery is a convenience for building a *RepoErrorQuery
