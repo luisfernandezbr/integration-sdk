@@ -30,8 +30,6 @@ const (
 	ExportDataModelCustomerIDColumn = "customer_id"
 	// ExportDataModelIDColumn is the column json value id
 	ExportDataModelIDColumn = "id"
-	// ExportDataModelIntegrationIDColumn is the column json value integration_id
-	ExportDataModelIntegrationIDColumn = "integration_id"
 	// ExportDataModelIntegrationInstanceIDColumn is the column json value integration_instance_id
 	ExportDataModelIntegrationInstanceIDColumn = "integration_instance_id"
 	// ExportDataModelJobIDColumn is the column json value job_id
@@ -50,10 +48,8 @@ type ExportData struct {
 	CustomerID string `json:"customer_id" codec:"customer_id" bson:"customer_id" yaml:"customer_id" faker:"-"`
 	// ID the primary key for the model instance
 	ID string `json:"id" codec:"id" bson:"_id" yaml:"id" faker:"-"`
-	// IntegrationID The ID of the integration
-	IntegrationID string `json:"integration_id" codec:"integration_id" bson:"integration_id" yaml:"integration_id" faker:"-"`
-	// IntegrationInstanceID the integration instance id
-	IntegrationInstanceID *string `json:"integration_instance_id,omitempty" codec:"integration_instance_id,omitempty" bson:"integration_instance_id" yaml:"integration_instance_id,omitempty" faker:"-"`
+	// IntegrationInstanceID the id of the integration instance that this data is for.
+	IntegrationInstanceID string `json:"integration_instance_id" codec:"integration_instance_id" bson:"integration_instance_id" yaml:"integration_instance_id" faker:"-"`
 	// JobID The job ID
 	JobID string `json:"job_id" codec:"job_id" bson:"job_id" yaml:"job_id" faker:"-"`
 	// Objects Objects as JSON map[type][]object for use in pipeline
@@ -261,8 +257,7 @@ func (o *ExportData) ToMap() map[string]interface{} {
 	return map[string]interface{}{
 		"customer_id":             toExportDataObject(o.CustomerID, false),
 		"id":                      toExportDataObject(o.ID, false),
-		"integration_id":          toExportDataObject(o.IntegrationID, false),
-		"integration_instance_id": toExportDataObject(o.IntegrationInstanceID, true),
+		"integration_instance_id": toExportDataObject(o.IntegrationInstanceID, false),
 		"job_id":                  toExportDataObject(o.JobID, false),
 		"objects":                 toExportDataObject(o.Objects, false),
 		"ref_id":                  toExportDataObject(o.RefID, false),
@@ -318,12 +313,12 @@ func (o *ExportData) FromMap(kv map[string]interface{}) {
 			}
 		}
 	}
-	if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = val
+	if val, ok := kv["integration_instance_id"].(string); ok {
+		o.IntegrationInstanceID = val
 	} else {
-		if val, ok := kv["integration_id"]; ok {
+		if val, ok := kv["integration_instance_id"]; ok {
 			if val == nil {
-				o.IntegrationID = ""
+				o.IntegrationInstanceID = ""
 			} else {
 				v := pstrings.Value(val)
 				if v != "" {
@@ -333,24 +328,7 @@ func (o *ExportData) FromMap(kv map[string]interface{}) {
 				} else {
 					val = v
 				}
-				o.IntegrationID = fmt.Sprintf("%v", val)
-			}
-		}
-	}
-	if val, ok := kv["integration_instance_id"].(*string); ok {
-		o.IntegrationInstanceID = val
-	} else if val, ok := kv["integration_instance_id"].(string); ok {
-		o.IntegrationInstanceID = &val
-	} else {
-		if val, ok := kv["integration_instance_id"]; ok {
-			if val == nil {
-				o.IntegrationInstanceID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationInstanceID = pstrings.Pointer(fmt.Sprintf("%v", val))
+				o.IntegrationInstanceID = fmt.Sprintf("%v", val)
 			}
 		}
 	}
@@ -438,7 +416,6 @@ func (o *ExportData) Hash() string {
 	args := make([]interface{}, 0)
 	args = append(args, o.CustomerID)
 	args = append(args, o.ID)
-	args = append(args, o.IntegrationID)
 	args = append(args, o.IntegrationInstanceID)
 	args = append(args, o.JobID)
 	args = append(args, o.Objects)
@@ -450,22 +427,16 @@ func (o *ExportData) Hash() string {
 
 // SetIntegrationInstanceID will set the integration instance ID
 func (o *ExportData) SetIntegrationInstanceID(id string) {
-	if id == "" {
-		o.IntegrationInstanceID = nil
-	} else {
-		o.IntegrationInstanceID = &id
-	}
+	o.IntegrationInstanceID = id
 }
 
 // GetIntegrationInstanceID will return the integration instance ID
 func (o *ExportData) GetIntegrationInstanceID() *string {
-	return o.IntegrationInstanceID
+	return &o.IntegrationInstanceID
 }
 
 // ExportDataPartial is a partial struct for upsert mutations for ExportData
 type ExportDataPartial struct {
-	// IntegrationID The ID of the integration
-	IntegrationID *string `json:"integration_id,omitempty"`
 	// JobID The job ID
 	JobID *string `json:"job_id,omitempty"`
 	// Objects Objects as JSON map[type][]object for use in pipeline
@@ -482,9 +453,8 @@ func (o *ExportDataPartial) GetModelName() datamodel.ModelNameType {
 // ToMap returns the object as a map
 func (o *ExportDataPartial) ToMap() map[string]interface{} {
 	kv := map[string]interface{}{
-		"integration_id": toExportDataObject(o.IntegrationID, true),
-		"job_id":         toExportDataObject(o.JobID, true),
-		"objects":        toExportDataObject(o.Objects, true),
+		"job_id":  toExportDataObject(o.JobID, true),
+		"objects": toExportDataObject(o.Objects, true),
 	}
 	for k, v := range kv {
 		if v == nil || reflect.ValueOf(v).IsZero() {
@@ -520,23 +490,6 @@ func (o *ExportDataPartial) setDefaults(frommap bool) {
 
 // FromMap attempts to load data into object from a map
 func (o *ExportDataPartial) FromMap(kv map[string]interface{}) {
-	if val, ok := kv["integration_id"].(*string); ok {
-		o.IntegrationID = val
-	} else if val, ok := kv["integration_id"].(string); ok {
-		o.IntegrationID = &val
-	} else {
-		if val, ok := kv["integration_id"]; ok {
-			if val == nil {
-				o.IntegrationID = pstrings.Pointer("")
-			} else {
-				// if coming in as map, convert it back
-				if kv, ok := val.(map[string]interface{}); ok {
-					val = kv["string"]
-				}
-				o.IntegrationID = pstrings.Pointer(fmt.Sprintf("%v", val))
-			}
-		}
-	}
 	if val, ok := kv["job_id"].(*string); ok {
 		o.JobID = val
 	} else if val, ok := kv["job_id"].(string); ok {
